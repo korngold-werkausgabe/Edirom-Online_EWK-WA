@@ -26,7 +26,9 @@
         <entry key="annotation_layout" value="EdiromOnline.view.window.annotationLayouts.AnnotationLayout1"/>
         <entry key="image_prefix" value="../../../digilib/Scaler/"/>
         <entry key="image_server" value="digilib"/>
-        <entry key="edition_path" value="/db/apps/contents"/>
+        <entry key="image_server_with_credentials" value="true"/>
+        <entry key="image_server_credentials" value="/db/apps/edirom-content/.credentials"/>
+        <entry key="edition_path" value="/db/apps/edirom-content"/>
         <entry key="start_documents_uri" value=""/>
     </entries>
 </prefs>

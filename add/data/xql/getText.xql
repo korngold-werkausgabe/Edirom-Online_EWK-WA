@@ -1,4 +1,4 @@
-xquery version "3.0";
+xquery version "3.1";
 (:
  : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
  :)
@@ -10,14 +10,17 @@ import module namespace edition="http://www.edirom.de/xquery/edition" at "../xqm
 
 (: NAMESPACE DECLARATIONS ================================================== :)
 
-declare namespace request="http://exist-db.org/xquery/request";
-declare namespace tei="http://www.tei-c.org/ns/1.0";
-declare namespace xhtml="http://www.w3.org/1999/xhtml";
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+declare namespace request = "http://exist-db.org/xquery/request";
+declare namespace tei = "http://www.tei-c.org/ns/1.0";
+declare namespace xhtml = "http://www.w3.org/1999/xhtml";
 
 (: OPTION DECLARATIONS ===================================================== :)
 
-declare option exist:serialize "method=xhtml media-type=text/html omit-xml-declaration=yes indent=yes";
-(:declare option exist:serialize "method=text media-type=text/plain omit-xml-declaration=yes";:)
+declare option output:method "xhtml";
+declare option output:media-type "text/html";
+declare option output:omit-xml-declaration "yes";
+declare option output:indent "yes";
 
 (: QUERY BODY ============================================================== :)
 

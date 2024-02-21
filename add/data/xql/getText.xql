@@ -19,6 +19,8 @@ declare namespace xhtml="http://www.w3.org/1999/xhtml";
 declare option exist:serialize "method=xhtml media-type=text/html omit-xml-declaration=yes indent=yes";
 (:declare option exist:serialize "method=text media-type=text/plain omit-xml-declaration=yes";:)
 
+(: QUERY BODY ============================================================== :)
+
 let $uri := request:get-parameter('uri', '')
 let $idPrefix := request:get-parameter('idPrefix', '')
 let $term := request:get-parameter('term', '')
@@ -55,7 +57,11 @@ let $imagePrefix := if($imageserver = 'leaflet')
 
 (:let $imagePrefix := eutil:getPreference('image_prefix', request:get-parameter('edition', '')):)
 
-let $xsl := if($xslInstruction)then($xslInstruction)else('../xslt/teiBody2HTML.xsl')
+let $xsl :=
+    if ($xslInstruction) then
+        ($xslInstruction)
+    else
+        ('../xslt/tei/Stylesheets/html/html.xsl')
 
 let $params := (
     (: parameters for Edirom-Online :)

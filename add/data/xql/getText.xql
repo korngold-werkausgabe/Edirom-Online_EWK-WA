@@ -90,7 +90,7 @@ let $xsl :=
     if ($xslInstruction) then
         ($xslInstruction)
     else
-        ('../xslt/tei/Stylesheets/html/html.xsl')
+        ('../xslt/tei/profiles/edirom-body/teiBody2HTML.xsl')
 
 let $params := (
     (: parameters for Edirom-Online :)

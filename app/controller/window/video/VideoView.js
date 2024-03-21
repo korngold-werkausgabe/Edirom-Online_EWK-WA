@@ -40,6 +40,7 @@ Ext.define('EdiromOnline.controller.window.video.VideoView', {
         view.initialized = true;
 
         var uri = view.uri;
+        console.log(uri);
         var type = view.type;
 
         view.setIFrameURL('data/xql/getVideoPlayer.xql?uri=' + uri);

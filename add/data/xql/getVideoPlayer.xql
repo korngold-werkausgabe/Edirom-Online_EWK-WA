@@ -18,9 +18,24 @@ xquery version "3.1";
   along with Edirom Online.  If not, see <http://www.gnu.org/licenses/>.
 :)
 
-declare option exist:serialize "method=xhtml media-type=text/html omit-xml-declaration=yes indent=yes";
+import module namespace eutil="http://www.edirom.de/xquery/util" at "../xqm/util.xqm";
+
+declare namespace request="http://exist-db.org/xquery/request";
+declare namespace mei="http://www.music-encoding.org/ns/mei";
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+
+(: declare option exist:serialize "method=html media-type=text/html omit-xml-declaration=yes indent=yes"; :)
+
+declare option output:method "html";
+declare option output:media-type "text/html";
+
+let $uri := request:get-parameter('uri', '')
+let $docUri := if(contains($uri, '#')) then(substring-before($uri, '#')) else($uri)
+let $doc := eutil:getDoc($docUri)
+let $avFile := $doc//mei:avFile[1]/string(@target)
 
 
+return
 <html lang="de">
 <head>
     <meta charset="UTF-8"/>
@@ -28,6 +43,8 @@ declare option exist:serialize "method=xhtml media-type=text/html omit-xml-decla
     <title>Document</title>
 </head>
 <body>
-    <h1>TEST!</h1>
+<video width="900" height="500" controls="">
+  <source src="{$avFile}" type="video/mp4"></source>
+</video> 
 </body>
 </html>

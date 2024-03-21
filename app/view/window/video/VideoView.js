@@ -33,7 +33,7 @@ Ext.define('EdiromOnline.view.window.video.VideoView', {
 
         var me = this;
 
-        me.html = '<div id="' + me.id + '_videoCont" class="videoViewContent"><iframe id="' + me.id + '_videoContIFrame" src="" seamless="seamless" style="width:100%; height:100%; border:none;"></div>';
+        me.html = '<div id="' + me.id + '_videoCont" class="videoViewContent" style="width:100%; height:100%"><iframe id="' + me.id + '_videoContIFrame" src="" seamless="seamless" style="width:100%; height:100%; border:none;"></div>';
 
         me.callParent();
     },

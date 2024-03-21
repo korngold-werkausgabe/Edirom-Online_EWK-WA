@@ -33,7 +33,14 @@ Ext.define('EdiromOnline.view.window.video.VideoView', {
 
         var me = this;
 
-        me.html = '<div id="' + me.id + '_videoCont" class="videoViewContent" style="width:100%; height:100%"><iframe id="' + me.id + '_videoContIFrame" src="" seamless="seamless" style="width:100%; height:100%; border:none;"></div>';
+        let videoplayerJsElement = document.createElement("script");
+        videoplayerJsElement.setAttribute("defer", "defer");
+        videoplayerJsElement.setAttribute("src", "resources/webcomponents/videoplayer/videoplayerElement.js")
+        document.querySelector("head").appendChild(videoplayerJsElement);
+
+        // me.html = '<div id="' + me.id + '_videoCont" class="videoViewContent" style="width:100%; height:100%"><iframe id="' + me.id + '_videoContIFrame" src="" seamless="seamless" style="width:100%; height:100%; border:none;"></div>';
+
+        me.html = '<edirom-videoplayer src="https://samplelib.com/lib/preview/mp4/sample-15s.mp4"></edirom-videoplayer>';
 
         me.callParent();
     },

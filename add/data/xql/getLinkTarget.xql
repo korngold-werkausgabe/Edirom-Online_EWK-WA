@@ -24,6 +24,16 @@ declare namespace tei = "http://www.tei-c.org/ns/1.0";
 
 (: OPTION DECLARATIONS ===================================================== :)
 
+import module namespace functx = "http://www.functx.com";
+import module namespace request = "http://exist-db.org/xquery/request";
+import module namespace xmldb = "http://exist-db.org/xquery/xmldb";
+import module namespace console = "http://exist-db.org/xquery/console";
+
+import module namespace eutil = "http://www.edirom.de/xquery/util" at "../xqm/util.xqm";
+import module namespace source = "http://www.edirom.de/xquery/source" at "../xqm/source.xqm";
+import module namespace teitext = "http://www.edirom.de/xquery/teitext" at "../xqm/teitext.xqm";
+import module namespace work = "http://www.edirom.de/xquery/work" at "../xqm/work.xqm";
+
 declare option output:method "json";
 declare option output:media-type "application/json";
 
@@ -57,18 +67,20 @@ declare function local:getView($type as xs:string, $docUri as xs:string, $doc as
             
     (: whether to set the view as default view:)
     let $defaultViewed.map :=
-        if ($type = (
-                'mei_sourceView',
-                'mei_audioView',
-                'tei_textView',
-                'tei_facsimileView',
-                'tei_textFacsimileSplitView',
-                'mei_annotationView',
-                'mei_verovioView')
-        ) then
-            (map:put($labeled.map, 'defaultView', true()))
-        else
-            ($labeled.map)
+			mei_sourceView',
+    if ($type = (
+		'mei_sourceView',
+    	'mei_audioView',
+    	'mei_videoView',
+    	'tei_textView',
+    	'tei_facsimileView',
+    	'tei_textFacsimileSplitView',
+    	'mei_annotationView',
+    	'mei_verovioView')
+	) then
+        (map:put($labeled.map, 'defaultView', true()))
+    else
+        ($labeled.map)
         
     (: xpath check whether any given view is supported :)
     let $hasView :=
@@ -111,8 +123,58 @@ declare function local:getView($type as xs:string, $docUri as xs:string, $doc as
         else if ($type = 'desc_xmlView') then
             (exists($doc//mei:annot[@type = 'descLink']))
             
-        else
-            (false())
+            else
+                if ($type = 'mei_sourceView')
+                then
+                    (exists($doc//mei:facsimile//mei:graphic[@type = 'facsimile']))
+                
+                else
+                    if ($type = 'mei_audioView')
+                    then
+                        (exists($doc//mei:recording[@type='audio']))
+
+                    else
+                        if ($type = 'mei_videoView')
+                        then
+                            (exists($doc//mei:recording[@type='video']))
+
+                        else
+                            if ($type = 'mei_verovioView')
+                            then
+                                (exists($doc//mei:body//mei:measure) and exists($doc//mei:body//mei:note))
+                            
+                            else
+                                if ($type = 'tei_textView')
+                                then
+                                    (exists($doc//tei:body[matches(.//text(), '[^\s]+')]))
+                                
+                                else
+                                    if ($type = 'tei_facsimileView')
+                                    then
+                                        (exists($doc//tei:facsimile//tei:graphic))
+                                    
+                                    else
+                                        if ($type = 'tei_textFacsimileSplitView')
+                                        then
+                                            (exists($doc//tei:facsimile//tei:graphic) and exists($doc//tei:pb[@facs]))
+                                        
+                                        else
+                                            if ($type = 'mei_annotationView')
+                                            then
+                                                (exists($doc//mei:annot[@type = 'editorialComment']))
+                                            
+                                            else
+                                                if ($type = 'xml_xmlView')
+                                                then
+                                                    (true())
+                                                
+                                                else
+                                                    if ($type = 'desc_xmlView')
+                                                    then
+                                                        (exists($doc//mei:annot[@type = 'descLink']))
+                                                    
+                                                    else
+                                                        (false())
     
     return
         if ($hasView) then
@@ -127,19 +189,19 @@ declare function local:getView($type as xs:string, $docUri as xs:string, $doc as
 declare function local:getViews($type as xs:string, $docUri as xs:string, $doc as node()+) as map(*)* {
     
     let $views := (
-        (:'desc_summaryView',:)
-        (:'desc_headerView',:)
-        'mei_textView',
-        'mei_sourceView',
-        'mei_audioView',
-        'mei_verovioView',
-        'tei_textView',
-        'tei_facsimileView',
-        'tei_textFacsimileSplitView',
-        'mei_annotationView',
-        'html_iFrameView',
-        'xml_xmlView',
-        'desc_xmlView'
+    	(:'desc_summaryView',:)
+    	(:'desc_headerView',:)
+    	'mei_textView',
+    	'mei_sourceView',
+    	'mei_audioView',
+    	'mei_videoView',
+    	'mei_verovioView',
+    	'tei_textView',
+    	'tei_facsimileView',
+    	'tei_textFacsimileSplitView',
+    	'mei_annotationView',
+    	'xml_xmlView',
+    	'desc_xmlView'
     )
     
     let $maps :=

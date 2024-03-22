@@ -40,7 +40,8 @@ function define(html) {
             console.log(name, oldValue, newValue);
             if (oldValue === newValue) return;
             if (name == "src") {
-                this.shadow.querySelector("source").setAttribute("src", newValue);
+                console.log("Set new source value in source");
+                this.shadow.querySelector("video").setAttribute("src", newValue);
             }
         }
     }

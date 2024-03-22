@@ -42,6 +42,21 @@ Ext.define('EdiromOnline.controller.window.video.VideoView', {
         var uri = view.uri;
         var type = view.type;
 
-        // view.setIFrameURL('data/xql/getVideoPlayer.xql?uri=' + uri);
+        this.getVideoUrl('data/xql/getVideoSrc.xql?uri=' + uri);
+        view.setSrc(this.videoUrl);
+    },
+
+    getVideoUrl: function (requestUrl) {
+        Ext.Ajax.request({
+            url: requestUrl,
+            async: false,
+            method: 'GET',
+            dataType: "text",
+            success: function (response) {
+                this.videoUrl = response.responseText;
+            },
+            scope: this
+        });
     }
+
 });

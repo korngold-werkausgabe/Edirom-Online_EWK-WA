@@ -38,23 +38,14 @@ Ext.define('EdiromOnline.view.window.video.VideoView', {
         videoplayerJsElement.setAttribute("src", "resources/webcomponents/videoplayer/videoplayerElement.js")
         document.querySelector("head").appendChild(videoplayerJsElement);
 
-        // me.html = '<div id="' + me.id + '_videoCont" class="videoViewContent" style="width:100%; height:100%"><iframe id="' + me.id + '_videoContIFrame" src="" seamless="seamless" style="width:100%; height:100%; border:none;"></div>';
-
-        me.html = '<edirom-videoplayer src="https://samplelib.com/lib/preview/mp4/sample-15s.mp4"></edirom-videoplayer>';
+        me.html = `<edirom-videoplayer id="${me.id}-videoplayer"></edirom-videoplayer>`;
 
         me.callParent();
     },
 
-    setIFrameURL: function (url) {
+    setSrc: function (src) {
         var me = this;
-        var contEl = me.el.getById(me.id + '_videoContIFrame');
-        contEl.set({ 'src': url });
-    },
-
-    getContentConfig: function () {
-        var me = this;
-        return {
-            id: this.id
-        };
+        var contEl = me.el.getById(me.id + '-videoplayer');
+        contEl.set({ 'src': src });
     }
 });

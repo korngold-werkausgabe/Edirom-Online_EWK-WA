@@ -24,10 +24,9 @@ declare namespace request="http://exist-db.org/xquery/request";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
-(: declare option exist:serialize "method=html media-type=text/html omit-xml-declaration=yes indent=yes"; :)
 
-declare option output:method "html";
-declare option output:media-type "text/html";
+declare option output:method "text";
+declare option output:media-type "text";
 
 let $uri := request:get-parameter('uri', '')
 let $docUri := if(contains($uri, '#')) then(substring-before($uri, '#')) else($uri)
@@ -36,15 +35,4 @@ let $avFile := $doc//mei:avFile[1]/string(@target)
 
 
 return
-<html lang="de">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Document</title>
-</head>
-<body>
-<video width="900" height="500" controls="">
-  <source src="{$avFile}" type="video/mp4"></source>
-</video> 
-</body>
-</html>
+$avFile

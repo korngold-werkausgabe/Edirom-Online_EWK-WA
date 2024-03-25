@@ -46,6 +46,9 @@ Ext.define('EdiromOnline.controller.window.video.VideoView', {
         view.setSrc(this.videoUrl);
     },
 
+    /**
+     * Requests the XQuery to get the video file location from the document 
+     */
     getVideoUrl: function (requestUrl) {
         Ext.Ajax.request({
             url: requestUrl,

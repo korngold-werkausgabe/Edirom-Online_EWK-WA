@@ -1,5 +1,5 @@
 
-console.log("SCRIPT LOADED!!!!!!");
+console.log("Videoplayer Webcomponent loaded");
 
 fetch("resources/webcomponents/videoplayer/videoplayerElement.html")
     .then(stream => stream.text())
@@ -11,24 +11,46 @@ function define(html) {
             super();
             this.shadow = this.attachShadow({ mode: "open" });
             this.shadow.innerHTML = html;
+            this.video = this.shadow.querySelector("video");
+            this.canvas = this.shadow.querySelector('#video-canvas');
+            this.ctx = this.canvas.getContext('2d');
+
+            this.canvas.addEventListener("click", () => {
+                if (this.state == "play") {
+                    this.state = "pause";
+                }
+                else {
+                    this.state = "play";
+                }
+            });
         }
 
         static get observedAttributes() {
-            return ["src"]
+            return ["src", "tstamp", "state"]
         }
 
         // Ist dann mit this.testattr abrufbar
         get src() {
             return this.getAttribute("src");
         }
-
         set src(value) {
             this.setAttribute("src", value);
         }
 
+        get state() {
+            return this.getAttribute("state");
+        }
+        set state(value) {
+            this.setAttribute("state", value);
+        }
+
+        drawScreen = () => {
+            this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+        }
+
         // Wird ausgeführt, wenn WC dem DOM zur Verfügung steht
         connectedCallback() {
-            //pass
+            setInterval(this.drawScreen, 33);
         }
 
         disconnectedCallback() {
@@ -40,8 +62,18 @@ function define(html) {
             console.log(name, oldValue, newValue);
             if (oldValue === newValue) return;
             if (name == "src") {
-                console.log("Set new source value in source");
-                this.shadow.querySelector("video").setAttribute("src", newValue);
+                this.video.src = newValue;
+            }
+            else if (name == "tstamp") {
+                this.video.currentTime = newValue;
+            }
+            else if (name == "state") {
+                if (newValue == "play") {
+                    this.video.play();
+                }
+                else if (newValue == "pause") {
+                    this.video.pause();
+                }
             }
         }
     }

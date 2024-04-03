@@ -47,22 +47,24 @@ Ext.define('EdiromOnline.controller.navigator.Navigator', {
         var editionId = this.application.activeEdition;
         var lang = window.getLanguage('application_language');
 
-        window.doAJAXRequest('data/xql/getNavigatorConfig.xql',
-            'GET', 
-            {
+        Ext.Ajax.request({
+            url: 'data/xql/getNavigatorConfig.xql',
+            params: {
                 editionId: editionId,
                 workId: workId,
                 lang: lang
             },
-            Ext.bind(function(response){
+            success: function(response){
+
                 this.navigatorContents.add(workId, response.responseText);
 
                 Ext.Array.each(this.navigators, function(navigator) {
                     navigator.body.update(this.getNavigatorContent(workId));
                     navigator.setLoading(false);
                 }, this);
-            }, this)
-        );
+            },
+            scope: this
+        });
     },
 
     getNavigatorContent: function(workId) {

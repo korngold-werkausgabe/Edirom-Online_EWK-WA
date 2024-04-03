@@ -1,21 +1,35 @@
-xquery version "3.1";
+xquery version "1.0";
 (:
- : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
- :)
+  Edirom Online
+  Copyright (C) 2011 The Edirom Project
+  http://www.edirom.de
 
-(: NAMESPACE DECLARATIONS ================================================== :)
+  Edirom Online is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
 
-declare namespace mei = "http://www.music-encoding.org/ns/mei";
-declare namespace request = "http://exist-db.org/xquery/request";
-declare namespace system = "http://exist-db.org/xquery/system";
-declare namespace transform = "http://exist-db.org/xquery/transform";
-declare namespace xmldb = "http://exist-db.org/xquery/xmldb";
+  Edirom Online is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-(: OPTION DECLARATIONS ===================================================== :)
+  You should have received a copy of the GNU General Public License
+  along with Edirom Online.  If not, see <http://www.gnu.org/licenses/>.
+
+  ID: $Id: getRendering.xql 1334 2012-06-14 12:40:33Z daniel $
+:)
+
+declare namespace request="http://exist-db.org/xquery/request";
+declare namespace mei="http://www.music-encoding.org/ns/mei";
+
+declare namespace xmldb="http://exist-db.org/xquery/xmldb";
+declare namespace system="http://exist-db.org/xquery/system";
+declare namespace transform="http://exist-db.org/xquery/transform";
 
 declare option exist:serialize "method=xhtml media-type=text/html omit-xml-declaration=yes indent=yes";
 
-(: QUERY BODY ============================================================== :)
+
 
 let $uri := request:get-parameter('uri', '')
 let $movementId := request:get-parameter('movementId', '')
@@ -25,12 +39,7 @@ let $firstMeasure := request:get-parameter('firstMeasure', '')
 let $lastMeasure := request:get-parameter('lastMeasure', '')
 
 
-let $docUri :=
-    if (contains($uri, '#')) then
-        (substring-before($uri, '#'))
-    else
-        ($uri)
-
+let $docUri := if(contains($uri, '#')) then(substring-before($uri, '#')) else($uri)
 let $doc := doc($docUri)
 
 return
@@ -41,8 +50,9 @@ return
     let $mdiv2show := $movementId
     let $outputStep := 'svg'
     
-    let $svg := transform:transform($doc, concat($base, 'mei2svg.xsl'),
-        <parameters>
+   
+    
+    let $svg := transform:transform($doc, concat($base, 'mei2svg.xsl'), <parameters>
             <param name="outputStep" value="{$outputStep}"/>
             <param name="basePath" value="{$base}"/>
             <param name="mdiv2show" value="{$mdiv2show}"/>
@@ -50,13 +60,11 @@ return
             <param name="showStaff" value="{$showStaff}"/>
             <param name="firstMeasure" value="{$firstMeasure}"/>
             <param name="lastMeasure" value="{$lastMeasure}"/>
-        </parameters>
-    )
-
+        </parameters>)
     (:let $svg := transform:transform($svg, concat($base, 'svgCleaner.xsl'),<parameters/>):)
     
     (:let $mdiv := transform:transform($doc, concat($base, 'reduceToMdiv.xsl'), <parameters><param name="mdiv2show" value="{$mdiv2show}"/></parameters>)
-
+    
     let $addedIDs := transform:transform($mdiv, concat($base, 'preprocessor/add-ids.xsl'), <parameters/>)
     let $canonicalized := transform:transform($addedIDs, concat($base, 'preprocessor/canonicalize.xsl'), <parameters/>)
     let $addedDurs := transform:transform($canonicalized, concat($base, 'preprocessor/addDurations.xsl'), <parameters/>)
@@ -66,4 +74,6 @@ return
     
     
     return
-        $svg
+            
+        $svg            
+       

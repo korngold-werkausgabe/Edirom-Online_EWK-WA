@@ -50,12 +50,13 @@ Ext.define('EdiromOnline.controller.window.text.TextFacsimileSplitView', {
 
         var uri = view.uri;
 
-        window.doAJAXRequest('data/xql/getPages.xql',
-            'GET', 
-            {
+        Ext.Ajax.request({
+            url: 'data/xql/getPages.xql',
+            method: 'GET',
+            params: {
                 uri: uri
             },
-            Ext.bind(function(response){
+            success: function(response){
                 var data = response.responseText;
 
                 var pages = Ext.create('Ext.data.Store', {
@@ -64,16 +65,17 @@ Ext.define('EdiromOnline.controller.window.text.TextFacsimileSplitView', {
                 });
 
                 view.setImageSet(pages);
-            }, this)
-        );
+            }
+        });
         
-        window.doAJAXRequest('data/xql/getChapters.xql',
-            'GET', 
-            {
+        Ext.Ajax.request({
+            url: 'data/xql/getChapters.xql',
+            method: 'GET',
+            params: {
                 uri: view.uri,
                 mode: 'pageMode'
             },
-            Ext.bind(function(response){
+            success: function(response){
                 var data = response.responseText;
 
                 var chapters = Ext.create('Ext.data.Store', {
@@ -82,8 +84,8 @@ Ext.define('EdiromOnline.controller.window.text.TextFacsimileSplitView', {
                 });
 
                 me.chaptersLoaded(chapters, view);
-            }, this)
-        );
+            }
+        });
     },
     
     onAfterImageChanged: function(view) {
@@ -146,13 +148,14 @@ Ext.define('EdiromOnline.controller.window.text.TextFacsimileSplitView', {
         var me = this;
 
         if(visible)
-            window.doAJAXRequest('data/xql/getAnnotationsInText.xql',
-                'GET', 
-                {
+            Ext.Ajax.request({
+                url: 'data/xql/getAnnotationsInText.xql',
+                method: 'GET',
+                params: {
                     uri: view.uri,
                     page: view.getActivePage()
                 },
-                Ext.bind(function(response){
+                success: function(response){
                     var data = response.responseText;
 
                     var annotations = Ext.create('Ext.data.Store', {
@@ -161,8 +164,9 @@ Ext.define('EdiromOnline.controller.window.text.TextFacsimileSplitView', {
                     });
 
                     me.annotationsLoaded(annotations, view);
-                }, this)
-            );
+                }
+            });
+
         else
             view.hideAnnotations();
     },

@@ -39,13 +39,21 @@ function define(html) {
                 }
             });
 
+
             this.video.addEventListener("timeupdate", () => {
                 this.currentTimeElem.textContent = this.formatDuration(this.video.currentTime);
                 const percent = this.video.currentTime / this.video.duration;
                 this.timelineContainer.style.setProperty("--progress-position", percent);
+
+                // Send timeupdate event to host
+                const communicateTimeupdateEvent = new CustomEvent('communicate-time-update', {
+                    detail: { time: this.video.currentTime },
+                    bubbles: true
+                });
+                this.dispatchEvent(communicateTimeupdateEvent);
             });
 
-            this.video.addEventListener("loadeddata", () => { // wenn das Video geladen ist, können wir die Total time abfragen
+            this.video.addEventListener("loadeddata", () => { // when video is loaded we can access the time data
                 this.totalTimeElem.textContent = this.formatDuration(this.video.duration);
             });
         }

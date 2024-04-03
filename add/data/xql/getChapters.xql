@@ -1,9 +1,7 @@
-xquery version "3.1";
+xquery version "3.0";
 (:
  : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
  :)
-
-(: IMPORTS ================================================================= :)
 
 import module namespace eutil = "http://www.edirom.de/xquery/eutil" at "../xqm/eutil.xqm";
 
@@ -23,27 +21,25 @@ declare option output:media-type "application/json";
 (: FUNCTION DECLARATIONS =================================================== :)
 
 declare function local:changeFormat($n) as xs:string {
-(:TODO replace with fn:format-integer:)
-    if ($n = '1') then
-        ('I')
-    else if ($n = '2') then
-        ('II')
-    else if ($n = '3') then
-        ('III')
-    else if ($n = '4') then
-        ('IV')
-    else if ($n = '5') then
-        ('V')
-    else if ($n = '6') then
-        ('VI')
-    else if ($n = '7') then
-        ('VII')
-    else if ($n = '8') then
-        ('VIII')
-    else if ($n = '9') then
-        ('IX')
-    else
-        ($n)
+    if($n = '1')
+    then('I')
+    else if($n = '2')
+    then('II')
+    else if($n = '3')
+    then('III')
+    else if($n = '4')
+    then('IV')
+    else if($n = '5')
+    then('V')
+    else if($n = '6')
+    then('VI')
+    else if($n = '7')
+    then('VII')
+    else if($n = '8')
+    then('VIII')
+    else if($n = '9')
+    then('IX')
+    else ($n)
 };
 
 let $uri := request:get-parameter('uri', '')

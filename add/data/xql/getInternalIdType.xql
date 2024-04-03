@@ -1,4 +1,4 @@
-xquery version "3.1";
+xquery version "1.0";
 (:
  : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
  :)
@@ -21,21 +21,10 @@ declare option output:method "text";
 (: QUERY BODY ============================================================== :)
 
 let $uri := request:get-parameter('uri', '')
-let $docUri :=
-    if (contains($uri, '#')) then
-        (substring-before($uri, '#'))
-    else
-        ($uri)
-let $internalId :=
-    if (contains($uri, '#')) then
-        (substring-after($uri, '#'))
-    else
-        ()
-let $internalId :=
-    if (contains($internalId, '?')) then
-        (substring-before($internalId, '?'))
-    else
-        ($internalId)
+let $docUri := if(contains($uri, '#')) then(substring-before($uri, '#')) else($uri)
+let $internalId := if(contains($uri, '#')) then(substring-after($uri, '#')) else()
+let $internalId := if(contains($internalId, '?')) then(substring-before($internalId, '?')) else($internalId)
+
 let $doc := doc($docUri)
 let $internal := $doc/id($internalId)
 
@@ -58,7 +47,6 @@ let $internal :=
     )
 
 return
-    if (exists($internal)) then
-        (local-name($internal))
-    else
-        ('unknown')
+    if(exists($internal))
+    then(local-name($internal))
+    else('unknown')

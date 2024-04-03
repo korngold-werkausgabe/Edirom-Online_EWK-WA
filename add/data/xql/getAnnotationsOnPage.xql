@@ -5,7 +5,7 @@ xquery version "3.1";
 
 (:~
  :  Returns a JSON sequence with all anotations on a specific page.
- :
+ :  
  :  @author <a href="mailto:roewenstrunk@edirom.de">Daniel Röwenstrunk</a>
  :  @author <a href="mailto:bohl@edirom.de">Benjamin W. Bohl</a>
  :)
@@ -18,7 +18,9 @@ import module namespace functx = "http://www.functx.com";
 import module namespace eutil = "http://www.edirom.de/xquery/eutil" at "../xqm/eutil.xqm";
 
 
-(: NAMESPACE DECLARATIONS ================================================== :)
+declare namespace mei="http://www.music-encoding.org/ns/mei";
+declare namespace xlink="http://www.w3.org/1999/xlink";
+declare namespace svg="http://www.w3.org/2000/svg";
 
 declare namespace ft = "http://exist-db.org/xquery/lucene";
 
@@ -105,7 +107,7 @@ declare function local:getAnnotations($sourceUriSharp as xs:string, $surfaceId a
  : @returns A sequence of mei:annot elements
  :)
 declare function local:findAnnotations($edition as xs:string, $uri as xs:string, $elemIds as xs:string*) as element()* {
-    
+
     (: TODO: search in other documents and in other collections :)
     (: TODO: check if annotations hold URIs or IDRefs :)
     let $annots := collection(eutil:getPreference('edition_path', $edition))//mei:annot
@@ -171,7 +173,6 @@ declare function local:getParticipants($annoId as xs:string, $plist as xs:string
 declare function local:getAnnotSVGs($annoId as xs:string, $plist as xs:string*, $elems as element()*) as array(*)* {
     
     let $participants := $elems[@id = $plist]
-    
     return
         array {
             for $svg in $participants
@@ -187,16 +188,10 @@ declare function local:getAnnotSVGs($annoId as xs:string, $plist as xs:string*, 
 };
 
 (:~
- : Reads the coordinates of an element referenced from an mei:annot/@plist
- : If the element name is 'measure' or 'staff' theses will be fetched from
- : a zone referenced with the @facs attribute
- : If the zone does not have an @ulx attribute or if there is no zone being referenced
- : the function will return -1 as avalue for all coordinates
- :
+ : Reads the coordinates of an element
+ : 
  : @param $participant The element to process
- :
  : @returns A sequence with coordinates (ulx, uly, lrx, lry)
- : @error A fallback sequence wit -1 as all values: (-1, -1, -1, -1)
 :)
 declare function local:getCoordinates($participant as element()) as xs:integer+ {
 

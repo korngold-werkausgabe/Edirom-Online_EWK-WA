@@ -1,12 +1,13 @@
 # Edirom Online Contributing Guidelines
 
-- [How to contribute](#how-to-contribute)
-  * [Bug reports](#bug-reports)
-  * [Feature requests](#feature-requests)
-  * [Contributing code and documentation](#contributing-code-and-documentation)
-    + [Commit messages](#commit-messages) 
-- [Release Process](#release-process)
-- [Versioning](#versioning)
+- [Edirom Online Contributing Guidelines](#edirom-online-contributing-guidelines)
+  - [How to contribute](#how-to-contribute)
+    - [Bug reports](#bug-reports)
+    - [Feature requests](#feature-requests)
+    - [Contributing code and documentation](#contributing-code-and-documentation)
+      - [Commit messages](#commit-messages)
+  - [Release Process](#release-process)
+  - [Versioning](#versioning)
 
 ## How to contribute
 

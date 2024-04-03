@@ -1,58 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project name="EdiromOnline" default="xar">
-    
-    <import file="${basedir}/.sencha/app/build-impl.xml"/>
-    <import file="${basedir}/testing/ant-tests.xml"/>
-    
-    <property name="project.version" value="1.0.0-beta.7"/>
-    <property name="project.app" value="Edirom-Online"/>
-    <property name="project.title" value="Edirom Online"/>
-    <property name="repo.target" value="${project.app}"/>
-    <property name="build.dir" value="build"/>
-    <property name="dist.dir" value="build-xar"/>
-    <property name="temp.dir.name" value="temp"/>
-    <property name="temp.dir" value="${build.dir}/${temp.dir.name}"/>
-    
-    <tstamp/>
+
+    <import file="${basedir}/.sencha/app/build-impl.xml" />
+    <import file="${basedir}/testing/ant-tests.xml" />
+
+    <property name="project.version" value="1.0.0-beta.7" />
+    <property name="project.app" value="Edirom-Online" />
+    <property name="project.title" value="Edirom Online" />
+    <property name="repo.target" value="${project.app}" />
+    <property name="build.dir" value="build" />
+    <property name="dist.dir" value="build-xar" />
+    <property name="temp.dir.name" value="temp" />
+    <property name="temp.dir" value="${build.dir}/${temp.dir.name}" />
+
+    <tstamp />
 
     <target name="build-plus">
         <copy todir="${build.dir}" preservelastmodified="true">
             <fileset dir="${basedir}/add">
-                <include name="*"/>
-                <include name="data/locale/"/>
-                <include name="data/prefs/"/>
-                <include name="data/xql/"/>
-                <include name="data/xqm/"/>
-                <include name="data/xslt/*"/>
-                <include name="data/xslt/i18n/"/>
-                <include name="data/xslt/tei/profiles/**"/>
-                <include name="data/xslt/tei/Stylesheets/catalog.xml"/>
-                <include name="data/xslt/tei/Stylesheets/i18n.xml"/>
-                <include name="data/xslt/tei/Stylesheets/html/"/>
-                <include name="data/xslt/tei/Stylesheets/common/"/>
-                <include name="data/xslt/tei/Stylesheets/VERSION"/>
-                <include name="help/**"/>
-                <include name="index/**"/>
+                <include name="*" />
+                <include name="data/locale/" />
+                <include name="data/prefs/" />
+                <include name="data/xql/" />
+                <include name="data/xqm/" />
+                <include name="data/xslt/*" />
+                <include name="data/xslt/i18n/" />
+                <include name="data/xslt/tei/profiles/**" />
+                <include name="data/xslt/tei/Stylesheets/catalog.xml" />
+                <include name="data/xslt/tei/Stylesheets/i18n.xml" />
+                <include name="data/xslt/tei/Stylesheets/html/" />
+                <include name="data/xslt/tei/Stylesheets/common/" />
+                <include name="data/xslt/tei/Stylesheets/VERSION" />
+                <include name="help/**" />
+                <include name="index/**" />
             </fileset>
             <fileset dir="${basedir}">
-                <include name="testing/**"/>
+                <include name="testing/**" />
             </fileset>
             <filterset begintoken="@" endtoken="@">
-                <filter token="project.version" value="${project.version}"/>
-                <filter token="project.app" value="${project.app}"/>
-                <filter token="project.title" value="${project.title}"/>
-                <filter token="repo.target" value="${repo.target}"/>
+                <filter token="project.version" value="${project.version}" />
+                <filter token="project.app" value="${project.app}" />
+                <filter token="project.title" value="${project.title}" />
+                <filter token="repo.target" value="${repo.target}" />
             </filterset>
         </copy>
-        <copy file="${build.dir}/resources/pix/ViFE-logo-small-144x144-trans.png" tofile="${build.dir}/icon.png" overwrite="true"/>
-        <copy file="${basedir}/CITATION.cff" tofile="${build.dir}/resources/CITATION.cff" overwrite="true"/>
+        <copy file="${build.dir}/resources/pix/ViFE-logo-small-144x144-trans.png"
+            tofile="${build.dir}/icon.png" overwrite="true" />
+        <copy file="${basedir}/CITATION.cff" tofile="${build.dir}/resources/CITATION.cff"
+            overwrite="true" />
     </target>
-    
+
     <target name="xar">
-        <mkdir dir="${dist.dir}"/>
-        <zip basedir="${build.dir}" destfile="${dist.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar">
-            <exclude name="${temp.dir.name}/**"/>
+        <mkdir dir="${dist.dir}" />
+        <zip basedir="${build.dir}"
+            destfile="${dist.dir}/${project.app}-${project.version}-${DSTAMP}-${TSTAMP}.xar">
+            <exclude name="${temp.dir.name}/**" />
         </zip>
     </target>
-    
+
 </project>

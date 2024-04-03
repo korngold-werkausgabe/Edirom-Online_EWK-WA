@@ -1,4 +1,4 @@
-xquery version "3.1";
+xquery version "3.0";
 (:
  : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
  :)
@@ -27,7 +27,6 @@ declare option output:method "text";
 
 let $uri := request:get-parameter('uri', '')
 return
-    if (doc-available($uri)) then
-        ($uri)
-    else
-        (edition:findEdition($uri))
+    if(doc-available($uri))
+    then($uri)
+    else(edition:findEdition($uri))

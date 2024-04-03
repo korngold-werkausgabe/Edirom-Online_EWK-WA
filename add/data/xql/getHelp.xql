@@ -1,4 +1,4 @@
-xquery version "3.1";
+xquery version "1.0";
 (:
  : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
  :)
@@ -28,13 +28,7 @@ let $base := replace(system:get-module-load-path(), 'embedded-eXist-server', '')
 let $doc := doc(concat('../../help/help_', $lang, '.xml'))
 
 let $xsl := doc('../xslt/edirom_langReplacement.xsl')
-let $doc := 
-    transform:transform($doc, $xsl,
-        <parameters>
-            <param name="base" value="{concat($base, '/../xslt/')}"/>
-            <param name="lang" value="{$lang}"/>
-        </parameters>
-    )
+let $doc := transform:transform($doc, $xsl, <parameters><param name="base" value="{concat($base, '/../xslt/')}"/><param name="lang" value="{$lang}"/></parameters>)
 
 let $xsl := doc('../xslt/tei/profiles/edirom-body/teiBody2HTML.xsl')
 let $doc :=
@@ -51,9 +45,4 @@ let $doc :=
     )
 
 return
-    transform:transform($doc, doc('../xslt/edirom_idPrefix.xsl'),
-        <parameters>
-            <param name="idPrefix" value="{$idPrefix}"/>
-        </parameters>
-    )
-
+    transform:transform($doc, doc('../xslt/edirom_idPrefix.xsl'), <parameters><param name="idPrefix" value="{$idPrefix}"/></parameters>)

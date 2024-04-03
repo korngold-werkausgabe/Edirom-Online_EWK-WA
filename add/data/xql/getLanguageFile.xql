@@ -1,15 +1,15 @@
-xquery version "3.1";
+xquery version "1.0";
 (:
  : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
- :)
+:)
 
 (:~
- : Returns a language file as JSON or XML.
- :
- : @author <a href="mailto:roewenstrunk@edirom.de">Daniel Röwenstrunk</a>
- :)
+    Returns a language file as JSON or XML.
+    
+    @author <a href="mailto:roewenstrunk@edirom.de">Daniel Röwenstrunk</a>
+:)
 
-(: IMPORTS ================================================================= :)
+declare namespace request="http://exist-db.org/xquery/request";
 
 import module namespace edition = "http://www.edirom.de/xquery/edition" at "../xqm/edition.xqm";
 

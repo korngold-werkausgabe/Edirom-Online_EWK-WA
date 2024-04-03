@@ -1,9 +1,7 @@
-xquery version "3.1";
+xquery version "1.0";
 (:
  : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
  :)
-
-(: IMPORTS ================================================================= :)
 
 import module namespace eutil = "http://www.edirom.de/xquery/eutil" at "../xqm/eutil.xqm";
 
@@ -68,8 +66,6 @@ declare function local:getSingleConnections($parent) as array(*)* {
             }
     }
 };
-
-(: QUERY BODY ============================================================== :)
 
 let $id := request:get-parameter('id', '')
 let $mei := doc($id)/root()

@@ -14,6 +14,12 @@ function define(html) {
             this.video = this.shadow.querySelector("video");
             this.canvas = this.shadow.querySelector('#video-canvas');
             this.ctx = this.canvas.getContext('2d');
+            this.playPauseBtn = this.shadow.querySelector('.play-pause-btn');
+            this.timelineContainer = this.shadow.querySelector(".timeline-container");
+            this.currentTimeElem = this.shadow.querySelector(".current-time");
+            this.totalTimeElem = this.shadow.querySelector(".total-time");
+            this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
+
 
             this.canvas.addEventListener("click", () => {
                 if (this.state == "play") {
@@ -22,6 +28,25 @@ function define(html) {
                 else {
                     this.state = "play";
                 }
+            });
+
+            this.playPauseBtn.addEventListener("click", () => {
+                if (this.state == "play") {
+                    this.state = "pause";
+                }
+                else {
+                    this.state = "play";
+                }
+            });
+
+            this.video.addEventListener("timeupdate", () => {
+                this.currentTimeElem.textContent = this.formatDuration(this.video.currentTime);
+                const percent = this.video.currentTime / this.video.duration;
+                this.timelineContainer.style.setProperty("--progress-position", percent);
+            });
+
+            this.video.addEventListener("loadeddata", () => { // wenn das Video geladen ist, können wir die Total time abfragen
+                this.totalTimeElem.textContent = this.formatDuration(this.video.duration);
             });
         }
 
@@ -46,6 +71,17 @@ function define(html) {
 
         drawScreen = () => {
             this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        formatDuration = (time) => {
+            const seconds = Math.floor(time % 60);
+            const minutes = Math.floor(time / 60) % 60;
+            const hours = Math.floor(time / 3600);
+            if (hours === 0) {
+                return `${minutes}:${this.leadingZeroFormatter.format(seconds)}`;
+            } else {
+                return `${hours}:${this.leadingZeroFormatter.format(minutes)}:${this.leadingZeroFormatter.format(seconds)}`;
+            }
         }
 
         // Wird ausgeführt, wenn WC dem DOM zur Verfügung steht

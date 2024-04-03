@@ -38,7 +38,7 @@ Ext.define('EdiromOnline.view.window.video.VideoView', {
         videoplayerJsElement.setAttribute("src", "resources/webcomponents/videoplayer/videoplayerElement.js")
         document.querySelector("head").appendChild(videoplayerJsElement);
 
-        me.html = `<edirom-videoplayer id="${me.id}-videoplayer"></edirom-videoplayer>`;
+        me.html = `<edirom-videoplayer id="${me.id}-videoplayer" state="pause"></edirom-videoplayer>`;
 
         me.callParent();
     },

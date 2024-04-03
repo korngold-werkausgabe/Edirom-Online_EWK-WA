@@ -9,3 +9,109 @@ video {
     display: none;
 }
 
+
+.player-controls-container {
+    z-index: 100;
+    margin: 0;
+    width: 100%;
+}
+
+.timeline-container {
+    margin-top: 10px;
+    height: 15px;
+    margin-inline: 0.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+#main-timeline-container.scrubbing .timeline::before,
+#main-timeline-container:hover .timeline::before {
+    display: block;
+}
+
+#main-timeline-container.scrubbing .timeline,
+#main-timeline-container:hover .timeline {
+    height: 100%;
+}
+
+.timeline {
+    background-color: rgba(100, 100, 100, 0.5);
+    height: 9px;
+    width: 100%;
+    position: relative;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: calc(100% - var(--preview-position) * 100%);
+    background-color: rgb(150, 150, 150);
+    display: none;
+}
+
+.timeline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: calc(100% - var(--progress-position) * 100%);
+    background-color: #1c274c;
+}
+
+.timeline .position-indicator-arrow {
+    z-index: 100;
+    --scale: 1;
+    position: absolute;
+    transform: translateX(-50%) scale(var(--scale));
+    top: -110%;
+    left: calc(var(--progress-position) * 100%);
+    /* transition: transform 150ms ease-in-out; */
+    width: 0; 
+    height: 0; 
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 8px solid #f00;
+}
+
+.timeline .position-indicator-line {
+    z-index: 100;
+    --scale: 1;
+    position: absolute;
+    transform: translateX(-50%) scale(var(--scale));
+    height: 200%;
+    top: -50%;
+    left: calc(var(--progress-position) * 100%);
+    background-color: red;
+    transition: transform 150ms ease-in-out;
+    width: 2px;
+}
+
+.player-controls-container .controls {
+    display: flex;
+    gap: .5rem;
+    padding: .25rem;
+    align-items: center;
+}
+
+.player-controls-container .controls button {
+    cursor: pointer;
+}
+
+:host([state="play"]) .play-icon {
+    display: none;
+}
+
+:host([state="pause"]) .pause-icon {
+    display: none;
+}
+
+.duration-container {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}

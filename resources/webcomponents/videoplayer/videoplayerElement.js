@@ -57,6 +57,8 @@ function define(html) {
             this.video.addEventListener("loadeddata", () => { // when video is loaded we can access the time data
                 this.totalTimeElem.textContent = this.formatDuration(this.video.duration);
             });
+
+            this.timelineContainer.addEventListener("mousemove", this.handleTimelineUpdate);
         }
 
         static get observedAttributes() {
@@ -128,6 +130,12 @@ function define(html) {
                     this.video.pause();
                 }
             }
+        }
+
+        handleTimelineUpdate = (e) => {
+            const rect = this.timelineContainer.getBoundingClientRect();
+            const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
+            this.timelineContainer.style.setProperty("--preview-position", percent);
         }
     }
 

@@ -84,9 +84,8 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         ];
 
         me.ediromVideoplayer = document.querySelector("edirom-videoplayer");
-        console.log(me.ediromVideoplayer);
         me.ediromVideoplayer.addEventListener("communicate-time-update", (e) => {
-            me.showPrevConnection();
+            me.showTest(Math.floor(e.detail.time));
         });
 
         me.callParent();
@@ -246,6 +245,11 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
 
     showConnection: function () {
         var me = this;
+
+        // var ediromVideoplayer = document.querySelector("edirom-videoplayer");
+        // console.log(me.itemSlider.getRawValue());
+        // me.ediromVideoplayer.tstamp = me.itemSlider.getEnhancedValue();
+
         me.fireEvent('showConnection', me, me.itemSlider.getRawValue()['plist']);
     },
 
@@ -258,6 +262,12 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
     showNextConnection: function () {
         var me = this;
         var success = me.itemSlider.next();
+        if (success) me.showConnection();
+    },
+
+    showTest: function (time) {
+        var me = this;
+        var success = me.itemSlider.setEnhancedValue(time + 2);
         if (success) me.showConnection();
     },
 

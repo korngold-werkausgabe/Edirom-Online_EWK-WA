@@ -41,6 +41,7 @@ function define(html) {
 
 
             this.video.addEventListener("timeupdate", () => {
+                console.log("timeupdate");
                 this.currentTimeElem.textContent = this.formatDuration(this.video.currentTime);
                 const percent = this.video.currentTime / this.video.duration;
                 this.timelineContainer.style.setProperty("--progress-position", percent);
@@ -77,6 +78,10 @@ function define(html) {
             this.setAttribute("state", value);
         }
 
+        set tstamp(value) {
+            this.setAttribute("tstamp", value);
+        }
+
         drawScreen = () => {
             this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
         }
@@ -103,13 +108,17 @@ function define(html) {
 
         // Wird ausgeführt, wenn Attributwert sich ändert und initial
         attributeChangedCallback(name, oldValue, newValue) {
-            console.log(name, oldValue, newValue);
+            // console.log(name, oldValue, newValue);
             if (oldValue === newValue) return;
             if (name == "src") {
                 this.video.src = newValue;
             }
             else if (name == "tstamp") {
-                this.video.currentTime = newValue;
+                console.log("tstamp", newValue);
+                console.log("currentTime", this.video.currentTime);
+                if (this.video.currentTime != newValue) {
+                    this.video.currentTime = newValue;
+                }
             }
             else if (name == "state") {
                 if (newValue == "play") {

@@ -68,7 +68,7 @@ video {
     --scale: 1;
     position: absolute;
     transform: translateX(-50%) scale(var(--scale));
-    top: -110%;
+    top: -101%;
     left: calc(var(--progress-position) * 100%);
     /* transition: transform 150ms ease-in-out; */
     width: 0; 

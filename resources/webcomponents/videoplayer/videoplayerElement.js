@@ -19,7 +19,7 @@ function define(html) {
             this.currentTimeElem = this.shadow.querySelector(".current-time");
             this.totalTimeElem = this.shadow.querySelector(".total-time");
             this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
-
+            this.isScrubbing = false;
 
             this.canvas.addEventListener("click", () => {
                 if (this.state == "play") {
@@ -41,7 +41,6 @@ function define(html) {
 
 
             this.video.addEventListener("timeupdate", () => {
-                console.log("timeupdate");
                 this.currentTimeElem.textContent = this.formatDuration(this.video.currentTime);
                 const percent = this.video.currentTime / this.video.duration;
                 this.timelineContainer.style.setProperty("--progress-position", percent);
@@ -54,11 +53,23 @@ function define(html) {
                 this.dispatchEvent(communicateTimeupdateEvent);
             });
 
-            this.video.addEventListener("loadeddata", () => { // when video is loaded we can access the time data
+            this.video.addEventListener("loadedmetadata", () => { // when metadata is loaded we can access the time data
                 this.totalTimeElem.textContent = this.formatDuration(this.video.duration);
             });
 
+
+
             this.timelineContainer.addEventListener("mousemove", this.handleTimelineUpdate);
+
+            this.timelineContainer.addEventListener("mousedown", this.toggleScrubbing);
+
+            document.addEventListener("mouseup", e => {
+                if (this.isScrubbing) this.toggleScrubbing(e);
+            });
+            document.addEventListener("mousemove", e => {
+                if (this.isScrubbing) this.handleTimelineUpdate(e);
+            });
+
         }
 
         static get observedAttributes() {
@@ -110,14 +121,12 @@ function define(html) {
 
         // Wird ausgeführt, wenn Attributwert sich ändert und initial
         attributeChangedCallback(name, oldValue, newValue) {
-            // console.log(name, oldValue, newValue);
+            console.log(name, oldValue, newValue);
             if (oldValue === newValue) return;
             if (name == "src") {
                 this.video.src = newValue;
             }
             else if (name == "tstamp") {
-                console.log("tstamp", newValue);
-                console.log("currentTime", this.video.currentTime);
                 if (this.video.currentTime != newValue) {
                     this.video.currentTime = newValue;
                 }
@@ -136,6 +145,17 @@ function define(html) {
             const rect = this.timelineContainer.getBoundingClientRect();
             const percent = Math.min(Math.max(0, e.x - rect.x), rect.width) / rect.width;
             this.timelineContainer.style.setProperty("--preview-position", percent);
+
+            if (this.isScrubbing) {
+                e.preventDefault();
+                this.timelineContainer.style.setProperty("--progress-position", percent);
+                this.video.currentTime = percent * this.video.duration;
+            }
+        }
+
+        toggleScrubbing = (e) => {
+            this.isScrubbing = (e.buttons & 1) === 1;
+            this.handleTimelineUpdate(e);
         }
     }
 

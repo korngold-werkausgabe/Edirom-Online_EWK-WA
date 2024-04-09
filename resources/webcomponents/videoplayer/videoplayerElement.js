@@ -14,6 +14,7 @@ function define(html) {
             this.video = this.shadow.querySelector("video");
             this.canvas = this.shadow.querySelector('#video-canvas');
             this.ctx = this.canvas.getContext('2d');
+            this.playerControlsContainer = this.shadow.querySelector('.player-controls-container');
             this.playPauseBtn = this.shadow.querySelector('.play-pause-btn');
             this.timelineContainer = this.shadow.querySelector(".timeline-container");
             this.currentTimeElem = this.shadow.querySelector(".current-time");
@@ -55,6 +56,7 @@ function define(html) {
 
             this.video.addEventListener("loadedmetadata", () => { // when metadata is loaded we can access the time data
                 this.totalTimeElem.textContent = this.formatDuration(this.video.duration);
+                this.adjustPlayerSize();
             });
 
 
@@ -73,7 +75,7 @@ function define(html) {
         }
 
         static get observedAttributes() {
-            return ["src", "tstamp", "state"]
+            return ["src", "tstamp", "state", "maxwidth", "maxheight"];
         }
 
         // Ist dann mit this.testattr abrufbar
@@ -93,6 +95,22 @@ function define(html) {
 
         set tstamp(value) {
             this.setAttribute("tstamp", value);
+        }
+
+        set maxwidth(value) {
+            this.setAttribute("maxwidth", value);
+        }
+
+        get maxwidth() {
+            return this.getAttribute("maxwidth");
+        }
+
+        set maxheight(value) {
+            this.setAttribute("maxheight", value);
+        }
+
+        get maxheight() {
+            return this.getAttribute("maxheight");
         }
 
         drawScreen = () => {
@@ -139,6 +157,9 @@ function define(html) {
                     this.video.pause();
                 }
             }
+            else if (name == "maxwidth" || name == "maxheight") {
+                this.adjustPlayerSize();
+            }
         }
 
         handleTimelineUpdate = (e) => {
@@ -156,6 +177,26 @@ function define(html) {
         toggleScrubbing = (e) => {
             this.isScrubbing = (e.buttons & 1) === 1;
             this.handleTimelineUpdate(e);
+        }
+
+        toggleScrubbing = (e) => {
+            this.isScrubbing = (e.buttons & 1) === 1;
+            this.handleTimelineUpdate(e);
+        }
+
+        adjustPlayerSize = () => {
+            console.log("adjustPlayerSize");
+
+            if (this.video.videoWidth && this.video.videoHeight) { // check if metadata is loaded yet
+                const aspectRatio = this.video.videoWidth / this.video.videoHeight;
+                var newWidth = this.maxwidth;
+                var newHeight = this.maxwidth / aspectRatio;
+                this.canvas.width = newWidth;
+                this.canvas.height = newHeight;
+            }
+            else {
+                return;
+            }
         }
     }
 

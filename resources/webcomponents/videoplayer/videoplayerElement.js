@@ -75,7 +75,7 @@ function define(html) {
         }
 
         static get observedAttributes() {
-            return ["src", "tstamp", "state", "maxwidth", "maxheight"];
+            return ["src", "tstamp", "state", "maxsize"];
         }
 
         // Ist dann mit this.testattr abrufbar
@@ -97,21 +97,14 @@ function define(html) {
             this.setAttribute("tstamp", value);
         }
 
-        set maxwidth(value) {
-            this.setAttribute("maxwidth", value);
+        set maxsize(value) {
+            this.setAttribute("maxsize", value);
         }
 
-        get maxwidth() {
-            return this.getAttribute("maxwidth");
+        get maxsize() {
+            return this.getAttribute("maxsize");
         }
 
-        set maxheight(value) {
-            this.setAttribute("maxheight", value);
-        }
-
-        get maxheight() {
-            return this.getAttribute("maxheight");
-        }
 
         drawScreen = () => {
             this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
@@ -157,7 +150,7 @@ function define(html) {
                     this.video.pause();
                 }
             }
-            else if (name == "maxwidth" || name == "maxheight") {
+            else if (name == "maxsize") {
                 this.adjustPlayerSize();
             }
         }
@@ -189,8 +182,17 @@ function define(html) {
 
             if (this.video.videoWidth && this.video.videoHeight) { // check if metadata is loaded yet
                 const aspectRatio = this.video.videoWidth / this.video.videoHeight;
-                var newWidth = this.maxwidth;
-                var newHeight = this.maxwidth / aspectRatio;
+                var maxWidth = this.maxsize.split("x")[0];
+                var maxHeight = this.maxsize.split("x")[1];
+
+                if (maxWidth / aspectRatio < maxHeight) {
+                    var newWidth = maxWidth;
+                    var newHeight = newWidth / aspectRatio;
+                }
+                else {
+                    var newHeight = maxHeight;
+                    var newWidth = newHeight * aspectRatio;
+                }
                 this.canvas.width = newWidth;
                 this.canvas.height = newHeight;
             }

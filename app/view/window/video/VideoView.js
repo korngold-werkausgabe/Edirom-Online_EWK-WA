@@ -47,13 +47,7 @@ Ext.define('EdiromOnline.view.window.video.VideoView', {
         console.log('onResize Event fired!');
         var me = this;
         var contEl = me.el.getById(me.id + '-videoplayer');
-
-        if (newwidth != oldWidth) {
-            contEl.set({ 'maxwidth': newwidth });
-        }
-        if (newheight != oldHeight) {
-            contEl.set({ 'maxheight': newheight });
-        }
+        contEl.set({ 'maxsize': newwidth + "x" + newheight });
     },
 
     setSrc: function (src) {

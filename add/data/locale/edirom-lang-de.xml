@@ -23,30 +23,29 @@
     <lang>de</lang>
     <version>1.0</version>
     <entries>
-
+        
         <!-- *** APPLICATION-UI *** -->
-
+        
         <entry key="global_cancel" value="Abbrechen"/>
         <entry key="global_execute" value="Ausführen"/>
         <entry key="global_loading" value="Lade…"/>
         <entry key="global_unknown" value="Unbekannt"/>
-
+        
         <entry key="controller.desktop.TaskBar_confirmReload" value="Die Anwendung muss neu gestartet werden, damit die Spracheinstellung vollständig umgesetzt wird."/>
-
+        
         <entry key="controller.window.Window_annotationView" value="Anmerkung"/>
         <entry key="controller.window.Window_headerView" value="Metadaten"/>
         <entry key="controller.window.Window_renderingView" value="Rendering"/>
         <entry key="controller.window.Window_searchView" value="Suche"/>
         <entry key="controller.window.Window_sourceView" value="Faksimile"/>
         <entry key="controller.window.Window_audioView" value="Audio"/>
-        <entry key="controller.window.Window_videoView" value="Video"/>
         <entry key="controller.window.Window_verovioView" value="Rendering"/>
         <entry key="controller.window.Window_summaryView" value="Zusammenfassung"/>
         <entry key="controller.window.Window_textFacsimileSplitView" value="Text-Faksimile"/>
         <entry key="controller.window.Window_textView" value="Text"/>
         <entry key="controller.window.Window_xmlView" value="XML-Ansicht"/>
         <entry key="controller.window.Window_iFrameView" value="HTML-Ansicht"/>
-
+        
         <entry key="view.desktop.Desktop_Cascade" value="Überlappen"/>
         <entry key="view.desktop.Desktop_Close" value="Schließen"/>
         <entry key="view.desktop.Desktop_CloseAll" value="Schließe alle"/>
@@ -55,7 +54,7 @@
         <entry key="view.desktop.Desktop_Minimize" value="Minimieren"/>
         <entry key="view.desktop.Desktop_Restore" value="Wiederherstellen"/>
         <entry key="view.desktop.Desktop_Tile" value="Nebeneinander"/>
-
+        
         <entry key="view.desktop.TaskBar_concordanceNav" value="Öffne Konkordanznavigator"/>
         <entry key="view.desktop.TaskBar_measureNumbers" value="Taktzahlen einblenden"/>
         <entry key="view.desktop.TaskBar_annotations" value="Anmerkungen einblenden"/>
@@ -89,17 +88,17 @@
         <entry key="view.window.AnnotationView_Grid" value="Rasteransicht"/>
         <entry key="view.window.AnnotationView_Single" value="Einzelansicht"/>
         <entry key="view.window.AnnotationView_ListView" value="Listenansicht"/>
-
+        
         <entry key="view.window.AnnotationView_PreviousAnnotation" value="Vorherige Anmerkung"/>
         <entry key="view.window.AnnotationView_NextAnnotation" value="Nächste Anmerkung"/>
         <entry key="view.window.AnnotationView_OpenAll" value="Alle Quellen öffnen"/>
         <entry key="view.window.AnnotationView_CloseAll" value="Alle Quellen schließen"/>
         <entry key="view.window.HelpWindow_Title" value="Hilfe"/>
         <entry key="view.window.TobBar_View" value="Ansicht"/>
-
+        
         <entry key="view.window.concordanceNavigator.ConcordanceNavigator_Title" value="Konkordanzen"/>
         <entry key="view.window.concordanceNavigator.ConcordanceNavigator_Show" value="Anzeigen"/>
-
+        
         <entry key="view.window.search.SearchWindow_Title" value="Suche"/>
         <entry key="view.window.about.AboutWindow_Title" value="About Edirom Online"/>
         <entry key="view.window.about.AboutWindow_License" value="Lizenz"/>
@@ -135,8 +134,8 @@
         <entry key="view.window.text.TextView_categoriesMenu" value="Kategorien…"/>
         <entry key="view.window.text.TextView_gotoChapter" value="Gehe zu Kapitel/Nummer…"/>
         <entry key="view.window.text.TextView_viewMenu" value="Darstellung"/>
-
-
+        
+        
         <!-- naming gui elements -->
         <entry key="view.desktop.Desktop" value="Desktop"/>
         <entry key="view.desktop.TopBar" value="Symbolleiste"/>
@@ -158,22 +157,22 @@
         <entry key="view.window.source.SourceView_pageNaviation" value="Seiten-Navigation"/>
         <entry key="view.window.source.SourceView_measureBasedCombo" value="Nummern Kombobox"/>
         <entry key="view.window.source.SourceView_measureBasedRange" value="Bereich der Takte"/>
-
+        
         <entry key="view.window.xmlView_decreaseFontSize.label" value="A-"/>
         <entry key="view.window.xmlView_decreaseFontSize.title" value="Schriftgröße verkleinern"/>
         <entry key="view.window.xmlView_increaseFontSize.label" value="A+"/>
         <entry key="view.window.xmlView_increaseFontSize.title" value="Schriftgröße vergrößern"/>
         <entry key="view.window.xmlView_showLineNumbers.label" value="Zeile #"/>
         <entry key="view.window.xmlView_showLineNumbers.title" value="Zeilennummern anzeigen"/>
-
+        
         <entry key="view.window.pref_generalSettings" value="Generell"/>
         <entry key="view.window.pref_programSettings" value="Programmeinstellungen"/>
         <entry key="view.window.pref_concNavSettings" value="Einstellungen für Konkordanznavigator"/>
         <entry key="view.window.pref_windowSettings" value="Fenster-Einstellungen"/>
         <entry key="view.window.pref_langSettings" value="Sprach-Einstellungen"/>
         <entry key="Number field with left and right arrows" value="Anzahl der Pfeile nach links und rechts"/>
-
-
+        
+        
         <!-- DATA -->
         <entry key="Annotation" value="Anmerkung"/>
         <entry key="Annotation_plus_Title" value="Anmerkung: {0}"/>
@@ -181,7 +180,7 @@
         <entry key="Bar_n" value="Takt {0}"/>
         <!-- XSL-FO specific -->
         <entry key="contentsWord" value="Inhaltsverzeichnis"/>
-
+        
         <!-- PERFORMANCE MEDIUM -->
         <entry key="perfMedium.perfRes.voice" value="Singstimme"/>
         <entry key="perfMedium.perfRes.voiceSpeaking" value="Sprechstimme"/>
@@ -192,27 +191,27 @@
         <entry key="perfMedium.perfRes.alto" value="Alt"/>
         <entry key="perfMedium.perfRes.tenor" value="Tenor"/>
         <entry key="perfMedium.perfRes.bass" value="Bass"/>
-
+        
         <entry key="perfMedium.perfRes.violin" value="Violine"/>
         <entry key="perfMedium.perfRes.viola" value="Viola"/>
         <entry key="perfMedium.perfRes.violoncello" value="Violoncello"/>
         <entry key="perfMedium.perfRes.doubleBass" value="Kontrabass"/>
         <entry key="perfMedium.perfRes.bassInstrumental" value="Bass (instrumental)"/>
-
+        
         <entry key="perfMedium.perfRes.flute" value="Flöte"/>
         <entry key="perfMedium.perfRes.oboe" value="Oboe"/>
         <entry key="perfMedium.perfRes.clarinet" value="Klarinette"/>
         <entry key="perfMedium.perfRes.hornEnglish" value="Englischhorn"/>
         <entry key="perfMedium.perfRes.bassoon" value="Fagott"/>
-
+        
         <entry key="perfMedium.perfRes.hornFrench" value="Horn"/>
         <entry key="perfMedium.perfRes.trumpet" value="Trompete"/>
         <entry key="perfMedium.perfRes.trombone" value="Posaune"/>
         <entry key="perfMedium.perfRes.tuba" value="Tuba"/>
-
+        
         <entry key="perfMedium.perfRes.timpani" value="Pauken"/>
         <entry key="perfMedium.perfRes.bells" value="Glocken"/>
-
+        
         <entry key="perfMedium.perfRes.harp" value="Harfe"/>
         <entry key="perfMedium.perfRes.piano" value="Klavier"/>
         <entry key="perfMedium.perfRes.organ" value="Orgel"/>

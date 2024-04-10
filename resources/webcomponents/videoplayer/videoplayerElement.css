@@ -9,6 +9,12 @@ video {
     display: none;
 }
 
+#player-container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 
 .player-controls-container {
     z-index: 100;

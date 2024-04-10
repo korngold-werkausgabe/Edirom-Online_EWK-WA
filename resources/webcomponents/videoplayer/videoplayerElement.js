@@ -183,7 +183,7 @@ function define(html) {
             if (this.video.videoWidth && this.video.videoHeight) { // check if metadata is loaded yet
                 const aspectRatio = this.video.videoWidth / this.video.videoHeight;
                 var maxWidth = this.maxsize.split("x")[0];
-                var maxHeight = (this.maxsize.split("x")[1] - 14) - this.playerControlsContainer.clientHeight;
+                var maxHeight = this.maxsize.split("x")[1] - this.playerControlsContainer.clientHeight;
 
                 if (maxWidth / aspectRatio < maxHeight) {
                     var newWidth = maxWidth;

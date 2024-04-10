@@ -14,6 +14,7 @@ function define(html) {
             this.video = this.shadow.querySelector("video");
             this.canvas = this.shadow.querySelector('#video-canvas');
             this.ctx = this.canvas.getContext('2d');
+            this.playerContainer = this.shadow.querySelector('#player-container');
             this.playerControlsContainer = this.shadow.querySelector('.player-controls-container');
             this.playPauseBtn = this.shadow.querySelector('.play-pause-btn');
             this.timelineContainer = this.shadow.querySelector(".timeline-container");
@@ -177,13 +178,12 @@ function define(html) {
             this.handleTimelineUpdate(e);
         }
 
+        // Adjusts the size of the player to fit the video aspect ratio within the maxsize
         adjustPlayerSize = () => {
-            console.log("adjustPlayerSize");
-
             if (this.video.videoWidth && this.video.videoHeight) { // check if metadata is loaded yet
                 const aspectRatio = this.video.videoWidth / this.video.videoHeight;
                 var maxWidth = this.maxsize.split("x")[0];
-                var maxHeight = this.maxsize.split("x")[1];
+                var maxHeight = (this.maxsize.split("x")[1] - 14) - this.playerControlsContainer.clientHeight;
 
                 if (maxWidth / aspectRatio < maxHeight) {
                     var newWidth = maxWidth;

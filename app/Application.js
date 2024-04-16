@@ -26,6 +26,7 @@ Ext.define('EdiromOnline.Application', {
         'CookieController',
         'LanguageController',
         'PreferenceController',
+        'SecretController',
         'ToolsController',
         'LinkController',
         'desktop.Desktop',
@@ -105,6 +106,8 @@ Ext.define('EdiromOnline.Application', {
         });
         
         me.getController('PreferenceController').initPreferences(me.activeEdition);
+        if(getPreference('use_secrets'))
+            me.getController('SecretController').initSecrets(me.activeEdition);
         me.getController('LanguageController').initLangFile(me.activeEdition, 'de');
         me.getController('LanguageController').initLangFile(me.activeEdition, 'en');
         me.initDataStores();

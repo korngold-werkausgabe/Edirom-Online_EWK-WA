@@ -10,9 +10,9 @@ services:
       - 127.0.0.1:80:80
 
   edirom:
-      image: stadlerpeter/existdb
-      container_name: robin-hood_exist
-      volumes:
-        - ./build-xar/Edirom-Online-1.0.0.xar:/opt/exist/autodeploy/Edirom-Online-1.0.0.xar
-      ports:
-        - 8080:8080
+    image: stadlerpeter/existdb:6.0.1
+    container_name: robin-hood_exist
+    volumes:
+      - ./build-xar/Edirom-Online-1.0.0.xar:/opt/exist/autodeploy/Edirom-Online-1.0.0.xar
+    ports:
+      - 8080:8080

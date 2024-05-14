@@ -28,7 +28,7 @@
         <!--<entry key="leaflet_prefix" value="/exist/rest/db/contents/leafletImages/"/>
              <entry key="image_server" value="leaflet"/>-->
         <entry key="image_server" value="openseadragon"/>
-        <entry key="edition_path" value="/db/apps/${title.short}"/>
+        <entry key="edition_path" value="/db/apps/edirom-content"/>
         <entry key="start_documents_uri" value=""/>
         <entry key="use_secrets" value="true"/>
         <entry  key="ajax_with_credentials" value="true"/>

@@ -77,12 +77,24 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
     initSurface: function() {
         var me = this;
         
-        me.viewer = OpenSeadragon({
-            id: me.id + '_openseadragon',
-            showNavigator:  false,
+        var openseadragonOpts = {
+            id: me.id + "_openseadragon",
+            showNavigator: false,
             showNavigationControl: false,
-            tileSources:   []
-        });
+            tileSources: [],
+        }
+
+        if (getPreference('ajax_with_credentials')) {
+            openseadragonOpts.ajaxWithCredentials = true;
+            openseadragonOpts.ajaxHeaders = {
+                auth: {
+                    username: getSecret('imagesUser'),
+                    password: getSecret('imagesPwd'),
+                    },
+            }
+        }
+        
+        me.viewer = OpenSeadragon(openseadragonOpts);
         me.viewer.addHandler('zoom', function(event){ me.fireEvent('zoomChanged', event.zoom);});
         me.viewer.gestureSettingsMouse.clickToZoom = false;
     },

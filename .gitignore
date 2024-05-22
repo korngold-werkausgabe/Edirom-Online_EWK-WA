@@ -10,4 +10,5 @@ Thumbs.db
 *.xpr
 local.properties
 .idea/
-add/data/prefs/secrets.xml
+.existdb.json
+secrets.xml

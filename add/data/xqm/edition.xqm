@@ -138,17 +138,6 @@ declare function edition:getPreferencesURI($uri as xs:string) as xs:string {
 };
 
 (:~
-: Returns the URI for the secret file
-:
-: @param $uri The URI of the Edition's document to process
-: @return The URI of the secret file
-:)
-declare function edition:getSecretsURI($uri as xs:string) as xs:string {
-    
-    doc($uri)//secrets/@xlink:href => string()
-};
-
-(:~
 : Returns the URI of the edition specified by the submitted $editionID parameter.
 : If $editionID is the empty string, returns the URI of the first edition found in '/db/apps'.
 : If the submitted $editionID already qualifies to read a document, return $editionID unaltered.

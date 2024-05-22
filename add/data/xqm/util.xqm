@@ -271,22 +271,6 @@ declare function eutil:getPreference($key as xs:string, $edition as xs:string?) 
 };
 
 (:~
-: Return a value of secret to key
-:
-: @param $key The key to search for
-: @return The string
-:)
-declare function eutil:getSecret($key as xs:string, $edition as xs:string?) as xs:string {
-
-     let $file := doc('../prefs/secrets.xml')
-     let $projectFile := doc(edition:getSecretsURI($edition))
-     
-     return
-        if($projectFile != 'null' and $projectFile//entry[@key = $key]) then ($projectFile//entry[@key = $key]/string(@value))
-        else ($file//entry[@key = $key]/string(@value))
-};
-
-(:~
 : Return the application and content language
 :
 : @param $edition The edition's path

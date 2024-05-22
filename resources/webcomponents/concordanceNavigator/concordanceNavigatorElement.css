@@ -1,0 +1,23 @@
+h1 {
+    color: red;
+}
+
+.concordance-navigator-container, .measure-selector-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+#show-connection-button {
+    flex-grow: 1;
+}
+
+button {
+    margin: 3px;
+}

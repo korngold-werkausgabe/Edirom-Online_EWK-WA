@@ -23,7 +23,7 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
     mixins: {
         observable: 'Ext.util.Observable'
     },
-    
+
     alias: 'widget.concordanceNavigator',
 
     requires: [
@@ -49,14 +49,14 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
     bodyBorder: false,
 
     padding: 0,
-    
-    
+
+
     bodyPadding: '12',
 
     cls: 'ediromConcordanceNavigatorWindow ediromWindow',
 
     defaults: {
-        border:false
+        border: false
     },
 
     items: [],
@@ -69,7 +69,7 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
     x: 250,
     y: 200,
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
 
         me.addEvents('showConnection');
@@ -83,20 +83,25 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
             me.createButtons()
         ];
 
+        me.ediromVideoplayer = document.querySelector("edirom-videoplayer");
+        me.ediromVideoplayer.addEventListener("communicate-time-update", (e) => {
+            me.showTest(Math.floor(e.detail.time));
+        });
+
         me.callParent();
     },
 
-    createConcordanceSelector: function() {
+    createConcordanceSelector: function () {
         var me = this;
 
         me.concordanceSelectorMenu = Ext.create('Ext.menu.Menu', {
         });
 
         me.concordanceSelector = Ext.create('Ext.button.Button', {
-                text: '',
-                indent: false,
-                menu: me.concordanceSelectorMenu
-            });
+            text: '',
+            indent: false,
+            menu: me.concordanceSelectorMenu
+        });
 
         return Ext.create('Ext.container.Container', {
             width: '100%',
@@ -108,18 +113,18 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         });
     },
 
-    createGroupSelector: function() {
+    createGroupSelector: function () {
         var me = this;
 
         me.groupSelectorMenu = Ext.create('Ext.menu.Menu', {
         });
 
         me.groupSelector = Ext.create('Ext.button.Button', {
-                text: '',
-                indent: false,
-                anchor: '100%',
-                menu: me.groupSelectorMenu
-            });
+            text: '',
+            indent: false,
+            anchor: '100%',
+            menu: me.groupSelectorMenu
+        });
 
         me.groupSelectionLabel = Ext.create('Ext.form.Label', {
             text: '',
@@ -140,13 +145,13 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         return me.groupContainer;
     },
 
-    setGroupSelectorVisibility: function(visible) {
+    setGroupSelectorVisibility: function (visible) {
         var me = this;
-        me.setHeight(visible?me.expandedHeight:me.collapsedHeight);
+        me.setHeight(visible ? me.expandedHeight : me.collapsedHeight);
         me.groupContainer.setVisible(visible);
     },
 
-    createItemSelector: function() {
+    createItemSelector: function () {
         var me = this;
 
         me.itemSelection = Ext.create('Ext.form.field.Text', {
@@ -183,16 +188,16 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         });
     },
 
-    blurOnInput: function(field) {
+    blurOnInput: function (field) {
         //TODO: Was machen wir beim Fokus-Verlust? Zurücksetzen oder Übernehmen
     },
-    
-    specialKeyOnInput: function(field, e){
+
+    specialKeyOnInput: function (field, e) {
         var me = this;
 
         if (e.getKey() == e.ENTER) {
             var success = me.itemSlider.setEnhancedValue(me.itemSelection.getValue());
-            if(!success)
+            if (!success)
                 me.itemSelection.setValue(me.itemSlider.getEnhancedValue());
 
             me.itemSelection.blur();
@@ -202,12 +207,12 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         }
     },
 
-    itemSelectionChanged: function(slider, newValue, thumb, eOpts) {
+    itemSelectionChanged: function (slider, newValue, thumb, eOpts) {
         var me = this;
         me.itemSelection.setValue(slider.getEnhancedValue());
     },
 
-    createButtons: function() {
+    createButtons: function () {
         var me = this;
 
         return Ext.create('Ext.container.Container', {
@@ -238,29 +243,40 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         });
     },
 
-    showConnection: function() {
+    showConnection: function () {
         var me = this;
+
+        // var ediromVideoplayer = document.querySelector("edirom-videoplayer");
+        // console.log(me.itemSlider.getRawValue());
+        // me.ediromVideoplayer.tstamp = me.itemSlider.getEnhancedValue();
+
         me.fireEvent('showConnection', me, me.itemSlider.getRawValue()['plist']);
     },
 
-    showPrevConnection: function() {
+    showPrevConnection: function () {
         var me = this;
         var success = me.itemSlider.prev();
-        if(success) me.showConnection();
+        if (success) me.showConnection();
     },
 
-    showNextConnection: function() {
+    showNextConnection: function () {
         var me = this;
         var success = me.itemSlider.next();
-        if(success) me.showConnection();
+        if (success) me.showConnection();
     },
 
-    setConcordances: function(concordanceStore) {
+    showTest: function (time) {
+        var me = this;
+        var success = me.itemSlider.setEnhancedValue(time + 2);
+        if (success) me.showConnection();
+    },
+
+    setConcordances: function (concordanceStore) {
         var me = this;
 
         this.concordanceSelectorMenu.removeAll();
 
-        concordanceStore.each(function(concordance) {
+        concordanceStore.each(function (concordance) {
             me.concordanceSelectorMenu.add({
                 xtype: 'menucheckitem',
                 group: 'concordances',
@@ -270,36 +286,36 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
             });
         });
 
-        if(concordanceStore.getTotalCount() > 0)
+        if (concordanceStore.getTotalCount() > 0)
             me.switchConcordance(null, true, concordanceStore.getAt(0), concordanceStore.getAt(0).get('name'));
     },
 
-    switchConcordance: function(menuItem, checked, concordance, label) {
+    switchConcordance: function (menuItem, checked, concordance, label) {
         var me = this;
 
-        if(!checked) return;
+        if (!checked) return;
 
         me.concordanceSelector.setText(label);
 
         var hasGroups = concordance.get('groups') != null
         me.setGroupSelectorVisibility(hasGroups);
 
-        if(hasGroups) {
+        if (hasGroups) {
             me.groupSelectionLabel.setText(concordance.get('groups')['label']);
             me.setGroups(concordance.get('groups')['groups']);
-        }else {
+        } else {
             me.itemSelectionLabel.setText(concordance.get('connections')['label']);
             me.itemSlider.setData(concordance.get('connections')['connections'], 'name');
             me.itemSelection.setValue(me.itemSlider.getEnhancedValue());
         }
     },
 
-    setGroups: function(groups) {
+    setGroups: function (groups) {
         var me = this;
 
         this.groupSelectorMenu.removeAll();
 
-        Ext.Array.each(groups, function(group) {
+        Ext.Array.each(groups, function (group) {
             this.groupSelectorMenu.add({
                 xtype: 'menucheckitem',
                 group: 'groups',
@@ -309,22 +325,22 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
             });
         }, me);
 
-        if(groups.length > 0)
+        if (groups.length > 0)
             me.switchGroup(null, true, groups[0], groups[0]['name']);
     },
 
-    switchGroup: function(menuItem, checked, group, label) {
+    switchGroup: function (menuItem, checked, group, label) {
         var me = this;
 
-        if(!checked) return;
+        if (!checked) return;
 
         me.groupSelector.setText(label);
         me.itemSelectionLabel.setText(group['connections']['label']);
         me.itemSlider.setData(group['connections']['connections'], 'name');
         me.itemSelection.setValue(me.itemSlider.getEnhancedValue());
-    }, 
-    
-    close: function() {
+    },
+
+    close: function () {
         this.hide();
     }
 });

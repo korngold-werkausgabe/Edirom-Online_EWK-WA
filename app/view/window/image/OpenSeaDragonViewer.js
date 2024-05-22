@@ -76,7 +76,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
 
     initSurface: function() {
         var me = this;
-
+        
         var openseadragonOpts = {
             id: me.id + "_openseadragon",
             showNavigator: false,

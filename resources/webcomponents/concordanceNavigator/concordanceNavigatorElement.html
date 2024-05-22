@@ -2,9 +2,25 @@
     <link rel="stylesheet" href="resources/webcomponents/concordanceNavigator/concordanceNavigatorElement.css">
     </link>
     <div class="concordance-navigator-container">
-        <h1>TEST!</h1>
+        <div class="concordance-selector-container">
+            <select name="concordance-selector" id="concordance-selector">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+            </select>
+        </div>
+        <div class="group-selector-container">
+            <label for="group-selector">op 14 Hard Coded</label>
+            <select name="group-selector" id="group-selector">
+                <option value="volvo">Volvo</option>
+                <option value="saab">Saab</option>
+                <option value="mercedes">Mercedes</option>
+                <option value="audi">Audi</option>
+            </select>
+        </div>
         <div class="measure-selector-container">
-            <p>Takt Hard Coded</p>
+            <label for="measure-slider">Takt Hard Coded</label>
             <input type="range" min="1" max="100" value="50" class="slider" id="measure-slider" />
             <input type="text" id="measureForm" />
             <div class="buttons-container">

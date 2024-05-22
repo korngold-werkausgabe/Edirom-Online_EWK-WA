@@ -2,7 +2,7 @@ h1 {
     color: red;
 }
 
-.concordance-navigator-container, .measure-selector-container {
+.concordance-navigator-container, .measure-selector-container, .group-selector-container, .concordance-selector-container {
     display: flex;
     justify-content: space-between;
     flex-direction: column;

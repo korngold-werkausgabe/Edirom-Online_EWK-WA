@@ -28,8 +28,6 @@
         <!--<entry key="leaflet_prefix" value="/exist/rest/db/contents/leafletImages/"/>
         <entry key="image_server" value="leaflet"/>-->
         <entry key="image_server" value="openseadragon"/>
-        <entry key="image_server_with_credentials" value="true"/>
-        <entry key="image_server_credentials" value="/db/apps/edirom-content/.credentials"/>
         <entry key="edition_path" value="/db/apps/edirom-content"/>
         <entry key="start_documents_uri" value=""/>
     </entries>

@@ -19,68 +19,65 @@
 Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavigator', {
 
     extend: 'Ext.app.Controller',
-
+    
     navwin: null,
 
     views: [
         'window.concordanceNavigator.ConcordanceNavigator'
     ],
 
-    init: function () {
-
-        this.application.addListener('workSelected', this.onWorkSelected, this);
-
+    init: function() {
+	    
+	    this.application.addListener('workSelected', this.onWorkSelected, this);
+	    
         this.control({
             'concordanceNavigator': {
                 render: this.onWindowRendered,
                 single: true
             }
         });
-
+        
         this.control({
             'concordanceNavigator': {
                 showConnection: this.onShowConnection
             }
         });
+    },
+    
+    onWorkSelected: function(workId) {
+	    //console.log('Werk gewechselt, von Conc registriert!');
+	    //console.log(workId);
+	    
 
+	    var me = this;
+	    if(me.navwin != null) {
+	    	var app = me.application;
+			app.callFunctionOfEdition(me.navwin, 'getConcordances', Ext.bind(me.concordancesLoaded, me, [me.navwin], true));
+		}
+	    
     },
 
-    onWorkSelected: function (workId) {
-        //console.log('Werk gewechselt, von Conc registriert!');
-        //console.log(workId);
-
-
-        var me = this;
-        if (me.navwin != null) {
-            var app = me.application;
-            app.callFunctionOfEdition(me.navwin, 'getConcordances', Ext.bind(me.concordancesLoaded, me, [me.navwin], true));
-        }
-
-    },
-
-    onWindowRendered: function (win) {
+    onWindowRendered: function(win) {
         var me = this;
 
-        if (win.initialized) return;
+        if(win.initialized) return;
         win.initialized = true;
-
+        
         this.navwin = win;
 
         //win.on('showConnection', me.onShowConnection, me);
 
         var app = me.application;
         app.callFunctionOfEdition(win, 'getConcordances', Ext.bind(me.concordancesLoaded, me, [win], true));
-
-
     },
 
-    concordancesLoaded: function (concordanceStore, concordanceWindow) {
+    concordancesLoaded: function(concordanceStore, concordanceWindow) {
         concordanceWindow.setConcordances(concordanceStore);
     },
 
-    onShowConnection: function (navigator, plist) {
+    onShowConnection: function(navigator, plist) {
         var me = this;
         var linkController = me.application.getController('LinkController');
-        linkController.loadLink(plist, { useExisting: true, onlyExisting: true }); //TODO: in Preferences einbauen; TODO: grid sorting vorerst rausgenommen
+        linkController.loadLink(plist, {useExisting: true, onlyExisting: true}); //TODO: in Preferences einbauen; TODO: grid sorting vorerst rausgenommen
     }
 });

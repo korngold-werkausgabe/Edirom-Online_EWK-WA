@@ -23,7 +23,7 @@
     <lang>en</lang>
     <version>1.0</version>
     <entries>
-
+        
         <!-- *** APPLICATION-UI *** -->
 
         <entry key="global_cancel" value="Cancel"/>
@@ -39,14 +39,13 @@
         <entry key="controller.window.Window_searchView" value="Search window"/>
         <entry key="controller.window.Window_sourceView" value="Facsimile"/>
         <entry key="controller.window.Window_audioView" value="Audio"/>
-        <entry key="controller.window.Window_videoView" value="Video"/>
-        <entry key="controller.window.Window_verovioView" value="Rendering"/>
+	<entry key="controller.window.Window_verovioView" value="Rendering"/>
         <entry key="controller.window.Window_summaryView" value="Summary"/>
         <entry key="controller.window.Window_textFacsimileSplitView" value="Text-Facsimile"/>
         <entry key="controller.window.Window_textView" value="Text"/>
         <entry key="controller.window.Window_xmlView" value="XML-View"/>
         <entry key="controller.window.Window_iFrameView" value="HTML-View"/>
-
+        
         <entry key="view.desktop.Desktop_Cascade" value="Cascade"/>
         <entry key="view.desktop.Desktop_Close" value="Close"/>
         <entry key="view.desktop.Desktop_CloseAll" value="Close All"/>
@@ -55,7 +54,7 @@
         <entry key="view.desktop.Desktop_Minimize" value="Minimize"/>
         <entry key="view.desktop.Desktop_Restore" value="Restore"/>
         <entry key="view.desktop.Desktop_Tile" value="Tile"/>
-
+        
         <entry key="view.desktop.TaskBar_concordanceNav" value="Open concordance navigator"/>
         <entry key="view.desktop.TaskBar_measureNumbers" value="Show measure numbers"/>
         <entry key="view.desktop.TaskBar_annotations" value="Show annotations"/>
@@ -88,17 +87,17 @@
         <entry key="view.window.AnnotationView_Grid" value="Grid view"/>
         <entry key="view.window.AnnotationView_Single" value="Single view"/>
         <entry key="view.window.AnnotationView_ListView" value="List view"/>
-
+        
         <entry key="view.window.AnnotationView_PreviousAnnotation" value="Previous annotation"/>
         <entry key="view.window.AnnotationView_NextAnnotation" value="Next annotation"/>
         <entry key="view.window.AnnotationView_OpenAll" value="Open all sources"/>
         <entry key="view.window.AnnotationView_CloseAll" value="Close all sources"/>
         <entry key="view.window.HelpWindow_Title" value="Help"/>
         <entry key="view.window.TobBar_View" value="View"/>
-
+        
         <entry key="view.window.concordanceNavigator.ConcordanceNavigator_Title" value="Concordances"/>
         <entry key="view.window.concordanceNavigator.ConcordanceNavigator_Show" value="Show"/>
-
+        
         <entry key="view.window.search.SearchWindow_Title" value="Search"/>
         <entry key="view.window.source.SourceView_categoriesMenu" value="Categories…"/>
         <entry key="view.window.source.SourceView_prioMenu" value="Priorities…"/>
@@ -132,8 +131,8 @@
         <entry key="view.window.text.TextView_categoriesMenu" value="Categories…"/>
         <entry key="view.window.text.TextView_gotoChapter" value="Go to chapter/number…"/>
         <entry key="view.window.text.TextView_viewMenu" value="Display"/>
-
-
+        
+        
         <!-- naming gui elements -->
         <entry key="view.desktop.Desktop" value="Desktop"/>
         <entry key="view.desktop.TopBar" value="Toolbar"/>
@@ -155,14 +154,14 @@
         <entry key="view.window.source.SourceView_pageNaviation" value="Page navigation"/>
         <entry key="view.window.source.SourceView_measureBasedCombo" value="Movement combo box"/>
         <entry key="view.window.source.SourceView_measureBasedRange" value="Measure range"/>
-
+        
         <entry key="view.window.xmlView_decreaseFontSize.label" value="A-"/>
         <entry key="view.window.xmlView_decreaseFontSize.title" value="Decrease font size"/>
         <entry key="view.window.xmlView_increaseFontSize.label" value="A+"/>
         <entry key="view.window.xmlView_increaseFontSize.title" value="Increase font size"/>
         <entry key="view.window.xmlView_showLineNumbers.label" value="Line #"/>
         <entry key="view.window.xmlView_showLineNumbers.title" value="Show line numbers"/>
-
+      
         <entry key="view.window.pref_generalSettings" value="General"/>
         <entry key="view.window.pref_programSettings" value="Program settings"/>
         <entry key="view.window.pref_concNavSettings" value="Concordance Navigator settings"/>
@@ -177,7 +176,7 @@
         <entry key="Bar_n" value="Bar {0}"/>
         <!-- XSL-FO specific -->
         <entry key="contentsWord" value="Table of contents"/>
-
+        
         <!-- PERFORMANCE MEDIUM -->
         <entry key="perfMedium.perfRes.voice" value="Voice (singing)"/>
         <entry key="perfMedium.perfRes.voiceSpeaking" value="Voice (speaking)"/>
@@ -188,27 +187,27 @@
         <entry key="perfMedium.perfRes.alto" value="Alto"/>
         <entry key="perfMedium.perfRes.tenor" value="Tenor"/>
         <entry key="perfMedium.perfRes.bass" value="Bass"/>
-
+        
         <entry key="perfMedium.perfRes.violin" value="Violin"/>
         <entry key="perfMedium.perfRes.viola" value="Viola"/>
         <entry key="perfMedium.perfRes.violoncello" value="Violoncello"/>
         <entry key="perfMedium.perfRes.doubleBass" value="Double Bass"/>
         <entry key="perfMedium.perfRes.bassInstrumental" value="Bass (instrumental)"/>
-
+        
         <entry key="perfMedium.perfRes.flute" value="Flute"/>
         <entry key="perfMedium.perfRes.oboe" value="Oboe"/>
         <entry key="perfMedium.perfRes.clarinet" value="Clarinet"/>
         <entry key="perfMedium.perfRes.hornEnglish" value="English Horn"/>
         <entry key="perfMedium.perfRes.bassoon" value="Bassoon"/>
-
+        
         <entry key="perfMedium.perfRes.hornFrench" value="French Horn"/>
         <entry key="perfMedium.perfRes.trumpet" value="Trumpet"/>
         <entry key="perfMedium.perfRes.trombone" value="Trombone"/>
         <entry key="perfMedium.perfRes.tuba" value="Tuba"/>
-
+        
         <entry key="perfMedium.perfRes.timpani" value="Timpani"/>
         <entry key="perfMedium.perfRes.bells" value="Bells"/>
-
+        
         <entry key="perfMedium.perfRes.harp" value="Harp"/>
         <entry key="perfMedium.perfRes.piano" value="Piano"/>
         <entry key="perfMedium.perfRes.organ" value="Organ"/>

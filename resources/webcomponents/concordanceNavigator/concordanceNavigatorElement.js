@@ -19,6 +19,7 @@ function define(html) {
             this.itemSlider = this.shadow.querySelector("#item-slider");
             this.itemSelectorLabel = this.shadow.querySelector("#item-selector-label");
             this.concordances = [];
+            this.groups = [];
 
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
         }
@@ -95,23 +96,7 @@ function define(html) {
         setGroups = (groups) => {
             console.log("Groups set!");
             console.log(groups);
-            // this.concordanceSelector.innerHTML = ""; // Clear the select
-            // for (let concordance of this.concordances) {
-            //     let option = document.createElement("option");
-            //     option.value = concordance.name;
-            //     option.text = concordance.name;
-            //     if (concordance == this.concordances[0]) { // Select the first concordance
-            //         option.selected = true;
-            //     }
-            //     this.concordanceSelector.appendChild(option);
-
-            //     // Just for testing, delete later
-            //     let option2 = document.createElement("option");
-            //     option2.value = "Test1";
-            //     option2.text = "Test1";
-            //     this.concordanceSelector.appendChild(option2);
-
-            // }
+            this.groups = groups;
             this.groupSelector.innerHTML = ""; // Clear the select
             console.log(this.groupSelector);
             for (let group of groups) {
@@ -130,6 +115,20 @@ function define(html) {
                 this.groupSelector.appendChild(option2);
 
             }
+            if (this.groups.length > 0) { // If there are groups, switch to the first one
+                this.switchGroup(this.groupSelector.value);
+            }
+        }
+
+        switchGroup = (groupName) => {
+            console.log("Group switched!");
+            console.log(groupName);
+            var group = this.groups.find(group => group.name === groupName);
+            console.log(group);
+
+            this.itemSelectorLabel.innerHTML = group.connections.label;
+            this.itemSlider.setAttribute("value", 0);
+            this.itemSlider.setAttribute("max", group.connections.connections.length - 1);
         }
 
     }

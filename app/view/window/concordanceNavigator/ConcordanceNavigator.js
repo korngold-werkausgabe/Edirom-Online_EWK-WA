@@ -79,8 +79,34 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         concordanceNavigatorJsElement.setAttribute("src", "resources/webcomponents/concordanceNavigator/concordanceNavigatorElement.js")
         document.querySelector("head").appendChild(concordanceNavigatorJsElement);
 
-        me.html = `<edirom-concordance-navigator id="${me.id}-concordance-navigator" state="pause"></edirom-concordance-navigator>`;
+
+        me.html = `<edirom-concordance-navigator id="${me.id}-concordance-navigator"></edirom-concordance-navigator>`;
 
         me.callParent();
+
     },
+
+    setConcordances: function (concordanceStore) {
+        var me = this;
+        const ediromConcordanceNavigator = document.querySelector(`#${me.id}-concordance-navigator`);
+        // let cache = [];
+        // console.log(concordanceStore);
+        // const concordanceStoreString = JSON.stringify(concordanceStore.data.items, function (key, value) {
+        //     if (typeof value === 'object' && value !== null) {
+        //         if (cache.indexOf(value) !== -1) {
+        //             // Circular reference found, discard key
+        //             return;
+        //         }
+        //         // Store value in our collection
+        //         cache.push(value);
+        //     }
+        //     return value;
+        // });
+        let concordanceStoreRaw = [];
+        for (let concordance of concordanceStore.data.items) {
+            concordanceStoreRaw.push(concordance.raw);
+        }
+
+        ediromConcordanceNavigator.setAttribute("concordances", JSON.stringify(concordanceStoreRaw));
+    }
 });

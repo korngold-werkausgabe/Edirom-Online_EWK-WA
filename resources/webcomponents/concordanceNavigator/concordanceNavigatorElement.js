@@ -13,6 +13,7 @@ function define(html) {
             this.shadow = this.attachShadow({ mode: "open" });
             this.shadow.innerHTML = html;
             this.concordanceSelector = this.shadow.querySelector("#concordance-selector");
+            this.groupSelectorContainer = this.shadow.querySelector("#group-selector-container");
             this.groupSelector = this.shadow.querySelector("#group-selector");
             this.groupSelectorLabel = this.shadow.querySelector("#group-selector-label");
             this.itemSelector = this.shadow.querySelector("#item-selector");
@@ -20,8 +21,12 @@ function define(html) {
             this.itemSelectorLabel = this.shadow.querySelector("#item-selector-label");
             this.concordances = [];
             this.groups = [];
+            this.data = [];
+            this.labelField = "";
+            this.index = 0;
 
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
+            this.groupSelector.addEventListener("change", function () { me.switchGroup(this.value) });
         }
 
         static get observedAttributes() {
@@ -81,15 +86,21 @@ function define(html) {
             var hasGroups = concordance.groups != null;
             console.log(hasGroups);
 
-            // hier dann noch groupvisibility
+            // if (hasGroups) {
+            //     // this.groupSelectorContainer.style.display = "block";
+            // } else {
+            //     this.groupSelectorContainer.style.display = "none";
+            // }
 
             if (hasGroups) {
+                this.groupSelectorContainer.classList.remove("hidden");
                 this.groupSelectorLabel.innerHTML = concordance.groups.label;
                 this.setGroups(concordance.groups.groups);
             } else {
-                // this.itemSelectorLabel.innerHTML = concordance.items.label;
-                // this.itemSlider.setAttribute("value", concordance.connections.connections.name);
-                // me.itemSelection.setValue(me.itemSlider.getEnhancedValue());
+                this.groupSelectorContainer.classList.add("hidden");
+                this.itemSelectorLabel.innerHTML = concordance.connections.label;
+                this.setData(concordance.connections.connections, "name");
+                this.itemSelector.setAttribute("value", this.getEnhancedValue());
             }
         }
 
@@ -126,12 +137,33 @@ function define(html) {
             var group = this.groups.find(group => group.name === groupName);
             console.log(group);
 
+            this.setData(group.connections.connections, "name");
+
             this.itemSelectorLabel.innerHTML = group.connections.label;
-            this.itemSlider.setAttribute("value", 0);
-            this.itemSlider.setAttribute("max", group.connections.connections.length - 1);
+            this.itemSelector.setAttribute("value", this.getEnhancedValue());
+        }
+
+        setData = (data, labelField) => {
+            this.data = data;
+            this.labelField = labelField;
+            this.index = 0;
+
+            this.itemSlider.setAttribute("value", this.index); // Maywe we could to this not here because it's a mixture of frontend and backend
+            this.itemSlider.setAttribute("max", this.data.length - 1);
+        }
+
+        // getRawValue = () => {
+        //     return this.data[this.index];
+        // }
+
+        getEnhancedValue = () => {
+            return this.data[this.index][this.labelField];
         }
 
     }
 
     customElements.define("edirom-concordance-navigator", concordanceNavigatorElement);
 }
+
+// Bei mir anders:
+// the "if (!checked) return;" check in some functions

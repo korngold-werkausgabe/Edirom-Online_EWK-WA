@@ -65,13 +65,6 @@ function define(html) {
                     option.selected = true;
                 }
                 this.concordanceSelector.appendChild(option);
-
-                // Just for testing, delete later
-                let option2 = document.createElement("option");
-                option2.value = "Test1";
-                option2.text = "Test1";
-                this.concordanceSelector.appendChild(option2);
-
             }
 
             if (this.concordances.length > 0) { // If there are concordances, switch to the first one
@@ -86,12 +79,6 @@ function define(html) {
             var hasGroups = concordance.groups != null;
             console.log(hasGroups);
 
-            // if (hasGroups) {
-            //     // this.groupSelectorContainer.style.display = "block";
-            // } else {
-            //     this.groupSelectorContainer.style.display = "none";
-            // }
-
             if (hasGroups) {
                 this.groupSelectorContainer.classList.remove("hidden");
                 this.groupSelectorLabel.innerHTML = concordance.groups.label;
@@ -100,7 +87,7 @@ function define(html) {
                 this.groupSelectorContainer.classList.add("hidden");
                 this.itemSelectorLabel.innerHTML = concordance.connections.label;
                 this.setData(concordance.connections.connections, "name");
-                this.itemSelector.setAttribute("value", this.getEnhancedValue());
+                this.itemSelector.value = this.getEnhancedValue();
             }
         }
 
@@ -119,12 +106,6 @@ function define(html) {
                 }
                 this.groupSelector.appendChild(option);
 
-                // Just for testing, delete later
-                let option2 = document.createElement("option");
-                option2.value = "Test1";
-                option2.text = "Test1";
-                this.groupSelector.appendChild(option2);
-
             }
             if (this.groups.length > 0) { // If there are groups, switch to the first one
                 this.switchGroup(this.groupSelector.value);
@@ -140,7 +121,7 @@ function define(html) {
             this.setData(group.connections.connections, "name");
 
             this.itemSelectorLabel.innerHTML = group.connections.label;
-            this.itemSelector.setAttribute("value", this.getEnhancedValue());
+            this.itemSelector.value = this.getEnhancedValue();
         }
 
         setData = (data, labelField) => {
@@ -148,8 +129,8 @@ function define(html) {
             this.labelField = labelField;
             this.index = 0;
 
-            this.itemSlider.setAttribute("value", this.index); // Maywe we could to this not here because it's a mixture of frontend and backend
-            this.itemSlider.setAttribute("max", this.data.length - 1);
+            this.itemSlider.value = this.index; // Maywe we could to this not here because it's a mixture of frontend and backend
+            this.itemSlider.max = this.data.length - 1;
         }
 
         // getRawValue = () => {

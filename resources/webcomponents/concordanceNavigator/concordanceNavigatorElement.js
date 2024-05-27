@@ -27,6 +27,9 @@ function define(html) {
 
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
             this.groupSelector.addEventListener("change", function () { me.switchGroup(this.value) });
+            this.itemSlider.addEventListener("input", function () { me.index = this.value; console.log(me.index); });
+            this.itemSelector.addEventListener("input", function () { me.index = this.value; console.log(me.index); });
+
         }
 
         static get observedAttributes() {

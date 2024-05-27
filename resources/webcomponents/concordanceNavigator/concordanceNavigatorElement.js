@@ -75,15 +75,14 @@ function define(html) {
         switchConcordance = (concordanceName) => {
             console.log("Concordance switched!");
             var concordance = this.concordances.find(concordance => concordance.name === concordanceName);
-            console.log(concordance);
             var hasGroups = concordance.groups != null;
-            console.log(hasGroups);
 
             if (hasGroups) {
                 this.groupSelectorContainer.classList.remove("hidden");
                 this.groupSelectorLabel.innerHTML = concordance.groups.label;
                 this.setGroups(concordance.groups.groups);
             } else {
+                console.log("No groups!");
                 this.groupSelectorContainer.classList.add("hidden");
                 this.itemSelectorLabel.innerHTML = concordance.connections.label;
                 this.setData(concordance.connections.connections, "name");
@@ -93,10 +92,8 @@ function define(html) {
 
         setGroups = (groups) => {
             console.log("Groups set!");
-            console.log(groups);
             this.groups = groups;
             this.groupSelector.innerHTML = ""; // Clear the select
-            console.log(this.groupSelector);
             for (let group of groups) {
                 let option = document.createElement("option");
                 option.value = group.name;
@@ -114,9 +111,7 @@ function define(html) {
 
         switchGroup = (groupName) => {
             console.log("Group switched!");
-            console.log(groupName);
             var group = this.groups.find(group => group.name === groupName);
-            console.log(group);
 
             this.setData(group.connections.connections, "name");
 
@@ -138,6 +133,10 @@ function define(html) {
         // }
 
         getEnhancedValue = () => {
+            console.log("data:");
+            console.log(this.data);
+            console.log("index:");
+            console.log(this.index);
             return this.data[this.index][this.labelField];
         }
 

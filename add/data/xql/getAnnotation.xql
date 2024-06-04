@@ -1,24 +1,8 @@
 xquery version "3.1";
 (:
-  Edirom Online
-  Copyright (C) 2011 The Edirom Project
-  http://www.edirom.de
+ : Copyright: For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
+ :)
 
-  Edirom Online is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  Edirom Online is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with Edirom Online.  If not, see <http://www.gnu.org/licenses/>.
-
-  ID: $Id: getAnnotation.xql 1455 2012-10-11 10:42:55Z daniel $
-:)
 
 (:~
     Returns the HTML for a specific annotation for an AnnotationView.
@@ -26,10 +10,14 @@ xquery version "3.1";
     @author <a href="mailto:roewenstrunk@edirom.de">Daniel Röwenstrunk</a>
 :)
 
+(: IMPORTS ================================================================= :)
+
 import module namespace source="http://www.edirom.de/xquery/source" at "../xqm/source.xqm";
 import module namespace eutil="http://www.edirom.de/xquery/util" at "../xqm/util.xqm";
 import module namespace annotation="http://www.edirom.de/xquery/annotation" at "../xqm/annotation.xqm";
 import module namespace edition="http://www.edirom.de/xquery/edition" at "../xqm/edition.xqm";
+
+(: NAMESPACE DECLARATIONS ================================================== :)
 
 declare namespace request="http://exist-db.org/xquery/request";
 declare namespace mei="http://www.music-encoding.org/ns/mei";
@@ -38,17 +26,26 @@ declare namespace edirom_image="http://www.edirom.de/ns/image";
 declare namespace xmldb="http://exist-db.org/xquery/xmldb";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
+(: OPTION DECLARATIONS ===================================================== :)
+
 declare option output:method "xhtml";
 declare option output:media-type "text/html";
 
+(: VARIABLE DECLARATIONS =================================================== :)
+
 declare variable $imageWidth := 600;
+
 declare variable $edition := request:get-parameter('edition', '');
+
 declare variable $imageserver :=  eutil:getPreference('image_server', $edition);
+
 declare variable $imageBasePath := if($imageserver = 'leaflet')
 	then(eutil:getPreference('leaflet_prefix', $edition))
 	else(eutil:getPreference('image_prefix', $edition));
 
 declare variable $lang := request:get-parameter('lang', '');
+
+(: FUNCTION DECLARATIONS =================================================== :)
 
 (: TODO: in Modul auslagern :)
 (:~
@@ -204,25 +201,36 @@ declare function local:getLowestSquareBase($i as xs:integer, $num as xs:integer)
 declare function local:getItemLabel($elem as element()) {
     let $name := local-name($elem)
     return (
-        if($name = 'measure')
-        then(if ($lang = 'de') then (concat('Takt ',$elem/@n)) else (concat('Bar ',$elem/@n)))
-        else(),
-        
-        if($name = 'staff')
-        then(if ($lang = 'de') then (concat($elem/preceding::mei:staffDef[@n = $elem/@n][1]/@label.abbr,', Takt ',$elem/ancestor::mei:measure/@n)) else(concat($elem/preceding::mei:staffDef[@n = $elem/@n][1]/@label.abbr,', Bar ',$elem/ancestor::mei:measure/@n)))
-        else(),
-        
-        if($name = 'zone')
-        then(if ($lang = 'de') then (concat('Ausschnitt (S. ',$elem/parent::mei:surface/@n,')')) else (concat('Detail (p. ',$elem/parent::mei:surface/@n,')')))
-        else()
-    )    
+        if($name = 'measure') then (
+            if ($lang = 'de') then
+                (concat('Takt ', if ($elem/@label) then ($elem/@label) else ($elem/@n)))
+            else
+                (concat('Bar ',if ($elem/@label) then ($elem/@label) else ($elem/@n)))
+        ) else
+            (),
+
+        if ($name = 'staff') then (
+            if ($lang = 'de') then
+                (concat($elem/preceding::mei:staffDef[@n = $elem/@n][1]/@label.abbr, ', Takt ', $elem/ancestor::mei:measure/@n))
+            else
+                (concat($elem/preceding::mei:staffDef[@n = $elem/@n][1]/@label.abbr, ', Bar ', $elem/ancestor::mei:measure/@n))
+        ) else
+            (),
+
+        if ($name = 'zone') then (
+            if ($lang = 'de') then
+                (concat('Ausschnitt (S. ', $elem/parent::mei:surface/@n, ')'))
+            else
+                (concat('Detail (p. ', $elem/parent::mei:surface/@n, ')'))
+        ) else
+            ()
+    )
 };
 
-
-(:
-    This function…
-
-:)
+(:~
+ :   This function…
+ :
+ :)
 declare function local:calculatePreviewsForTip($participants as xs:string*) {
     
     let $areaWidth := 204

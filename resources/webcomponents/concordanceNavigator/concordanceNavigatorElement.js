@@ -36,6 +36,9 @@ function define(html) {
             this.itemSelector.addEventListener("keypress", function (e) {
                 me.specialKeyOnInput(this, e);
             });
+            this.showConnectionButton.addEventListener("click", function () {
+                me.showConnection()
+            });
 
         }
 
@@ -166,6 +169,17 @@ function define(html) {
                 this.setEnhancedValue(t.value);
             }
 
+        }
+
+        showConnection = () => {
+            console.log("Show connection!");
+            // Send showConnection event to host
+            const showConnectionRequest = new CustomEvent('show-connection-request', {
+                detail: { plist: this.data[this.index]["plist"] },
+                bubbles: true
+            });
+            console.log(showConnectionRequest);
+            this.dispatchEvent(showConnectionRequest);
         }
 
     }

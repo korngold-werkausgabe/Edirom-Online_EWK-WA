@@ -2,13 +2,17 @@ h1 {
     color: red;
 }
 
-.concordance-navigator-container, .item-selector-container, #group-selector-container, .concordance-selector-container {
+#concordance-navigator-container, #item-selector-container, #group-selector-container, #concordance-selector-container {
     display: flex;
     justify-content: space-between;
     flex-direction: column;
 }
 
-.buttons-container {
+#concordance-selector, #group-selector, #item-selector {
+    text-align: center;
+}
+
+#buttons-container {
     display: flex;
     justify-content: space-between;
     flex-direction: row;

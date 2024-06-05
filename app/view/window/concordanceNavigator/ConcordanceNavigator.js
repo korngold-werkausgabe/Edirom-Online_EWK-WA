@@ -91,19 +91,6 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
     setConcordances: function (concordanceStore) {
         var me = this;
         const ediromConcordanceNavigator = document.querySelector(`#${me.id}-concordance-navigator`);
-        // let cache = [];
-        // console.log(concordanceStore);
-        // const concordanceStoreString = JSON.stringify(concordanceStore.data.items, function (key, value) {
-        //     if (typeof value === 'object' && value !== null) {
-        //         if (cache.indexOf(value) !== -1) {
-        //             // Circular reference found, discard key
-        //             return;
-        //         }
-        //         // Store value in our collection
-        //         cache.push(value);
-        //     }
-        //     return value;
-        // });
         let concordanceStoreRaw = [];
         for (let concordance of concordanceStore.data.items) {
             concordanceStoreRaw.push(concordance.raw);

@@ -62,8 +62,8 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
         var app = me.application;
         app.callFunctionOfEdition(win, 'getConcordances', Ext.bind(me.concordancesLoaded, me, [win], true));
 
-        me.concordanceNavigator = document.querySelector(`#${win.id}-concordance-navigator`);
-        me.concordanceNavigator.addEventListener('show-connection-request', function (e) {
+        me.ediromConcordanceNavigator = document.querySelector(`#${win.id}-concordance-navigator`);
+        me.ediromConcordanceNavigator.addEventListener('show-connection-request', function (e) {
             console.log("Event received!");
             console.log(e.detail);
             var plist = e.detail.plist;
@@ -73,7 +73,12 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
     },
 
     concordancesLoaded: function (concordanceStore, concordanceWindow) {
+        var me = this;
         console.log("Concordances loaded: " + concordanceStore.getCount() + " concordances");
-        concordanceWindow.setConcordances(concordanceStore);
+        let concordanceStoreRaw = [];
+        for (let concordance of concordanceStore.data.items) {
+            concordanceStoreRaw.push(concordance.raw);
+        }
+        me.ediromConcordanceNavigator.setAttribute("data-concordances", JSON.stringify(concordanceStoreRaw)); // set concordances as attribute to the web component
     },
 });

@@ -87,4 +87,8 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         me.callParent();
 
     },
+
+    close: function () {
+        this.hide();
+    }
 });

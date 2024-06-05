@@ -63,8 +63,6 @@ function define(html) {
             }
             else if (name === "data-show-connection-button-label") {
                 this.showConnectionButton.innerHTML = newValue;
-                console.log("Button label changed to " + newValue);
-                console.log(this.showConnectionButton.innerHTML);
             }
 
         }
@@ -148,10 +146,6 @@ function define(html) {
         // }
 
         getEnhancedValue = () => {
-            console.log("data:");
-            console.log(this.data);
-            console.log("index:");
-            console.log(this.index);
             return this.data[this.index][this.labelField];
         }
 
@@ -168,13 +162,7 @@ function define(html) {
         }
 
         specialKeyOnInput = (t, e) => {
-            console.log("t:");
-            console.log(t);
-            console.log("e:");
-            console.log(e);
-
             if (e.key === "Enter") {
-                console.log("Enter pressed");
                 this.setEnhancedValue(t.value);
             }
 

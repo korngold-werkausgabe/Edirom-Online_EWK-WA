@@ -27,8 +27,14 @@ function define(html) {
 
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
             this.groupSelector.addEventListener("change", function () { me.switchGroup(this.value) });
-            this.itemSlider.addEventListener("input", function () { me.index = this.value; console.log(me.index); });
-            this.itemSelector.addEventListener("input", function () { me.index = this.value; console.log(me.index); });
+            this.itemSlider.addEventListener("input", function () {
+                me.index = this.value;
+                me.itemSelector.value = me.getEnhancedValue();
+                console.log("Slider value changed to " + me.index);
+            });
+            this.itemSelector.addEventListener("keypress", function (e) {
+                me.specialKeyOnInput(this, e);
+            });
 
         }
 
@@ -141,6 +147,31 @@ function define(html) {
             console.log("index:");
             console.log(this.index);
             return this.data[this.index][this.labelField];
+        }
+
+        setEnhancedValue = (value) => {
+            var index = this.data.findIndex(item => item[this.labelField] === value);
+
+            if (index === -1) { // findIndex returns -1 if no item was found
+                this.itemSelector.value = this.getEnhancedValue();
+            }
+            else {
+                this.index = index;
+                this.itemSlider.value = this.index;
+            }
+        }
+
+        specialKeyOnInput = (t, e) => {
+            console.log("t:");
+            console.log(t);
+            console.log("e:");
+            console.log(e);
+
+            if (e.key === "Enter") {
+                console.log("Enter pressed");
+                this.setEnhancedValue(t.value);
+            }
+
         }
 
     }

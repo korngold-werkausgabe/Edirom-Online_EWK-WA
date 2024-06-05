@@ -64,8 +64,6 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
 
         me.ediromConcordanceNavigator = document.querySelector(`#${win.id}-concordance-navigator`);
         me.ediromConcordanceNavigator.addEventListener('show-connection-request', function (e) {
-            console.log("Event received!");
-            console.log(e.detail);
             var plist = e.detail.plist;
             var linkController = app.getController('LinkController');
             linkController.loadLink(plist, { useExisting: true, onlyExisting: true });

@@ -12,6 +12,14 @@ function define(html) {
             let me = this;
             this.shadow = this.attachShadow({ mode: "open" });
             this.shadow.innerHTML = html;
+            this.concordances = [];
+            this.groups = [];
+            this.data = [];
+            this.labelField = "";
+            this.index = 0;
+            this.maxIndex = 0;
+
+            // Elements
             this.concordanceSelector = this.shadow.querySelector("#concordance-selector");
             this.groupSelectorContainer = this.shadow.querySelector("#group-selector-container");
             this.groupSelector = this.shadow.querySelector("#group-selector");
@@ -22,13 +30,8 @@ function define(html) {
             this.showConnectionButton = this.shadow.querySelector("#show-connection-button");
             this.prevConnectionButton = this.shadow.querySelector("#prev-connection-button");
             this.nextConnectionButton = this.shadow.querySelector("#next-connection-button");
-            this.concordances = [];
-            this.groups = [];
-            this.data = [];
-            this.labelField = "";
-            this.index = 0;
-            this.maxIndex = 0;
 
+            // Event listeners
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
             this.groupSelector.addEventListener("change", function () { me.switchGroup(this.value) });
             this.itemSlider.addEventListener("input", function () {
@@ -54,7 +57,6 @@ function define(html) {
             return ["data-concordances", "data-show-connection-button-label"];
         }
 
-        // Wird ausgeführt, wenn WC dem DOM zur Verfügung steht
         connectedCallback() {
             console.log("Element hinzugefügt");
         }
@@ -150,10 +152,6 @@ function define(html) {
             this.maxIndex = this.data.length - 1;
             this.itemSlider.max = this.maxIndex;
         }
-
-        // getRawValue = () => {
-        //     return this.data[this.index];
-        // }
 
         getEnhancedValue = () => {
             return this.data[this.index][this.labelField];

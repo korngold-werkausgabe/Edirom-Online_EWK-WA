@@ -74,13 +74,15 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
 
         me.title = getLangString('view.window.concordanceNavigator.ConcordanceNavigator_Title');
 
+        me.showConnectionButtonLabel = getLangString('view.window.concordanceNavigator.ConcordanceNavigator_Show');
+
         let concordanceNavigatorJsElement = document.createElement("script");
         concordanceNavigatorJsElement.setAttribute("defer", "defer");
         concordanceNavigatorJsElement.setAttribute("src", "resources/webcomponents/concordanceNavigator/concordanceNavigatorElement.js")
         document.querySelector("head").appendChild(concordanceNavigatorJsElement);
 
 
-        me.html = `<edirom-concordance-navigator id="${me.id}-concordance-navigator"></edirom-concordance-navigator>`;
+        me.html = `<edirom-concordance-navigator id="${me.id}-concordance-navigator" data-show-connection-button-label="${me.showConnectionButtonLabel}"></edirom-concordance-navigator>`;
 
         me.callParent();
 
@@ -107,6 +109,6 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
             concordanceStoreRaw.push(concordance.raw);
         }
 
-        ediromConcordanceNavigator.setAttribute("concordances", JSON.stringify(concordanceStoreRaw));
+        ediromConcordanceNavigator.setAttribute("data-concordances", JSON.stringify(concordanceStoreRaw));
     }
 });

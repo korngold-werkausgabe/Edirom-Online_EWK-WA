@@ -19,6 +19,7 @@ function define(html) {
             this.itemSelector = this.shadow.querySelector("#item-selector");
             this.itemSlider = this.shadow.querySelector("#item-slider");
             this.itemSelectorLabel = this.shadow.querySelector("#item-selector-label");
+            this.showConnectionButton = this.shadow.querySelector("#show-connection-button");
             this.concordances = [];
             this.groups = [];
             this.data = [];
@@ -39,7 +40,7 @@ function define(html) {
         }
 
         static get observedAttributes() {
-            return ["concordances"];
+            return ["data-concordances", "data-show-connection-button-label"];
         }
 
         // Wird ausgeführt, wenn WC dem DOM zur Verfügung steht
@@ -56,9 +57,14 @@ function define(html) {
             console.log("Attributwert geändert!");
             console.log(name, oldValue, newValue);
             if (oldValue === newValue) return;
-            if (name === "concordances") {
+            if (name === "data-concordances") {
                 this.concordances = JSON.parse(newValue);
                 this.setConcordances();
+            }
+            else if (name === "data-show-connection-button-label") {
+                this.showConnectionButton.innerHTML = newValue;
+                console.log("Button label changed to " + newValue);
+                console.log(this.showConnectionButton.innerHTML);
             }
 
         }

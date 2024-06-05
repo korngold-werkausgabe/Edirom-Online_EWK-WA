@@ -20,24 +20,32 @@ function define(html) {
             this.itemSlider = this.shadow.querySelector("#item-slider");
             this.itemSelectorLabel = this.shadow.querySelector("#item-selector-label");
             this.showConnectionButton = this.shadow.querySelector("#show-connection-button");
+            this.prevConnectionButton = this.shadow.querySelector("#prev-connection-button");
+            this.nextConnectionButton = this.shadow.querySelector("#next-connection-button");
             this.concordances = [];
             this.groups = [];
             this.data = [];
             this.labelField = "";
             this.index = 0;
+            this.maxIndex = 0;
 
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
             this.groupSelector.addEventListener("change", function () { me.switchGroup(this.value) });
             this.itemSlider.addEventListener("input", function () {
-                me.index = this.value;
-                me.itemSelector.value = me.getEnhancedValue();
+                me.updateIndex(this.value);
                 console.log("Slider value changed to " + me.index);
             });
             this.itemSelector.addEventListener("keypress", function (e) {
                 me.specialKeyOnInput(this, e);
             });
             this.showConnectionButton.addEventListener("click", function () {
-                me.showConnection()
+                me.showConnection();
+            });
+            this.prevConnectionButton.addEventListener("click", function () {
+                me.showPrevConnection();
+            });
+            this.nextConnectionButton.addEventListener("click", function () {
+                me.showNextConnection();
             });
 
         }
@@ -138,10 +146,9 @@ function define(html) {
         setData = (data, labelField) => {
             this.data = data;
             this.labelField = labelField;
-            this.index = 0;
-
-            this.itemSlider.value = this.index; // Maywe we could to this not here because it's a mixture of frontend and backend
-            this.itemSlider.max = this.data.length - 1;
+            this.updateIndex(0);
+            this.maxIndex = this.data.length - 1;
+            this.itemSlider.max = this.maxIndex;
         }
 
         // getRawValue = () => {
@@ -159,8 +166,7 @@ function define(html) {
                 this.itemSelector.value = this.getEnhancedValue();
             }
             else {
-                this.index = index;
-                this.itemSlider.value = this.index;
+                this.updateIndex(index);
             }
         }
 
@@ -180,6 +186,29 @@ function define(html) {
             });
             console.log(showConnectionRequest);
             this.dispatchEvent(showConnectionRequest);
+        }
+
+        showPrevConnection = () => {
+            var success = this.updateIndex(this.index - 1);
+            if (success) {
+                this.showConnection();
+            }
+        }
+
+        showNextConnection = () => {
+            var success = this.updateIndex(this.index + 1);
+            if (success) {
+                this.showConnection();
+            }
+        }
+
+        updateIndex = (newIndex) => {
+            var newIndex = parseInt(newIndex);
+            if (newIndex < 0 || newIndex > this.maxIndex) return false; // Prevent out of bounds
+            this.index = newIndex;
+            this.itemSlider.value = this.index;
+            this.itemSelector.value = this.getEnhancedValue();
+            return true;
         }
 
     }

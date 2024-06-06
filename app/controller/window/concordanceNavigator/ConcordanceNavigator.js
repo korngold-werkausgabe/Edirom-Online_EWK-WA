@@ -36,13 +36,6 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
                 single: true
             }
         });
-
-        this.control({
-            'concordanceNavigator': {
-                showConnection: this.onShowConnection
-            }
-        });
-
     },
 
     onWorkSelected: function (workId) {
@@ -66,21 +59,24 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
 
         this.navwin = win;
 
-        //win.on('showConnection', me.onShowConnection, me);
-
         var app = me.application;
         app.callFunctionOfEdition(win, 'getConcordances', Ext.bind(me.concordancesLoaded, me, [win], true));
 
-
+        me.ediromConcordanceNavigator = document.querySelector(`#${win.id}-concordance-navigator`);
+        me.ediromConcordanceNavigator.addEventListener('show-connection-request', function (e) {
+            var plist = e.detail.plist;
+            var linkController = app.getController('LinkController');
+            linkController.loadLink(plist, { useExisting: true, onlyExisting: true });
+        });
     },
 
     concordancesLoaded: function (concordanceStore, concordanceWindow) {
-        concordanceWindow.setConcordances(concordanceStore);
-    },
-
-    onShowConnection: function (navigator, plist) {
         var me = this;
-        var linkController = me.application.getController('LinkController');
-        linkController.loadLink(plist, { useExisting: true, onlyExisting: true }); //TODO: in Preferences einbauen; TODO: grid sorting vorerst rausgenommen
-    }
+        console.log("Concordances loaded: " + concordanceStore.getCount() + " concordances");
+        let concordanceStoreRaw = [];
+        for (let concordance of concordanceStore.data.items) {
+            concordanceStoreRaw.push(concordance.raw);
+        }
+        me.ediromConcordanceNavigator.setAttribute("data-concordances", JSON.stringify(concordanceStoreRaw)); // set concordances as attribute to the web component
+    },
 });

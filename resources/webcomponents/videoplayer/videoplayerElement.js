@@ -89,6 +89,24 @@ function define(html) {
                 this.state = "pause";
             });
 
+            this.currentMeasureElem.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    var newTime;
+                    var newMeasure = this.getMeasureFromName(this.currentMeasureElem.value);
+                    if (newMeasure === false) {
+                        newTime = this.video.currentTime;
+                    }
+                    else {
+                        newTime = newMeasure.begin;
+                    }
+                    this.video.currentTime = newTime;
+                }
+            });
+
+            this.currentMeasureElem.addEventListener("focus", () => {
+                this.state = "pause";
+            });
+
         }
 
         static get observedAttributes() {
@@ -251,6 +269,18 @@ function define(html) {
                 }
             }
             return false;
+        }
+
+        getMeasureFromName = (name) => {
+            var filteredArray = this.measures.filter((measure) => {
+                return measure.measureN === name;
+            });
+            if (filteredArray.length > 0) {
+                return filteredArray[0];
+            }
+            else {
+                return false;
+            }
         }
 
         updateMeasureForm = () => {

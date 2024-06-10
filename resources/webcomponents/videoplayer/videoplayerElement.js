@@ -18,7 +18,7 @@ function define(html) {
             this.playerControlsContainer = this.shadow.querySelector('.player-controls-container');
             this.playPauseBtn = this.shadow.querySelector('.play-pause-btn');
             this.timelineContainer = this.shadow.querySelector(".timeline-container");
-            this.currentTimeElem = this.shadow.querySelector(".current-time");
+            this.currentTimeElem = this.shadow.querySelector("#current-time");
             this.totalTimeElem = this.shadow.querySelector(".total-time");
             this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
             this.isScrubbing = false;
@@ -43,7 +43,7 @@ function define(html) {
 
 
             this.video.addEventListener("timeupdate", () => {
-                this.currentTimeElem.textContent = this.formatDuration(this.video.currentTime);
+                this.currentTimeElem.value = this.formatDuration(this.video.currentTime);
                 const percent = this.video.currentTime / this.video.duration;
                 this.timelineContainer.style.setProperty("--progress-position", percent);
 

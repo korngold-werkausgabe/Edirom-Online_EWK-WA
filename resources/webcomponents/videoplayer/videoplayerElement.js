@@ -43,7 +43,7 @@ function define(html) {
 
 
             this.video.addEventListener("timeupdate", () => {
-                this.currentTimeElem.value = this.formatDuration(this.video.currentTime);
+                this.currentTimeElem.value = this.secondsToHhmmss(this.video.currentTime);
                 const percent = this.video.currentTime / this.video.duration;
                 this.timelineContainer.style.setProperty("--progress-position", percent);
 
@@ -56,7 +56,7 @@ function define(html) {
             });
 
             this.video.addEventListener("loadedmetadata", () => { // when metadata is loaded we can access the time data
-                this.totalTimeElem.textContent = this.formatDuration(this.video.duration);
+                this.totalTimeElem.textContent = this.secondsToHhmmss(this.video.duration);
                 this.adjustPlayerSize();
             });
 
@@ -71,6 +71,12 @@ function define(html) {
             });
             document.addEventListener("mousemove", e => {
                 if (this.isScrubbing) this.handleTimelineUpdate(e);
+            });
+
+            this.currentTimeElem.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    this.video.currentTime = this.hhmmssToSeconds(this.currentTimeElem.value);
+                }
             });
 
         }
@@ -111,7 +117,7 @@ function define(html) {
             this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
         }
 
-        formatDuration = (time) => {
+        secondsToHhmmss = (time) => {
             const seconds = Math.floor(time % 60);
             const minutes = Math.floor(time / 60) % 60;
             const hours = Math.floor(time / 3600);
@@ -119,6 +125,23 @@ function define(html) {
                 return `${minutes}:${this.leadingZeroFormatter.format(seconds)}`;
             } else {
                 return `${hours}:${this.leadingZeroFormatter.format(minutes)}:${this.leadingZeroFormatter.format(seconds)}`;
+            }
+        }
+
+        hhmmssToSeconds = (time) => {
+            const parts = time.split(":");
+            const regex = /^(?!.*::)(?!.*:$)(?!^:)[0-9:]*$/;
+            if (!regex.test(time) || parts.length > 3 || time.length == 0) {
+                return this.video.currentTime;
+            }
+            if (parts.length == 1) {
+                return parseInt(parts[0]);
+            }
+            else if (parts.length == 2) {
+                return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            }
+            else if (parts.length == 3) {
+                return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
             }
         }
 

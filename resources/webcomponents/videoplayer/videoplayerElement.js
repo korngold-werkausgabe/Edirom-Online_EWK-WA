@@ -20,6 +20,7 @@ function define(html) {
             this.timelineContainer = this.shadow.querySelector(".timeline-container");
             this.currentTimeElem = this.shadow.querySelector("#current-time");
             this.totalTimeElem = this.shadow.querySelector(".total-time");
+            this.currentMeasureElem = this.shadow.querySelector("#current-measure");
             this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
             this.isScrubbing = false;
 
@@ -46,6 +47,7 @@ function define(html) {
                 this.currentTimeElem.value = this.secondsToHhmmss(this.video.currentTime);
                 const percent = this.video.currentTime / this.video.duration;
                 this.timelineContainer.style.setProperty("--progress-position", percent);
+                this.updateMeasureForm();
 
                 // Send timeupdate event to host
                 const communicateTimeupdateEvent = new CustomEvent('communicate-time-update', {
@@ -75,7 +77,11 @@ function define(html) {
 
             this.currentTimeElem.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") {
-                    this.video.currentTime = this.hhmmssToSeconds(this.currentTimeElem.value);
+                    var newTime = this.hhmmssToSeconds(this.currentTimeElem.value);
+                    if (newTime === false) {
+                        newTime = this.video.currentTime;
+                    }
+                    this.video.currentTime = newTime;
                 }
             });
 
@@ -86,7 +92,7 @@ function define(html) {
         }
 
         static get observedAttributes() {
-            return ["src", "tstamp", "state", "maxsize"];
+            return ["src", "tstamp", "state", "maxsize", "measures"];
         }
 
         // Ist dann mit this.testattr abrufbar
@@ -134,18 +140,19 @@ function define(html) {
 
         hhmmssToSeconds = (time) => {
             const parts = time.split(":");
-            const regex = /^(?!.*::)(?!.*:$)(?!^:)[0-9:]*$/;
+            const regex = /^(?!.*::)(?!.*:$)(?!^:)[0-9:.]*$/;
             if (!regex.test(time) || parts.length > 3 || time.length == 0) {
-                return this.video.currentTime;
+                console.log("Regex: " + regex.test(time) + " Parts: " + parts.length + " Length: " + time.length);
+                return false;
             }
             if (parts.length == 1) {
-                return parseInt(parts[0]);
+                return parseFloat(parts[0]);
             }
             else if (parts.length == 2) {
-                return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+                return parseInt(parts[0]) * 60 + parseFloat(parts[1]);
             }
             else if (parts.length == 3) {
-                return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
+                return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseFloat(parts[2]);
             }
         }
 
@@ -164,6 +171,15 @@ function define(html) {
             if (oldValue === newValue) return;
             if (name == "src") {
                 this.video.src = newValue;
+            }
+            else if (name == "measures") {
+                this.measures = JSON.parse(newValue);
+                for (var i = 0; i < this.measures.length; i++) {
+                    this.measures[i].begin = this.hhmmssToSeconds(this.measures[i].begin);
+                    this.measures[i].end = this.hhmmssToSeconds(this.measures[i].end);
+                }
+                console.log(this.measures);
+                this.updateMeasureForm();
             }
             else if (name == "tstamp") {
                 if (this.video.currentTime != newValue) {
@@ -225,6 +241,25 @@ function define(html) {
             }
             else {
                 return;
+            }
+        }
+
+        getMeasureFromSeconds = (seconds) => {
+            for (var i = 0; i < this.measures.length; i++) {
+                if (this.measures[i].begin <= seconds && seconds < this.measures[i].end) {
+                    return this.measures[i];
+                }
+            }
+            return false;
+        }
+
+        updateMeasureForm = () => {
+            var currentMeasure = this.getMeasureFromSeconds(this.video.currentTime);
+            if (currentMeasure === false) {
+                this.currentMeasureElem.value = "";
+            }
+            else {
+                this.currentMeasureElem.value = currentMeasure.measureN;
             }
         }
     }

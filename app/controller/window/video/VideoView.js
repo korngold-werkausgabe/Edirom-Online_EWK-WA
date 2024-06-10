@@ -44,6 +44,9 @@ Ext.define('EdiromOnline.controller.window.video.VideoView', {
 
         this.getVideoUrl('data/xql/getVideoSrc.xql?uri=' + uri);
         view.setSrc(this.videoUrl);
+
+        this.getMeasures('data/xql/getMeasuresInRecording.xql', uri);
+        view.setMeasures(this.measureData);
     },
 
     /**
@@ -57,6 +60,21 @@ Ext.define('EdiromOnline.controller.window.video.VideoView', {
             dataType: "text",
             success: function (response) {
                 this.videoUrl = response.responseText;
+            },
+            scope: this
+        });
+    },
+
+    getMeasures: function (requestUrl, uri) {
+        Ext.Ajax.request({
+            url: requestUrl,
+            async: false,
+            method: 'GET',
+            params: {
+                uri: uri
+            },
+            success: function (response) {
+                this.measureData = response.responseText;
             },
             scope: this
         });

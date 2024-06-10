@@ -79,6 +79,10 @@ function define(html) {
                 }
             });
 
+            this.currentTimeElem.addEventListener("focus", () => {
+                this.state = "pause";
+            });
+
         }
 
         static get observedAttributes() {

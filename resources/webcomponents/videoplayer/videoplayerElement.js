@@ -92,7 +92,7 @@ function define(html) {
             this.currentMeasureElem.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") {
                     var newTime;
-                    var newMeasure = this.getMeasureFromName(this.currentMeasureElem.value);
+                    var newMeasure = this.getMeasureFromLabel(this.currentMeasureElem.value);
                     if (newMeasure === false) {
                         newTime = this.video.currentTime;
                     }
@@ -278,9 +278,9 @@ function define(html) {
             return false;
         }
 
-        getMeasureFromName = (name) => {
+        getMeasureFromLabel = (label) => {
             var filteredArray = this.measures.filter((measure) => {
-                return measure.measureN === name;
+                return measure.measureLabel === label;
             });
             if (filteredArray.length > 0) {
                 return filteredArray[0];
@@ -308,7 +308,7 @@ function define(html) {
                 this.currentMeasureElem.value = "";
             }
             else {
-                this.currentMeasureElem.value = currentMeasure.measureN;
+                this.currentMeasureElem.value = currentMeasure.measureLabel;
             }
         }
     }

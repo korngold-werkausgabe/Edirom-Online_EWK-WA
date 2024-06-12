@@ -55,7 +55,7 @@ declare function local:getMeasures($mei as node()) as map(*)* {
         return
             map {
                 "measureId": string($measure/@xml:id),
-                "measureN": string($measure/@n),
+                "measureLabel": string($measure/@label),
                 "begin": $begin,
                 "end": $end
             }

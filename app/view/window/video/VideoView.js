@@ -63,7 +63,7 @@ Ext.define('EdiromOnline.view.window.video.VideoView', {
         contEl.set({ 'measures': measureData });
     },
 
-    loadInternalId: function (id, type) {
+    loadInternalId: function (id, type) { // gets called from LinkController
         var me = this;
         var contEl = me.el.getById(me.id + '-videoplayer');
         contEl.set({ 'currentmeasure': id });

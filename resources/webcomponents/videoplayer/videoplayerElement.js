@@ -110,7 +110,7 @@ function define(html) {
         }
 
         static get observedAttributes() {
-            return ["src", "tstamp", "state", "maxsize", "measures"];
+            return ["src", "tstamp", "state", "maxsize", "measures", "currentmeasure"];
         }
 
         // Ist dann mit this.testattr abrufbar
@@ -199,6 +199,13 @@ function define(html) {
                 console.log(this.measures);
                 this.updateMeasureForm();
             }
+            else if (name == "currentmeasure") {
+                console.log("Current measure changed!")
+                var newMeasure = this.getMeasureFromId(newValue);
+                if (newMeasure !== false) {
+                    this.video.currentTime = newMeasure.begin;
+                }
+            }
             else if (name == "tstamp") {
                 if (this.video.currentTime != newValue) {
                     this.video.currentTime = newValue;
@@ -274,6 +281,18 @@ function define(html) {
         getMeasureFromName = (name) => {
             var filteredArray = this.measures.filter((measure) => {
                 return measure.measureN === name;
+            });
+            if (filteredArray.length > 0) {
+                return filteredArray[0];
+            }
+            else {
+                return false;
+            }
+        }
+
+        getMeasureFromId = (id) => {
+            var filteredArray = this.measures.filter((measure) => {
+                return measure.measureId === id;
             });
             if (filteredArray.length > 0) {
                 return filteredArray[0];

@@ -62,4 +62,10 @@ Ext.define('EdiromOnline.view.window.video.VideoView', {
         var contEl = me.el.getById(me.id + '-videoplayer');
         contEl.set({ 'measures': measureData });
     },
+
+    loadInternalId: function (id, type) {
+        var me = this;
+        var contEl = me.el.getById(me.id + '-videoplayer');
+        contEl.set({ 'currentmeasure': id });
+    }
 });

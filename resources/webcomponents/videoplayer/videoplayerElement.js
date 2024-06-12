@@ -18,8 +18,9 @@ function define(html) {
             this.playerControlsContainer = this.shadow.querySelector('.player-controls-container');
             this.playPauseBtn = this.shadow.querySelector('.play-pause-btn');
             this.timelineContainer = this.shadow.querySelector(".timeline-container");
-            this.currentTimeElem = this.shadow.querySelector(".current-time");
+            this.currentTimeElem = this.shadow.querySelector("#current-time");
             this.totalTimeElem = this.shadow.querySelector(".total-time");
+            this.currentMeasureElem = this.shadow.querySelector("#current-measure");
             this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
             this.isScrubbing = false;
 
@@ -43,9 +44,10 @@ function define(html) {
 
 
             this.video.addEventListener("timeupdate", () => {
-                this.currentTimeElem.textContent = this.formatDuration(this.video.currentTime);
+                this.currentTimeElem.value = this.secondsToHhmmss(this.video.currentTime);
                 const percent = this.video.currentTime / this.video.duration;
                 this.timelineContainer.style.setProperty("--progress-position", percent);
+                this.updateMeasureForm();
 
                 // Send timeupdate event to host
                 const communicateTimeupdateEvent = new CustomEvent('communicate-time-update', {
@@ -56,7 +58,7 @@ function define(html) {
             });
 
             this.video.addEventListener("loadedmetadata", () => { // when metadata is loaded we can access the time data
-                this.totalTimeElem.textContent = this.formatDuration(this.video.duration);
+                this.totalTimeElem.textContent = this.secondsToHhmmss(this.video.duration);
                 this.adjustPlayerSize();
             });
 
@@ -73,10 +75,42 @@ function define(html) {
                 if (this.isScrubbing) this.handleTimelineUpdate(e);
             });
 
+            this.currentTimeElem.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    var newTime = this.hhmmssToSeconds(this.currentTimeElem.value);
+                    if (newTime === false) {
+                        newTime = this.video.currentTime;
+                    }
+                    this.video.currentTime = newTime;
+                }
+            });
+
+            this.currentTimeElem.addEventListener("focus", () => {
+                this.state = "pause";
+            });
+
+            this.currentMeasureElem.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    var newTime;
+                    var newMeasure = this.getMeasureFromName(this.currentMeasureElem.value);
+                    if (newMeasure === false) {
+                        newTime = this.video.currentTime;
+                    }
+                    else {
+                        newTime = newMeasure.begin;
+                    }
+                    this.video.currentTime = newTime;
+                }
+            });
+
+            this.currentMeasureElem.addEventListener("focus", () => {
+                this.state = "pause";
+            });
+
         }
 
         static get observedAttributes() {
-            return ["src", "tstamp", "state", "maxsize"];
+            return ["src", "tstamp", "state", "maxsize", "measures"];
         }
 
         // Ist dann mit this.testattr abrufbar
@@ -111,7 +145,7 @@ function define(html) {
             this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
         }
 
-        formatDuration = (time) => {
+        secondsToHhmmss = (time) => {
             const seconds = Math.floor(time % 60);
             const minutes = Math.floor(time / 60) % 60;
             const hours = Math.floor(time / 3600);
@@ -119,6 +153,24 @@ function define(html) {
                 return `${minutes}:${this.leadingZeroFormatter.format(seconds)}`;
             } else {
                 return `${hours}:${this.leadingZeroFormatter.format(minutes)}:${this.leadingZeroFormatter.format(seconds)}`;
+            }
+        }
+
+        hhmmssToSeconds = (time) => {
+            const parts = time.split(":");
+            const regex = /^(?!.*::)(?!.*:$)(?!^:)[0-9:.]*$/;
+            if (!regex.test(time) || parts.length > 3 || time.length == 0) {
+                console.log("Regex: " + regex.test(time) + " Parts: " + parts.length + " Length: " + time.length);
+                return false;
+            }
+            if (parts.length == 1) {
+                return parseFloat(parts[0]);
+            }
+            else if (parts.length == 2) {
+                return parseInt(parts[0]) * 60 + parseFloat(parts[1]);
+            }
+            else if (parts.length == 3) {
+                return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseFloat(parts[2]);
             }
         }
 
@@ -137,6 +189,15 @@ function define(html) {
             if (oldValue === newValue) return;
             if (name == "src") {
                 this.video.src = newValue;
+            }
+            else if (name == "measures") {
+                this.measures = JSON.parse(newValue);
+                for (var i = 0; i < this.measures.length; i++) {
+                    this.measures[i].begin = this.hhmmssToSeconds(this.measures[i].begin);
+                    this.measures[i].end = this.hhmmssToSeconds(this.measures[i].end);
+                }
+                console.log(this.measures);
+                this.updateMeasureForm();
             }
             else if (name == "tstamp") {
                 if (this.video.currentTime != newValue) {
@@ -198,6 +259,37 @@ function define(html) {
             }
             else {
                 return;
+            }
+        }
+
+        getMeasureFromSeconds = (seconds) => {
+            for (var i = 0; i < this.measures.length; i++) {
+                if (this.measures[i].begin <= seconds && seconds < this.measures[i].end) {
+                    return this.measures[i];
+                }
+            }
+            return false;
+        }
+
+        getMeasureFromName = (name) => {
+            var filteredArray = this.measures.filter((measure) => {
+                return measure.measureN === name;
+            });
+            if (filteredArray.length > 0) {
+                return filteredArray[0];
+            }
+            else {
+                return false;
+            }
+        }
+
+        updateMeasureForm = () => {
+            var currentMeasure = this.getMeasureFromSeconds(this.video.currentTime);
+            if (currentMeasure === false) {
+                this.currentMeasureElem.value = "";
+            }
+            else {
+                this.currentMeasureElem.value = currentMeasure.measureN;
             }
         }
     }

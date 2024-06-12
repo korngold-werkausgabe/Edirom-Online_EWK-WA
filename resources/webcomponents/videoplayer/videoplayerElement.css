@@ -121,3 +121,7 @@ video {
     align-items: center;
     gap: 0.25rem;
 }
+
+#current-time, #current-measure {
+    text-align: center;
+}

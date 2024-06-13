@@ -77,6 +77,6 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
         for (let concordance of concordanceStore.data.items) {
             concordanceStoreRaw.push(concordance.raw);
         }
-        me.ediromConcordanceNavigator.setAttribute("data-concordances", JSON.stringify(concordanceStoreRaw)); // set concordances as attribute to the web component
+        me.ediromConcordanceNavigator.setAttribute("concordances-data", JSON.stringify(concordanceStoreRaw)); // set concordances as attribute to the web component
     },
 });

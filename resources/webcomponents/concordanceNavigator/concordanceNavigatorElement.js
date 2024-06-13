@@ -36,7 +36,6 @@ function define(html) {
             this.groupSelector.addEventListener("change", function () { me.switchGroup(this.value) });
             this.itemSlider.addEventListener("input", function () {
                 me.updateIndex(this.value);
-                console.log("Slider value changed to " + me.index);
             });
             this.itemSelector.addEventListener("keypress", function (e) {
                 me.specialKeyOnInput(this, e);
@@ -54,27 +53,31 @@ function define(html) {
         }
 
         static get observedAttributes() {
-            return ["data-concordances", "data-show-connection-button-label"];
+            return ["concordances-data", "show-connection-button-label-data"];
+        }
+
+        get concordancesData() {
+            return this.getAttribute("concordances-data");
+        }
+        set concordancesData(value) {
+            this.setAttribute("concordances-data", value);
         }
 
         connectedCallback() {
-            console.log("Element hinzugefügt");
         }
 
         disconnectedCallback() {
-            console.log("Element entfernt");
+            console.log("Concordance Navigator disconnected!");
         }
 
-        // Wird ausgeführt, wenn Attributwert sich ändert und initial
         attributeChangedCallback(name, oldValue, newValue) {
-            console.log("Attributwert geändert!");
             console.log(name, oldValue, newValue);
             if (oldValue === newValue) return;
-            if (name === "data-concordances") {
+            if (name === "concordances-data") {
                 this.concordances = JSON.parse(newValue);
                 this.setConcordances();
             }
-            else if (name === "data-show-connection-button-label") {
+            else if (name === "show-connection-button-label-data") {
                 this.showConnectionButton.innerHTML = newValue;
             }
 
@@ -176,7 +179,6 @@ function define(html) {
         }
 
         showConnection = () => {
-            console.log("Show connection!");
             // Send showConnection event to host
             const showConnectionRequest = new CustomEvent('show-connection-request', {
                 detail: { plist: this.data[this.index]["plist"] },
@@ -213,6 +215,3 @@ function define(html) {
 
     customElements.define("edirom-concordance-navigator", concordanceNavigatorElement);
 }
-
-// Bei mir anders:
-// the "if (!checked) return;" check in some functions

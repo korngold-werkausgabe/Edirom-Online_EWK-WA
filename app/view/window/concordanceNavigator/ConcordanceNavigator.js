@@ -82,7 +82,7 @@ Ext.define('EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator',
         document.querySelector("head").appendChild(concordanceNavigatorJsElement);
 
 
-        me.html = `<edirom-concordance-navigator id="${me.id}-concordance-navigator" data-show-connection-button-label="${me.showConnectionButtonLabel}"></edirom-concordance-navigator>`;
+        me.html = `<edirom-concordance-navigator id="${me.id}-concordance-navigator" show-connection-button-label-data="${me.showConnectionButtonLabel}"></edirom-concordance-navigator>`;
 
         me.callParent();
 

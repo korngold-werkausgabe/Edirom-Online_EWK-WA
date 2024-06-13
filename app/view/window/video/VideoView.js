@@ -44,28 +44,26 @@ Ext.define('EdiromOnline.view.window.video.VideoView', {
     },
 
     onResize: function (newwidth, newheight, oldWidth, oldHeight) {
-        console.log('onResize Event fired!');
         var me = this;
         var contEl = me.el.getById(me.id + '-videoplayer');
         contEl.set({ 'maxsize': newwidth + "x" + newheight });
     },
 
-    setSrc: function (src) {
+    setSrcEndpoint: function (url) {
         var me = this;
         var contEl = me.el.getById(me.id + '-videoplayer');
-        contEl.set({ 'src': src });
+        contEl.set({ 'src-endpoint': url });
     },
 
-    setMeasures: function (measureData) {
-        console.log('setMeasureData Event fired!');
+    setMeasuresEndpoint: function (url) {
         var me = this;
         var contEl = me.el.getById(me.id + '-videoplayer');
-        contEl.set({ 'measures': measureData });
+        contEl.set({ 'measures-endpoint': url });
     },
 
     loadInternalId: function (id, type) { // gets called from LinkController
         var me = this;
         var contEl = me.el.getById(me.id + '-videoplayer');
-        contEl.set({ 'currentmeasure': id });
+        contEl.set({ 'target-measure': id });
     }
 });

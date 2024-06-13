@@ -110,15 +110,22 @@ function define(html) {
         }
 
         static get observedAttributes() {
-            return ["src", "tstamp", "state", "maxsize", "measures", "currentmeasure"];
+            return ["src-data", "src-endpoint", "target-time", "state", "maxsize", "measures-data", "measures-endpoint", "target-measure"];
         }
 
         // Ist dann mit this.testattr abrufbar
-        get src() {
-            return this.getAttribute("src");
+        get srcData() {
+            return this.getAttribute("src-data");
         }
-        set src(value) {
-            this.setAttribute("src", value);
+        set srcData(value) {
+            this.setAttribute("src-data", value);
+        }
+
+        get measuresData() {
+            return this.getAttribute("measures-data");
+        }
+        set measuresData(value) {
+            this.setAttribute("measures-data", value);
         }
 
         get state() {
@@ -126,10 +133,6 @@ function define(html) {
         }
         set state(value) {
             this.setAttribute("state", value);
-        }
-
-        set tstamp(value) {
-            this.setAttribute("tstamp", value);
         }
 
         set maxsize(value) {
@@ -140,6 +143,59 @@ function define(html) {
             return this.getAttribute("maxsize");
         }
 
+        // Gets exectuted when the element is added to the DOM
+        connectedCallback() {
+            setInterval(this.drawScreen, 33); // The 33 is still hard coded!
+        }
+
+        disconnectedCallback() {
+            console.log("Videoplayer removed from DOM!");
+        }
+
+        // Wird ausgeführt, wenn Attributwert sich ändert und initial
+        attributeChangedCallback(name, oldValue, newValue) {
+            console.log(name, oldValue, newValue);
+            if (oldValue === newValue) return;
+            if (name == "src-data") {
+                this.video.src = newValue;
+            }
+            else if (name == "src-endpoint") {
+                this.requestVideoSource(newValue);
+            }
+            else if (name == "measures-data") {
+                this.measures = JSON.parse(newValue);
+                for (var i = 0; i < this.measures.length; i++) {
+                    this.measures[i].begin = this.hhmmssToSeconds(this.measures[i].begin);
+                    this.measures[i].end = this.hhmmssToSeconds(this.measures[i].end);
+                }
+                this.updateMeasureForm();
+            }
+            else if (name == "measures-endpoint") {
+                this.requestMeasures(newValue);
+            }
+            else if (name == "target-measure") {
+                var newMeasure = this.getMeasureFromId(newValue);
+                if (newMeasure !== false) {
+                    this.video.currentTime = newMeasure.begin;
+                }
+            }
+            else if (name == "target-time") {
+                if (this.video.currentTime != newValue) {
+                    this.video.currentTime = newValue;
+                }
+            }
+            else if (name == "state") {
+                if (newValue == "play") {
+                    this.video.play();
+                }
+                else if (newValue == "pause") {
+                    this.video.pause();
+                }
+            }
+            else if (name == "maxsize") {
+                this.adjustPlayerSize();
+            }
+        }
 
         drawScreen = () => {
             this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height);
@@ -160,7 +216,6 @@ function define(html) {
             const parts = time.split(":");
             const regex = /^(?!.*::)(?!.*:$)(?!^:)[0-9:.]*$/;
             if (!regex.test(time) || parts.length > 3 || time.length == 0) {
-                console.log("Regex: " + regex.test(time) + " Parts: " + parts.length + " Length: " + time.length);
                 return false;
             }
             if (parts.length == 1) {
@@ -171,56 +226,6 @@ function define(html) {
             }
             else if (parts.length == 3) {
                 return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseFloat(parts[2]);
-            }
-        }
-
-        // Wird ausgeführt, wenn WC dem DOM zur Verfügung steht
-        connectedCallback() {
-            setInterval(this.drawScreen, 33);
-        }
-
-        disconnectedCallback() {
-            console.log("Element entfernt");
-        }
-
-        // Wird ausgeführt, wenn Attributwert sich ändert und initial
-        attributeChangedCallback(name, oldValue, newValue) {
-            console.log(name, oldValue, newValue);
-            if (oldValue === newValue) return;
-            if (name == "src") {
-                this.video.src = newValue;
-            }
-            else if (name == "measures") {
-                this.measures = JSON.parse(newValue);
-                for (var i = 0; i < this.measures.length; i++) {
-                    this.measures[i].begin = this.hhmmssToSeconds(this.measures[i].begin);
-                    this.measures[i].end = this.hhmmssToSeconds(this.measures[i].end);
-                }
-                console.log(this.measures);
-                this.updateMeasureForm();
-            }
-            else if (name == "currentmeasure") {
-                console.log("Current measure changed!")
-                var newMeasure = this.getMeasureFromId(newValue);
-                if (newMeasure !== false) {
-                    this.video.currentTime = newMeasure.begin;
-                }
-            }
-            else if (name == "tstamp") {
-                if (this.video.currentTime != newValue) {
-                    this.video.currentTime = newValue;
-                }
-            }
-            else if (name == "state") {
-                if (newValue == "play") {
-                    this.video.play();
-                }
-                else if (newValue == "pause") {
-                    this.video.pause();
-                }
-            }
-            else if (name == "maxsize") {
-                this.adjustPlayerSize();
             }
         }
 
@@ -310,6 +315,22 @@ function define(html) {
             else {
                 this.currentMeasureElem.value = currentMeasure.measureLabel;
             }
+        }
+
+        requestVideoSource = (url) => {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    this.srcData = data;
+                });
+        }
+
+        requestMeasures = (url) => {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    this.measuresData = data;
+                });
         }
     }
 

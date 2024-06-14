@@ -19,6 +19,7 @@ function define(html) {
             this.index = 0;
             this.maxIndex = 0;
             this.timelineBasisData = [];
+            this.timelineBasis;
 
             // Elements
             this.concordanceSelector = this.shadow.querySelector("#concordance-selector");
@@ -37,6 +38,7 @@ function define(html) {
             // Event listeners
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
             this.groupSelector.addEventListener("change", function () { me.switchGroup(this.value) });
+            this.timelineBasisSelector.addEventListener("change", function () { me.switchTimelineBasis(this.value) });
             this.itemSlider.addEventListener("input", function () {
                 me.updateIndex(this.value);
             });
@@ -190,16 +192,17 @@ function define(html) {
             console.log(this.data[0].plist);
             for (let uri of this.data[0].plist.replace(/\s|;/g, '\uC280').split('\uC280')) {
                 if (uri.length === 0) continue;
-                const data = await this.requestMeasuresOnRecording("data/xql/getMeasuresInRecording.xql?uri=" + uri.split("#")[0]);
+                const data = await this.makeRequest("data/xql/getMeasuresInRecording.xql?uri=" + uri.split("#")[0]);
                 if (data.length > 0) {
                     this.timelineBasisData.push({ uri: uri.split("#")[0], measures: data });
                     console.log("pushed!");
                 }
             }
-            console.log(this.timelineBasisData);
             for (let item of this.timelineBasisData) {
-                item.siglum = await this.requestSiglum("data/xql/getSiglum.xql?uri=" + item.uri);
-                console.log(item.siglum);
+                item.siglum = await this.makeRequest("data/xql/getSiglum.xql?uri=" + item.uri);
+                var recordingTimeData = await this.makeRequest("data/xql/getRecordingTime.xql?uri=" + item.uri);
+                item.begin = this.hhmmssToSeconds(recordingTimeData.begin);
+                item.end = this.hhmmssToSeconds(recordingTimeData.end);
             }
 
             if (this.timelineBasisData.length > 0) {
@@ -218,33 +221,13 @@ function define(html) {
         }
 
 
-        switchTimelineBasis = (timelineBasisName) => {
+        switchTimelineBasis = (timelineBasisSiglum) => {
             console.log("Timeline basis switched!");
-            var timelineBasis = this.timelineBasisData.find(timelineBasis => timelineBasis.name === timelineBasisName);
+            this.timelineBasis = this.timelineBasisData.find(timelineBasis => timelineBasis.siglum === timelineBasisSiglum);
+            console.log(this.timelineBasis);
         }
 
-        requestMeasuresOnRecording = (url) => {
-            return fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        return "";
-                    }
-                    const contentType = response.headers.get("content-type");
-                    if (contentType && contentType.includes("application/json")) {
-                        return response.json();
-                    } else {
-                        return response.text();
-                    }
-                })
-                .then(data => {
-                    return data;
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                });
-        }
-
-        requestSiglum = (url) => {
+        makeRequest = (url) => {
             return fetch(url)
                 .then(response => {
                     if (!response.ok) {
@@ -271,7 +254,6 @@ function define(html) {
                 detail: { plist: this.data[this.index]["plist"] },
                 bubbles: true
             });
-            console.log(showConnectionRequest);
             this.dispatchEvent(showConnectionRequest);
         }
 
@@ -296,6 +278,24 @@ function define(html) {
             this.itemSlider.value = this.index;
             this.itemSelector.value = this.getEnhancedValue();
             return true;
+        }
+
+        hhmmssToSeconds = (time) => {
+            // Still ignores milliseconds!!!
+            const parts = time.split(":");
+            const regex = /^(?!.*::)(?!.*:$)(?!^:)[0-9:.]*$/;
+            if (!regex.test(time) || parts.length > 3 || time.length == 0) {
+                return false;
+            }
+            if (parts.length == 1) {
+                return parseFloat(parts[0]);
+            }
+            else if (parts.length == 2) {
+                return parseInt(parts[0]) * 60 + parseFloat(parts[1]);
+            }
+            else if (parts.length == 3) {
+                return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseFloat(parts[2]);
+            }
         }
 
     }

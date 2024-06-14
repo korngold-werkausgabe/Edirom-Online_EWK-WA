@@ -213,6 +213,7 @@ function define(html) {
         }
 
         hhmmssToSeconds = (time) => {
+            // Still ignores milliseconds!!!
             const parts = time.split(":");
             const regex = /^(?!.*::)(?!.*:$)(?!^:)[0-9:.]*$/;
             if (!regex.test(time) || parts.length > 3 || time.length == 0) {

@@ -18,6 +18,7 @@ function define(html) {
             this.labelField = "";
             this.index = 0;
             this.maxIndex = 0;
+            this.timelineBasisData = [];
 
             // Elements
             this.concordanceSelector = this.shadow.querySelector("#concordance-selector");
@@ -30,6 +31,8 @@ function define(html) {
             this.showConnectionButton = this.shadow.querySelector("#show-connection-button");
             this.prevConnectionButton = this.shadow.querySelector("#prev-connection-button");
             this.nextConnectionButton = this.shadow.querySelector("#next-connection-button");
+            this.timeContainer = this.shadow.querySelector("#time-container");
+            this.timelineBasisSelector = this.shadow.querySelector("#timeline-basis-selector");
 
             // Event listeners
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
@@ -154,6 +157,7 @@ function define(html) {
             this.updateIndex(0);
             this.maxIndex = this.data.length - 1;
             this.itemSlider.max = this.maxIndex;
+            this.setTimelineBasis();
         }
 
         getEnhancedValue = () => {
@@ -176,6 +180,89 @@ function define(html) {
                 this.setEnhancedValue(t.value);
             }
 
+        }
+
+
+        setTimelineBasis = async () => {
+            this.timelineBasisData = [];
+            this.timeContainer.style.display = "none";
+            this.timelineBasisSelector.innerHTML = "";
+            console.log(this.data[0].plist);
+            for (let uri of this.data[0].plist.replace(/\s|;/g, '\uC280').split('\uC280')) {
+                if (uri.length === 0) continue;
+                const data = await this.requestMeasuresOnRecording("data/xql/getMeasuresInRecording.xql?uri=" + uri.split("#")[0]);
+                if (data.length > 0) {
+                    this.timelineBasisData.push({ uri: uri.split("#")[0], measures: data });
+                    console.log("pushed!");
+                }
+            }
+            console.log(this.timelineBasisData);
+            for (let item of this.timelineBasisData) {
+                item.siglum = await this.requestSiglum("data/xql/getSiglum.xql?uri=" + item.uri);
+                console.log(item.siglum);
+            }
+
+            if (this.timelineBasisData.length > 0) {
+                this.timeContainer.style.display = "block";
+                for (let item of this.timelineBasisData) {
+                    let option = document.createElement("option");
+                    option.value = item.siglum;
+                    option.text = item.siglum;
+                    if (item == this.timelineBasisData[0]) {
+                        option.selected = true;
+                    }
+                    this.timelineBasisSelector.appendChild(option);
+                }
+                this.switchTimelineBasis(this.timelineBasisSelector.value);
+            }
+        }
+
+
+        switchTimelineBasis = (timelineBasisName) => {
+            console.log("Timeline basis switched!");
+            var timelineBasis = this.timelineBasisData.find(timelineBasis => timelineBasis.name === timelineBasisName);
+        }
+
+        requestMeasuresOnRecording = (url) => {
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        return "";
+                    }
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    } else {
+                        return response.text();
+                    }
+                })
+                .then(data => {
+                    return data;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+
+        requestSiglum = (url) => {
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        return "";
+                    }
+                    const contentType = response.headers.get("content-type");
+                    if (contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    } else {
+                        return response.text();
+                    }
+                })
+                .then(data => {
+                    return data;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
         }
 
         showConnection = () => {

@@ -20,6 +20,7 @@ function define(html) {
             this.maxIndex = 0;
             this.timelineBasisData = [];
             this.timelineBasis;
+            this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
 
             // Elements
             this.concordanceSelector = this.shadow.querySelector("#concordance-selector");
@@ -34,6 +35,8 @@ function define(html) {
             this.nextConnectionButton = this.shadow.querySelector("#next-connection-button");
             this.timeContainer = this.shadow.querySelector("#time-container");
             this.timelineBasisSelector = this.shadow.querySelector("#timeline-basis-selector");
+            this.currentTimeElem = this.shadow.querySelector("#current-time");
+            this.totalTimeElem = this.shadow.querySelector("#total-time");
 
             // Event listeners
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
@@ -225,6 +228,9 @@ function define(html) {
             console.log("Timeline basis switched!");
             this.timelineBasis = this.timelineBasisData.find(timelineBasis => timelineBasis.siglum === timelineBasisSiglum);
             console.log(this.timelineBasis);
+            this.currentTimeElem.innerHTML = this.secondsToHhmmss(this.timelineBasis.begin);
+            this.totalTimeElem.innerHTML = this.secondsToHhmmss(this.timelineBasis.end);
+
         }
 
         makeRequest = (url) => {

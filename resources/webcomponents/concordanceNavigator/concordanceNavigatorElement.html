@@ -24,7 +24,11 @@
         <div id="time-container">
             <hr />
             <select name="timeline-basis-selector" id="timeline-basis-selector"></select>
-            <input type="text" id="time-selector" value="0" />
+            <div class="duration-container">
+                <input type="text" id="current-time" value="0:00" size="5"></input>
+                /
+                <div id="total-time"></div>
+            </div>
             <button id="play-button">Play</button>
         </div>
     </div>

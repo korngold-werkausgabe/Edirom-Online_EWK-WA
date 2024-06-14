@@ -26,6 +26,12 @@ h1 {
     display: none;
 }
 
+.duration-container {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 button {
     margin: 3px;
 }

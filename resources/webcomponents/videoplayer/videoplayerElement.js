@@ -202,6 +202,7 @@ function define(html) {
         }
 
         secondsToHhmmss = (time) => {
+            // still ignores milliseconds!!!
             const seconds = Math.floor(time % 60);
             const minutes = Math.floor(time / 60) % 60;
             const hours = Math.floor(time / 3600);

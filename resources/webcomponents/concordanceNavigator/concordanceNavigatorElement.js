@@ -280,6 +280,18 @@ function define(html) {
             return true;
         }
 
+        secondsToHhmmss = (time) => {
+            // still ignores milliseconds!!!
+            const seconds = Math.floor(time % 60);
+            const minutes = Math.floor(time / 60) % 60;
+            const hours = Math.floor(time / 3600);
+            if (hours === 0) {
+                return `${minutes}:${this.leadingZeroFormatter.format(seconds)}`;
+            } else {
+                return `${hours}:${this.leadingZeroFormatter.format(minutes)}:${this.leadingZeroFormatter.format(seconds)}`;
+            }
+        }
+
         hhmmssToSeconds = (time) => {
             // Still ignores milliseconds!!!
             const parts = time.split(":");

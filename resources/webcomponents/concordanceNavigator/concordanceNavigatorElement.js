@@ -21,6 +21,9 @@ function define(html) {
             this.timelineBasisData = [];
             this.timelineBasis;
             this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
+            this.timelineState = "pause";
+            this.interval = null;
+            this.currentTime = 0;
 
             // Elements
             this.concordanceSelector = this.shadow.querySelector("#concordance-selector");
@@ -37,6 +40,7 @@ function define(html) {
             this.timelineBasisSelector = this.shadow.querySelector("#timeline-basis-selector");
             this.currentTimeElem = this.shadow.querySelector("#current-time");
             this.totalTimeElem = this.shadow.querySelector("#total-time");
+            this.playButton = this.shadow.querySelector("#play-button");
 
             // Event listeners
             this.concordanceSelector.addEventListener("change", function () { me.switchConcordance(this.value) });
@@ -56,6 +60,14 @@ function define(html) {
             });
             this.nextConnectionButton.addEventListener("click", function () {
                 me.showNextConnection();
+            });
+            this.playButton.addEventListener("click", function () {
+                if (me.timelineState === "pause") {
+                    me.timelinePlay();
+                }
+                else if (me.timelineState === "play") {
+                    me.timelinePause();
+                }
             });
 
         }
@@ -192,6 +204,7 @@ function define(html) {
             this.timelineBasisData = [];
             this.timeContainer.style.display = "none";
             this.timelineBasisSelector.innerHTML = "";
+            this.interval = clearInterval(this.interval);
             console.log(this.data[0].plist);
             for (let uri of this.data[0].plist.replace(/\s|;/g, '\uC280').split('\uC280')) {
                 if (uri.length === 0) continue;
@@ -209,6 +222,7 @@ function define(html) {
             }
 
             if (this.timelineBasisData.length > 0) {
+                this.interval = setInterval(this.runInterval, 1000);
                 this.timeContainer.style.display = "block";
                 for (let item of this.timelineBasisData) {
                     let option = document.createElement("option");
@@ -228,9 +242,36 @@ function define(html) {
             console.log("Timeline basis switched!");
             this.timelineBasis = this.timelineBasisData.find(timelineBasis => timelineBasis.siglum === timelineBasisSiglum);
             console.log(this.timelineBasis);
-            this.currentTimeElem.innerHTML = this.secondsToHhmmss(this.timelineBasis.begin);
+            this.currentTime = this.timelineBasis.begin;
+            this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
             this.totalTimeElem.innerHTML = this.secondsToHhmmss(this.timelineBasis.end);
 
+        }
+
+        runInterval = () => {
+            if (this.timelineState === "play") {
+                this.currentTime++;
+                console.log(this.currentTime);
+                this.updateCurrentTimeField();
+            }
+            else if (this.timelineState === "pause") {
+                console.log("Interval paused!");
+            }
+        }
+
+        updateCurrentTimeField = () => {
+            console.log("Updating current time field!");
+            this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
+        }
+
+        timelinePlay = () => {
+            this.timelineState = "play";
+            this.playButton.innerHTML = "Pause";
+        }
+
+        timelinePause = () => {
+            this.timelineState = "pause";
+            this.playButton.innerHTML = "Play";
         }
 
         makeRequest = (url) => {

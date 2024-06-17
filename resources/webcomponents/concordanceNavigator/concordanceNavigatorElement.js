@@ -245,6 +245,7 @@ function define(html) {
             this.currentTime = this.timelineBasis.begin;
             this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
             this.totalTimeElem.innerHTML = this.secondsToHhmmss(this.timelineBasis.end);
+            console.log(this.timelineBasis);
 
         }
 
@@ -252,26 +253,41 @@ function define(html) {
             if (this.timelineState === "play") {
                 this.currentTime++;
                 console.log(this.currentTime);
-                this.updateCurrentTimeField();
+                this.timeChanged();
             }
             else if (this.timelineState === "pause") {
                 console.log("Interval paused!");
             }
         }
 
-        updateCurrentTimeField = () => {
-            console.log("Updating current time field!");
+        timeChanged = () => {
             this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
+            if (this.currentTime >= this.timelineBasis.end) {
+                this.timelinePause();
+                this.currentTime = this.timelineBasis.end;
+
+
+            }
         }
 
         timelinePlay = () => {
             this.timelineState = "play";
             this.playButton.innerHTML = "Pause";
+            // TODO: Fire the LinkController here so that everything starts synchronos.
         }
 
         timelinePause = () => {
             this.timelineState = "pause";
             this.playButton.innerHTML = "Play";
+        }
+
+        getMeasureFromSeconds = (seconds) => {
+            for (var measure of this.timelineBasis.measures) {
+                if (measure.begin <= seconds && seconds < measure.end) {
+                    return measure;
+                }
+            }
+            return false;
         }
 
         makeRequest = (url) => {

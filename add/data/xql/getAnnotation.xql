@@ -264,14 +264,27 @@ declare function local:calculatePreviewsForTip($participants as xs:string*) {
     let $height := floor($areaHeight * $h div 100)
     
     for $zone in $zones
-    let $e := $elems[substring(@facs,2) = $zone/@xml:id][1]
-    let $e := if($e)then($e)else($zone)
-    
-    let $test := if($imageserver  = 'digilib')
-    	then(
-    	<div class="previewItem" style="width: {$width - (round(100 div $w))}px; height: {$height - round(100 div $h)}px;">
-            <div class="imgBox">
-                <img src="{local:getImageAreaPathForTips($imageBasePath, $zone, $width - 4, $height - 4)}" class="previewImg" />
+    let $e := $elems[substring(@facs, 2) = $zone/@xml:id][1]
+
+    let $e :=
+        if ($e) then
+            ($e)
+        else
+            ($zone)
+
+    let $test :=
+        if ($imageserver = 'digilib') then (
+            <div
+                class="previewItem"
+                style="width: {$width - (round(100 div $w))}px; height: {$height - round(100 div $h)}px;">
+                <div
+                    class="imgBox">
+                    <img
+                        src="{local:getImageAreaPathForTips($imageBasePath, $zone, $width - 4, $height - 4)}"
+                        class="previewImg"/>
+                </div>
+                <div
+                    class="label">{local:getItemLabel($e)}</div>
             </div>
             <div class="label">{local:getItemLabel($e)}</div>
         </div>

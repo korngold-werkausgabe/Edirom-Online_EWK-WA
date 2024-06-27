@@ -134,11 +134,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
         });
         me.fireEvent('imageChanged', me, path, pageId);
     },
-        
-    removeShapes: function() {
-        
-    },
-    
+
     fitInImage: function() {
     
         var me = this;

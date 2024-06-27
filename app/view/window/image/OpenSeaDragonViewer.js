@@ -357,6 +357,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                     anno.dom.append(annoIcon);
                 }
 
+                // retrieve dom element of annotationIcon to bind actions
                 var annoIcon = me.el.getById(annoId + '_' + anno.id + '_inner');
                 
                 // bind onclick action to annotation icon

@@ -363,6 +363,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                     fn: fn
                 });
 
+                // create the tooltip for the annotation
                 var tip = Ext.create('Ext.tip.ToolTip', {
                     target: annoIcon.id,
                     cls: 'annotationTip',
@@ -376,6 +377,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                     html: getLangString('Annotation_plus_Title', name)
                 });
 
+                // bind function to fetch the contents for the annotation tooltip
                 tip.on('afterrender', function() {
                     window.doAJAXRequest('data/xql/getAnnotation.xql',
                         'GET',
@@ -396,6 +398,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                     }, this);
                 }, tip);
 
+                // delay hiding the annotation tooltip
                 tip.on('beforehide', function() {
                     if(this.el.hasCls('mouseOverAnnot')) {
                         Ext.Function.defer(function(){

@@ -258,7 +258,12 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
     },
     
     removeShapes: function(groupName) {
-   
+
+        if(debug !== null && debug) {
+            console.log('view: OpenSeaDragonView: removeShapes');
+            console.log(groupName);
+        }
+
         var me = this;
         if(!me.shapes.containsKey(groupName)) return;
 
@@ -307,7 +312,18 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
     	
         var me = this;
 
+        if(debug !== null && debug) {
+            console.log('controller: OpenseaDragonView: addAnnotaitons');
+            console.log('annotations RAW');
+            console.log(annotations);
+        }
+
         me.shapes.add('annotations', []);
+
+        if(debug !== null && debug) {
+            console.log('me.shapes annotations');
+            console.log(me.shapes.get('annotations'));
+        }
 
         annotations.each(function(annotation) {
 
@@ -424,6 +440,10 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
     
     getShapeElem: function(shapeId) {
    
+
+        if(debug !== null && debug) {
+            console.log('view: OpenSeaDragonView: getShapeElem: ' + shapeId);
+        }
         var me = this;
         var elem = me.el.getById(me.id + '_' + shapeId);//TODO causes problems || me.el.getById(shapeId);
 

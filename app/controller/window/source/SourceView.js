@@ -37,6 +37,10 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
     onSourceViewRendered: function(view) {
         var me = this;
 
+        if(debug !== null && debug) {
+            console.log('Controller: SourceView: onSourceViewRendered');
+        }
+
         if(view.initialized) return;
         view.initialized = true;
 
@@ -53,14 +57,15 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
         ToolsController.addAnnotationVisibilityListener(view.id, Ext.bind(view.checkGlobalAnnotationVisibility, view));
         view.checkGlobalAnnotationVisibility(ToolsController.areAnnotationsVisible());
 
-
-        Ext.Ajax.request({
-            url: 'data/xql/getMovements.xql',
-            method: 'GET',
-            params: {
+        if(debug !== null && debug) {
+            console.log('Controller: SourceView: onSourceViewRendered. getMovements');
+        }
+        window.doAJAXRequest('data/xql/getMovements.xql',
+            'GET', 
+            {
                 uri: view.uri
             },
-            success: function(response){
+            Ext.bind(function(response){
                 var data = response.responseText;
 
                 var movements = Ext.create('Ext.data.Store', {
@@ -69,9 +74,13 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
                 });
 
                 me.movementsLoaded(movements, view);
-            }
-        });
-        
+            }, this)
+        );
+
+        if(debug !== null && debug) {
+            console.log('Controller: SourceView: onSourceViewRendered: getAnnotationInfos');
+        }
+
         window.doAJAXRequest('data/xql/getAnnotationInfos.xql',
             'GET',
             {
@@ -83,6 +92,10 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
                 var data = response.responseText;
 
                 data = Ext.JSON.decode(data);
+
+                if(debug !== null && debug) {
+                    console.log(data);
+                }
 
                 var priorities = Ext.create('Ext.data.Store', {
                     fields: ['id', 'name'],
@@ -97,13 +110,12 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
             }, this)
         );
         
-        Ext.Ajax.request({
-            url: 'data/xql/getOverlays.xql',
-            method: 'GET',
-            params: {
+        window.doAJAXRequest('data/xql/getOverlays.xql',
+            'GET', 
+            {
                 uri: view.uri
             },
-            success: function(response){
+            Ext.bind(function(response){
                 var data = response.responseText;
 
                 var overlays = Ext.create('Ext.data.Store', {
@@ -112,8 +124,8 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
                 });
 
                 me.overlaysLoaded(overlays, view);
-            }
-        });
+            }, this)
+        );
     },
 
     movementsLoaded: function(movements, view) {
@@ -131,18 +143,17 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
     onGotoMovement: function(view, movementId) {
         var me = this;
 
-        Ext.Ajax.request({
-            url: 'data/xql/getMovementsFirstPage.xql',
-            method: 'GET',
-            params: {
+        window.doAJAXRequest('data/xql/getMovementsFirstPage.xql',
+            'GET', 
+            {
                 uri: view.uri,
                 movementId: movementId
             },
-            success: function(response){
+            Ext.bind(function(response){
                 var data = response.responseText;
                 me.gotoMovement(Ext.String.trim(data), view);
-            }
-        });
+            }, this)
+        );
     },
 
     gotoMovement: function(pageId, view) {
@@ -167,14 +178,13 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
     },
 
     fetchMeasures: function(uri, pageId, fn) {
-        Ext.Ajax.request({
-            url: 'data/xql/getMeasuresOnPage.xql',
-            method: 'GET',
-            params: {
+        window.doAJAXRequest('data/xql/getMeasuresOnPage.xql',
+            'GET', 
+            {
                 uri: uri,
                 pageId: pageId
             },
-            success: function(response){
+            Ext.bind(function(response){
                 var data = response.responseText;
 
                 var measures = Ext.create('Ext.data.Store', {
@@ -184,8 +194,8 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
 
                 if(typeof fn == 'function')
                     fn(measures);
-            }
-        });
+            }, this)
+        );
     },
 
     measuresOnPageLoaded: function(measures, view, pageId) {
@@ -198,8 +208,16 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
     onAnnotationsVisibilityChange: function(view, visible) {
         var me = this;
 
+        if(debug !== null && debug) {
+            console.log('controller: SourceView: onAnnotationsVisibilityChange');
+        }
+
         if(visible) {
-            
+
+            if(debug !== null && debug) {
+                console.log('visible: ' + visible);
+            }
+
             // If there is now active page, we don't need to load annotations
             if(typeof view.getActivePage() == 'undefined') return;
             
@@ -242,39 +260,35 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
 	onGotoMeasureByName: function (view, measure, movementId) {
 		var me = this;
 		
-		Ext.Ajax.request({
-			url: 'data/xql/getMeasurePage.xql',
-			method: 'GET',
-			params: {
-				id: view.uri,
+		window.doAJAXRequest('data/xql/getMeasurePage.xql',
+            'GET', 
+            {
+                id: view.uri,
 				measure: measure,
 				movementId: movementId
-			},
-			success: Ext.bind(function (response) {
-				var data = response.responseText;
+            },
+            Ext.bind(function(response){
+                var data = response.responseText;
 				this.gotoMeasure(Ext.JSON.decode(data)[0], view);
-			},
-			me)
-		});
+            }, me)
+        );
 	},
 	
 	onGotoMeasure: function (view, measureId) {
 		
 		var me = this;
 		
-		Ext.Ajax.request({
-			url: 'data/xql/getMeasure.xql',
-			method: 'GET',
-			params: {
-				id: view.uri,
+		window.doAJAXRequest('data/xql/getMeasure.xql',
+            'GET', 
+            {
+                id: view.uri,
 				measureId: measureId
-			},
-			success: Ext.bind(function (response) {
-				var data = response.responseText;
+            },
+            Ext.bind(function(response){
+                var data = response.responseText;
 				this.gotoMeasure(Ext.JSON.decode(data), view);
-			},
-			me)
-		});
+            }, me)
+        );
 	},
 	
 	gotoMeasure: function (result, view) {
@@ -293,19 +307,17 @@ Ext.define('EdiromOnline.controller.window.source.SourceView', {
 		
 		var me = this;
 		
-		Ext.Ajax.request({
-			url: 'data/xql/getZone.xql',
-			method: 'GET',
-			params: {
-				uri: view.uri,
+		window.doAJAXRequest('data/xql/getZone.xql',
+            'GET', 
+            {
+                uri: view.uri,
 				zoneId: zoneId
-			},
-			success: Ext.bind(function (response) {
-				var data = response.responseText;
+            },
+            Ext.bind(function(response){
+                var data = response.responseText;
 				this.gotoZone(Ext.JSON.decode(data), view);
-			},
-			me)
-		});
+            }, this)
+        );
 	},
 	
 	gotoZone: function (result, view) {

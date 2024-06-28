@@ -346,7 +346,8 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
             console.log(me.shapes.get('annotations'));
         }
 
-        annotations.each(function (annotation) {
+        // iterate over annotations
+        annotations.each(function(annotation) {
 
             var annoId = annotation.get('id');
             var name = annotation.get('title');
@@ -356,9 +357,11 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
             var fn = annotation.get('fn');
             var plist = Ext.Array.toArray(annotation.get('plist'));
 
+            //push plist to me.shapes annotations
             Ext.Array.push(me.shapes.get('annotations'), plist);
 
-            Ext.Array.each(plist, function (shape) {
+            //iterate over an annotations plist
+            Ext.Array.each(plist, function(shape) {
 
                 var id = shape.id;
                 var x = shape.ulx;

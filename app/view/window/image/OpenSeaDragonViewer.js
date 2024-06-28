@@ -24,19 +24,19 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
     },
 
     layout: 'fit',
-    
+
     border: 0,
-    
+
     viewer: null,
-    
+
     imageWidth: 0,
     imageHeight: 0,
-    
+
     imagePrefix: null,
-    
+
     shapes: null,
     partLabel: null,
-    
+
     annotTipWidth: 220,
     annotTipMaxWidth: 300,
     annotTipHeight: 140,
@@ -45,38 +45,38 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
     initComponent: function () {
 
         var me = this;
-        
+
         me.imagePrefix = getPreference('image_prefix');
-        
+
         me.addEvents('zoomChanged',
-                    'imageChanged');
-        
-       var openseadragonEvents;
+            'imageChanged');
+
+        var openseadragonEvents;
 
         if (me.partLabel != null) {
-         openseadragonEvents = '<div id="' + me.id + '_openseadragonEvents" class="openseadragonEvents">' +
-            '<div  id="' + me.id + '_' + me.partLabel + '" class="part">' +
-              '<span class="partInner" id="' + me.id + '_' + me.partLabel + '_inner">' +
-              me.partLabel + '</span>' +
-            '</div>' +
-         '</div>';
+            openseadragonEvents = '<div id="' + me.id + '_openseadragonEvents" class="openseadragonEvents">' +
+                '<div  id="' + me.id + '_' + me.partLabel + '" class="part">' +
+                '<span class="partInner" id="' + me.id + '_' + me.partLabel + '_inner">' +
+                me.partLabel + '</span>' +
+                '</div>' +
+                '</div>';
         }
         else {
-          openseadragonEvents = '<div id="' + me.id + '_openseadragonEvents" class="openseadragonEvents"></div>';
-         };
-         
+            openseadragonEvents = '<div id="' + me.id + '_openseadragonEvents" class="openseadragonEvents"></div>';
+        };
+
         me.html = '<div id="' + me.id + '_openseadragon" style="background-color: black; top:0px; bottom: 0px; left: 0px; right: 0px; position:absolute;"></div>' + openseadragonEvents;
 
         me.shapes = new Ext.util.MixedCollection();
-        
+
         me.callParent();
-        
-        me.on('afterrender', me.initSurface, me, {single: true});
+
+        me.on('afterrender', me.initSurface, me, { single: true });
     },
 
-    initSurface: function() {
+    initSurface: function () {
         var me = this;
-        
+
         var openseadragonOpts = {
             id: me.id + "_openseadragon",
             showNavigator: false,
@@ -85,79 +85,79 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
         }
 
         if (getPreference('use_secrets') === "true") {
-            openseadragonOpts.ajaxWithCredentials = getPreference('ajax_with_credentials') === "true" ? true : false ;
+            openseadragonOpts.ajaxWithCredentials = getPreference('ajax_with_credentials') === "true" ? true : false;
             openseadragonOpts.ajaxHeaders = {
                 auth: {
                     username: getSecret('imagesUser'),
                     password: getSecret('imagesPwd'),
-                    },
+                },
             }
         }
-        
+
         me.viewer = OpenSeadragon(openseadragonOpts);
-        me.viewer.addHandler('zoom', function(event){ me.fireEvent('zoomChanged', event.zoom);});
+        me.viewer.addHandler('zoom', function (event) { me.fireEvent('zoomChanged', event.zoom); });
         me.viewer.gestureSettingsMouse.clickToZoom = false;
     },
-            
-    clear: function() {
+
+    clear: function () {
         var me = this;
         me.rect = null;
     },
-    
-    showImage: function(path, width, height, pageId) {
+
+    showImage: function (path, width, height, pageId) {
         var me = this;
-        
+
         me.imageHeight = height;
         me.imageWidth = width;
         me.imgPath = path;
         me.imgId = pageId;
-        
+
         var iiifPath = path;
-        if(!path.startsWith("http")) {
+        if (!path.startsWith("http")) {
             iiifPath = me.imagePrefix + path.replace(new RegExp('\/', 'g'), '!');
         }
-        
+
         me.viewer.open({
             "@context": "http://iiif.io/api/image/2/context.json",
             "@id": iiifPath,
             "height": Number(height),
             "width": Number(width),
-            "profile": [ "http://iiif.io/api/image/2/level2.json" ],
+            "profile": ["http://iiif.io/api/image/2/level2.json"],
             "protocol": "http://iiif.io/api/image",
             "tiles": [{
-                "scaleFactors": [ 1, 2, 4, 8, 16, 32 ],
+                "scaleFactors": [1, 2, 4, 8, 16, 32],
                 "width": 1024
             }]
         });
-        me.viewer.addOnceHandler('tile-drawn', function() {
-            if(me.rect && me.rect != null) me.showRect(me.rect.x, me.rect.y, me.rect.width, me.rect.height, me.rect.highlight);
+        me.viewer.addOnceHandler('tile-drawn', function () {
+            if (me.rect && me.rect != null) me.showRect(me.rect.x, me.rect.y, me.rect.width, me.rect.height, me.rect.highlight);
         });
         me.fireEvent('imageChanged', me, path, pageId);
     },
 
-    fitInImage: function() {
-    
+    fitInImage: function () {
+
         var me = this;
         me.viewer.viewport.goHome();
     },
-    
-    setZoomAndCenter: function(z) {
-    
+
+    setZoomAndCenter: function (z) {
+
         var me = this;
         me.viewer.viewport.zoomTo(z);
     },
-    
-    getActualRect: function() {
-    
+
+    getActualRect: function () {
+
         var me = this;
-        
+
         var viewportBounds = me.viewer.viewport.getBounds();
         var imageBounds = me.viewer.viewport.viewportToImageRectangle(viewportBounds.x, viewportBounds.y, viewportBounds.width, viewportBounds.height);
-        var x = (imageBounds.x < 0?0:imageBounds.x);
-        var y = (imageBounds.y < 0?0:imageBounds.y);
-        var width = (imageBounds.width > me.imageWidth?me.imageWidth:imageBounds.width);
-        var height = (imageBounds.height > me.imageHeight?me.imageHeight:imageBounds.height);
-        
+        var x = (imageBounds.x < 0 ? 0 : imageBounds.x);
+        var y = (imageBounds.y < 0 ? 0 : imageBounds.y);
+        var width = (imageBounds.width > me.imageWidth ? me.imageWidth : imageBounds.width);
+        var height = (imageBounds.height > me.imageHeight ? me.imageHeight : imageBounds.height);
+
         return {
             x: x,
             y: y,
@@ -165,29 +165,29 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
             height: height
         };
     },
-    
-    showRect: function(x, y, width, height, highlight) {
-    
+
+    showRect: function (x, y, width, height, highlight) {
+
         var me = this;
         me.rect = {
-            x:x,
-            y:y,
-            width:width,
-            height:height,
-            highlight:highlight
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+            highlight: highlight
         };
 
         var rect = me.viewer.viewport.imageToViewportRectangle(x, y, width, height);
         me.viewer.viewport.fitBoundsWithConstraints(rect);
     },
-    
-    addMeasures: function(shapes) {
-   
+
+    addMeasures: function (shapes) {
+
         var me = this;
 
         me.shapes.add('measures', shapes);
 
-        me.shapes.get('measures').each(function(shape) {
+        me.shapes.get('measures').each(function (shape) {
 
             var id = shape.get('id');
             var name = shape.get('name');
@@ -199,11 +199,11 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
             var measure = document.createElement("div");
             measure.id = me.id + '_' + id;
             measure.className = "measure";
-            measure.innerHTML = '<span class="' + (name === ''?'measureInnerEmpty':'measureInner') + '" id="' + me.id + '_' + id + '_inner">' + name + '</span>';
-            
+            measure.innerHTML = '<span class="' + (name === '' ? 'measureInnerEmpty' : 'measureInner') + '" id="' + me.id + '_' + id + '_inner">' + name + '</span>';
+
             var point = me.viewer.viewport.imageToViewportCoordinates(x, y);
             var rect = me.viewer.viewport.imageToViewportRectangle(x, y, width, height);
-            
+
             me.viewer.addOverlay({
                 element: measure,
                 location: new OpenSeadragon.Rect(point.x, point.y, rect.width, rect.height)
@@ -217,18 +217,18 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
             });
         });
     },
-    
-    addSVGOverlay: function(overlayId, overlay, name, uri, fn) {
-    
+
+    addSVGOverlay: function (overlayId, overlay, name, uri, fn) {
+
         var me = this;
-        
+
         var svgId = me.id + '_' + overlayId;
         var overlayOSD = me.viewer.getOverlayById(svgId);
-        if (overlayOSD !== null ) {
+        if (overlayOSD !== null) {
             return;
         }
-        
-        overlay.each(function(overlay){
+
+        overlay.each(function (overlay) {
             if (overlay.get('svg') !== null) {
                 parser = new DOMParser;
                 var overlayXML = parser.parseFromString(overlay.get('svg'), 'text/xml');
@@ -241,78 +241,78 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                 var point = me.viewer.viewport.imageToViewportCoordinates(x, y);
                 var rect = me.viewer.viewport.imageToViewportRectangle(x, y, width, height);
                 me.viewer.addOverlay({
-                    element:overlayXML.documentElement,
-                    location:new OpenSeadragon.Rect(point.x, point.y, rect.width, rect.height)
+                    element: overlayXML.documentElement,
+                    location: new OpenSeadragon.Rect(point.x, point.y, rect.width, rect.height)
                 });
             }
         });
     },
-    
-    removeSVGOverlay: function(overlayId) {
+
+    removeSVGOverlay: function (overlayId) {
         var me = this;
         var svgId = me.id + '_' + overlayId;
         var overlayOSD = me.viewer.getOverlayById(svgId);
-        if (overlayOSD !== null ) {
+        if (overlayOSD !== null) {
             overlayOSD.destroy();
         }
     },
-    
-    removeShapes: function(groupName) {
 
-        if(debug !== null && debug) {
+    removeShapes: function (groupName) {
+
+        if (debug !== null && debug) {
             console.log('view: OpenSeaDragonView: removeShapes');
             console.log(groupName);
         }
 
         var me = this;
-        if(!me.shapes.containsKey(groupName)) return;
+        if (!me.shapes.containsKey(groupName)) return;
 
-        var fn = function(shape) {
+        var fn = function (shape) {
 
             var id;
 
             try {
                 id = shape.get('id');
-            }catch(e) {
+            } catch (e) {
                 id = shape.id;
             }
 
             me.viewer.removeOverlay(me.id + '_' + id);
         };
 
-        if(me.shapes.get(groupName).each)
+        if (me.shapes.get(groupName).each)
             me.shapes.get(groupName).each(fn);
         else
             Ext.Array.each(me.shapes.get(groupName), fn);
 
         me.shapes.add(groupName, []);
     },
-    
-    highlightShape: function(event, owner, shape) {
-    
+
+    highlightShape: function (event, owner, shape) {
+
         var elem = Ext.get(shape);
         elem.addCls('highlighted');
-        
+
         var annotId = elem.getAttribute('data-edirom-annot-id');
         Ext.select('div[data-edirom-annot-id=' + annotId + ']', this.el).addCls('combinedHighlight');
         Ext.select('span[data-edirom-annot-id=' + annotId + ']', this.el).addCls('combinedHighlight');
     },
 
-    deHighlightShape: function(event, owner, shape) {
-    
+    deHighlightShape: function (event, owner, shape) {
+
         var elem = Ext.get(shape);
         elem.removeCls('highlighted');
-        
+
         var annotId = elem.getAttribute('data-edirom-annot-id');
         Ext.select('div[data-edirom-annot-id=' + annotId + ']', this.el).removeCls('combinedHighlight');
         Ext.select('span[data-edirom-annot-id=' + annotId + ']', this.el).removeCls('combinedHighlight');
     },
-    
-    addAnnotations: function(annotations) {
-    	
+
+    addAnnotations: function (annotations) {
+
         var me = this;
 
-        if(debug !== null && debug) {
+        if (debug !== null && debug) {
             console.log('controller: OpenseaDragonView: addAnnotaitons');
             console.log('annotations RAW');
             console.log(annotations);
@@ -320,12 +320,12 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
 
         me.shapes.add('annotations', []);
 
-        if(debug !== null && debug) {
+        if (debug !== null && debug) {
             console.log('me.shapes annotations');
             console.log(me.shapes.get('annotations'));
         }
 
-        annotations.each(function(annotation) {
+        annotations.each(function (annotation) {
 
             var annoId = annotation.get('id');
             var name = annotation.get('title');
@@ -334,11 +334,11 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
             var priority = annotation.get('priority');
             var fn = annotation.get('fn');
             var plist = Ext.Array.toArray(annotation.get('plist'));
-            
+
 
             Ext.Array.push(me.shapes.get('annotations'), plist);
 
-            Ext.Array.each(plist, function(shape) {
+            Ext.Array.each(plist, function (shape) {
 
                 var id = shape.id;
                 var x = shape.ulx;
@@ -346,26 +346,26 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                 var width = shape.lrx - shape.ulx;
                 var height = shape.lry - shape.uly;
                 var partType = shape.type;
-                
+
                 var anno = me.viewer.getOverlayById(me.id + '_' + id);
-                if(anno === null) {
-                    
+                if (anno === null) {
+
                     var anno = document.createElement('div');
                     anno.id = me.id + '_' + id;
                     anno.className = 'annotation';
 
                     var annoIcon = document.createElement('div');
-                    annoIcon.id = annoId + '_' + anno.id + '_inner';
+                    annoIcon.id = anno.id + '_inner';
                     annoIcon.className = 'annotIcon ' + categories + ' ' + priority + ' ' + partType;
                     anno.append(annoIcon);
-                    
+
                     var point = me.viewer.viewport.imageToViewportCoordinates(x, y);
                     var rect = me.viewer.viewport.imageToViewportRectangle(x, y, width, height);
-                    
-                    me.viewer.addOverlay({element:anno, location:new OpenSeadragon.Rect(point.x, point.y, rect.width, rect.height)});
-                
-                }else {
-                    
+
+                    me.viewer.addOverlay({ element: anno, location: new OpenSeadragon.Rect(point.x, point.y, rect.width, rect.height) });
+
+                } else {
+
                     var anno = me.el.getById(me.id + '_' + id);
                     var annoIcon = document.createElement('div');
                     annoIcon.id = annoId + '_' + anno.id + '_inner';
@@ -375,11 +375,11 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
 
                 // retrieve dom element of annotationIcon to bind actions
                 var annoIcon = me.el.getById(annoId + '_' + anno.id + '_inner');
-                
+
                 // bind onclick action to annotation icon
                 annoIcon.on('click', me.openShapeLink, me, {
                     single: true,
-                    stopEvent : true,
+                    stopEvent: true,
                     fn: fn
                 });
 
@@ -398,7 +398,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                 });
 
                 // bind function to fetch the contents for the annotation tooltip
-                tip.on('afterrender', function() {
+                tip.on('afterrender', function () {
                     window.doAJAXRequest('data/xql/getAnnotation.xql',
                         'GET',
                         {
@@ -406,22 +406,22 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                             target: 'tip',
                             edition: EdiromOnline.getApplication().activeEdition
                         },
-                        Ext.bind(function(response){
+                        Ext.bind(function (response) {
                             this.update(response.responseText);
                         }, this)
                     );
-                    this.el.on('mouseover', function() {
+                    this.el.on('mouseover', function () {
                         this.addCls('mouseOverAnnot');
                     }, this);
-                    this.el.on('mouseout', function() {
+                    this.el.on('mouseout', function () {
                         this.removeCls('mouseOverAnnot');
                     }, this);
                 }, tip);
 
                 // delay hiding the annotation tooltip
-                tip.on('beforehide', function() {
-                    if(this.el.hasCls('mouseOverAnnot')) {
-                        Ext.Function.defer(function(){
+                tip.on('beforehide', function () {
+                    if (this.el.hasCls('mouseOverAnnot')) {
+                        Ext.Function.defer(function () {
                             this.hide();
                         }, 1000, this);
                         return false;
@@ -430,18 +430,17 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
             });
         });
     },
-    
-    getShapes: function(groupName) {
-    
+
+    getShapes: function (groupName) {
+
         var me = this;
         var shapes = me.shapes.get(groupName);
-        return (shapes == null || typeof shapes === 'undefined'?[]:shapes);
+        return (shapes == null || typeof shapes === 'undefined' ? [] : shapes);
     },
-    
-    getShapeElem: function(shapeId) {
-   
 
-        if(debug !== null && debug) {
+    getShapeElem: function (shapeId) {
+
+        if (debug !== null && debug) {
             console.log('view: OpenSeaDragonView: getShapeElem: ' + shapeId);
         }
         var me = this;
@@ -449,21 +448,21 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
 
         return elem;
     },
-    
-    listenForShapeLink: function(e, dom, args) {
-    
+
+    listenForShapeLink: function (e, dom, args) {
+
         var me = this;
 
-        if(e.button != 0) return;
+        if (e.button != 0) return;
 
         args.elem.on('mouseup', me.openShapeLink, me, {
             single: true,
-            stopEvent : true,
+            stopEvent: true,
             fn: args.fn
         });
     },
 
-    openShapeLink: function(e, dom, args) {
+    openShapeLink: function (e, dom, args) {
         eval(args.fn);
     }
 });

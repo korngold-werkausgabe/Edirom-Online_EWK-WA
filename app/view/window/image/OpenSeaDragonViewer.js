@@ -285,6 +285,11 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                 id = shape.id;
             }
 
+            if(debug !== null && debug) {
+                console.log('me.id: ' + me.id);
+                console.log('+shape.id: ' + me.id + '_' + id);
+            }
+
             me.viewer.removeOverlay(me.id + '_' + id);
         };
 

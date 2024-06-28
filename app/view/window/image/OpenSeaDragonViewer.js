@@ -301,6 +301,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
         me.shapes.add(groupName, []);
     },
 
+
     highlightShape: function (event, owner, shape) {
 
         var elem = Ext.get(shape);
@@ -348,7 +349,6 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
             var priority = annotation.get('priority');
             var fn = annotation.get('fn');
             var plist = Ext.Array.toArray(annotation.get('plist'));
-
 
             Ext.Array.push(me.shapes.get('annotations'), plist);
 

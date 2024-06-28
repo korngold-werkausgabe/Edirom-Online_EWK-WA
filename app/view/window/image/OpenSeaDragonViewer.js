@@ -437,6 +437,10 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
                     }
                 }, tip);
             });
+            if(debug !== null && debug) {
+                console.log('me.shapes annotations');
+                console.log(me.shapes.get('annotations'));
+            }
         });
     },
 

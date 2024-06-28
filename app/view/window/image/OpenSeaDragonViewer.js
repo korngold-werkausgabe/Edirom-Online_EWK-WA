@@ -335,7 +335,13 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
         //add empty annotations array to shapes
         me.shapes.add('annotations', []);
 
-        if (debug !== null && debug) {
+        // template for annotation element
+        //TODO: currently unused
+        //var dh = Ext.DomHelper;
+        //var tpl = dh.createTemplate('<div id="{0}" class="annotation {2} {3} {4}" data-edirom-annot-id="{4}"><div id="{0}_inner" class="annotIcon" title="{1}"></div></div>');
+        //tpl.compile();
+
+        if(debug !== null && debug) {
             console.log('me.shapes annotations');
             console.log(me.shapes.get('annotations'));
         }

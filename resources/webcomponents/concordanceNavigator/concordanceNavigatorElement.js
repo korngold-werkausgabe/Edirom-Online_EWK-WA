@@ -218,13 +218,11 @@ function define(html) {
             this.timeContainer.style.display = "none";
             this.timelineBasisSelector.innerHTML = "";
             this.interval = clearInterval(this.interval);
-            console.log(this.data[0].plist);
             for (let uri of this.data[0].plist.replace(/\s|;/g, '\uC280').split('\uC280')) {
                 if (uri.length === 0) continue;
                 const data = await this.makeRequest("data/xql/getMeasuresInRecording.xql?uri=" + uri.split("#")[0]);
                 if (data.length > 0) {
                     this.timelineBasisData.push({ uri: uri.split("#")[0], measures: data });
-                    console.log("pushed!");
                 }
             }
             for (let item of this.timelineBasisData) {
@@ -258,22 +256,16 @@ function define(html) {
         switchTimelineBasis = (timelineBasisSiglum) => {
             console.log("Timeline basis switched!");
             this.timelineBasis = this.timelineBasisData.find(timelineBasis => timelineBasis.siglum === timelineBasisSiglum);
-            console.log(this.timelineBasis);
             this.currentTime = this.timelineBasis.begin;
             this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
             this.totalTimeElem.innerHTML = this.secondsToHhmmss(this.timelineBasis.end);
-            console.log(this.timelineBasis);
-
         }
 
         runInterval = () => {
             if (this.timelineState === "play") {
                 this.currentTime++;
-                console.log(this.currentTime);
                 this.timeChanged();
                 var newMeasure = this.getMeasureFromSeconds(this.currentTime);
-                console.log("New measure:");
-                console.log(newMeasure);
                 if (newMeasure !== false && newMeasure.measureLabel !== this.index) { // TODO: change naming of measure to index
                     var success = this.updateIndex(newMeasure.measureLabel);
                     if (success) {

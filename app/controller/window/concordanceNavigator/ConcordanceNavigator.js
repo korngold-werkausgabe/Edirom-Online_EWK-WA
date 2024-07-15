@@ -68,6 +68,14 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
             var linkController = app.getController('LinkController');
             linkController.loadLink(plist, { useExisting: true, onlyExisting: true });
         });
+        me.ediromConcordanceNavigator.addEventListener('changed-play-pause-status', function (e) {
+            // Or should it's own controller be responsible for this?
+            var newStatus = e.detail.newStatus;
+            var ediromVideoplayer = document.querySelector(`edirom-videoplayer`);
+            if (ediromVideoplayer) {
+                ediromVideoplayer.setAttribute("state", newStatus);
+            }
+        });
     },
 
     concordancesLoaded: function (concordanceStore, concordanceWindow) {

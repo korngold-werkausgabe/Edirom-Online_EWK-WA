@@ -292,11 +292,21 @@ function define(html) {
             this.timelineState = "play";
             this.playButton.innerHTML = "Pause";
             // TODO: Fire the LinkController here so that everything starts synchronos.
+            const changedPlayPauseStatus = new CustomEvent('changed-play-pause-status', {
+                detail: { newStatus: this.timelineState },
+                bubbles: true
+            });
+            this.dispatchEvent(changedPlayPauseStatus);
         }
 
         timelinePause = () => {
             this.timelineState = "pause";
             this.playButton.innerHTML = "Play";
+            const changedPlayPauseStatus = new CustomEvent('changed-play-pause-status', {
+                detail: { newStatus: this.timelineState },
+                bubbles: true
+            });
+            this.dispatchEvent(changedPlayPauseStatus);
         }
 
         getMeasureFromSeconds = (seconds) => {

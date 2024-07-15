@@ -176,7 +176,11 @@ function define(html) {
             else if (name == "target-measure") {
                 var newMeasure = this.getMeasureFromId(newValue);
                 if (newMeasure !== false) {
-                    this.video.currentTime = newMeasure.begin;
+                    console.log("target:", newMeasure.begin);
+                    console.log("current:", this.video.currentTime);
+                    if (Math.ceil(this.video.currentTime) != newMeasure.begin) { // here I am working with tolarance by rounding up because the timer of the concardance navigator is slightly ahead. Is this the best solution?
+                        this.video.currentTime = newMeasure.begin;
+                    }
                 }
             }
             else if (name == "target-time") {

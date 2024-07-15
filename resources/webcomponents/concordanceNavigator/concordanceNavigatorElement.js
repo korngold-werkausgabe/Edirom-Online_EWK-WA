@@ -69,6 +69,16 @@ function define(html) {
                     me.timelinePause();
                 }
             });
+            this.currentTimeElem.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    var newTime = this.hhmmssToSeconds(this.currentTimeElem.value);
+                    if (newTime === false) {
+                        newTime = this.currentTime;
+                    }
+                    this.currentTime = newTime;
+                    this.timeChanged();
+                }
+            });
 
         }
 
@@ -261,13 +271,13 @@ function define(html) {
         }
 
         timeChanged = () => {
-            this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
             if (this.currentTime >= this.timelineBasis.end) {
                 this.timelinePause();
                 this.currentTime = this.timelineBasis.end;
 
 
             }
+            this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
         }
 
         timelinePlay = () => {

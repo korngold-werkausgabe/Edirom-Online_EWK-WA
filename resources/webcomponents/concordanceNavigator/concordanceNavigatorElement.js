@@ -69,6 +69,9 @@ function define(html) {
                     me.timelinePause();
                 }
             });
+            this.currentTimeElem.addEventListener("focus", () => {
+                me.timelinePause();
+            });
             this.currentTimeElem.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") {
                     var newTime = this.hhmmssToSeconds(this.currentTimeElem.value);

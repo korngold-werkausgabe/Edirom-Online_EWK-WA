@@ -232,6 +232,10 @@ function define(html) {
                 var recordingTimeData = await this.makeRequest("data/xql/getRecordingTime.xql?uri=" + item.uri);
                 item.begin = this.hhmmssToSeconds(recordingTimeData.begin);
                 item.end = this.hhmmssToSeconds(recordingTimeData.end);
+                for (let measure of item.measures) {
+                    measure.begin = this.hhmmssToSeconds(measure.begin);
+                    measure.end = this.hhmmssToSeconds(measure.end);
+                }
             }
 
             if (this.timelineBasisData.length > 0) {
@@ -267,6 +271,15 @@ function define(html) {
                 this.currentTime++;
                 console.log(this.currentTime);
                 this.timeChanged();
+                var newMeasure = this.getMeasureFromSeconds(this.currentTime);
+                console.log("New measure:");
+                console.log(newMeasure);
+                if (newMeasure !== false && newMeasure.measureLabel !== this.index) { // TODO: change naming of measure to index
+                    var success = this.updateIndex(newMeasure.measureLabel);
+                    if (success) {
+                        this.showConnection();
+                    }
+                }
             }
             else if (this.timelineState === "pause") {
                 console.log("Interval paused!");

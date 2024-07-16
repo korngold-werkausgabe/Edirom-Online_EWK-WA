@@ -265,16 +265,19 @@ function define(html) {
             if (this.timelineState === "play") {
                 this.currentTime++;
                 this.timeChanged();
-                var newMeasure = this.getMeasureFromSeconds(this.currentTime);
-                if (newMeasure !== false && newMeasure.measureLabel !== this.index) { // TODO: change naming of measure to index
-                    var success = this.updateIndex(newMeasure.measureLabel);
-                    if (success) {
-                        this.showConnection();
-                    }
-                }
             }
             else if (this.timelineState === "pause") {
                 console.log("Interval paused!");
+            }
+        }
+
+        setNewMeasure = () => {
+            var newMeasure = this.getMeasureFromSeconds(this.currentTime);
+            if (newMeasure !== false && newMeasure.measureLabel !== this.index) { // TODO: change naming of measure to index
+                var success = this.updateIndex(newMeasure.measureLabel);
+                if (success) {
+                    this.showConnection();
+                }
             }
         }
 
@@ -282,15 +285,16 @@ function define(html) {
             if (this.currentTime >= this.timelineBasis.end) {
                 this.timelinePause();
                 this.currentTime = this.timelineBasis.end;
-
-
             }
+            this.setNewMeasure();
+
             this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
         }
 
         timelinePlay = () => {
             this.timelineState = "play";
             this.playButton.innerHTML = "Pause";
+            this.setNewMeasure();
             // TODO: Fire the LinkController here so that everything starts synchronos.
             const changedPlayPauseStatus = new CustomEvent('changed-play-pause-status', {
                 detail: { newStatus: this.timelineState },

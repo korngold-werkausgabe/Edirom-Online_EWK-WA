@@ -24,6 +24,7 @@ function define(html) {
             this.timelineState = "pause";
             this.interval = null;
             this.currentTime = 0;
+            this.stopwatch = { elapsedTime: 0 }
 
             // Elements
             this.concordanceSelector = this.shadow.querySelector("#concordance-selector");
@@ -237,7 +238,7 @@ function define(html) {
             }
 
             if (this.timelineBasisData.length > 0) {
-                this.interval = setInterval(this.runInterval, 1000);
+                // this.interval = setInterval(this.runInterval, 1000);
                 this.timeContainer.style.display = "block";
                 for (let item of this.timelineBasisData) {
                     let option = document.createElement("option");
@@ -291,9 +292,22 @@ function define(html) {
             this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
         }
 
+        startStopwatch = () => {
+            console.log("!!!!");
+            this.stopwatch.startTime = Date.now();
+            this.stopwatch.frozenCurrentTime = this.currentTime;
+            this.stopwatch.intervalId = setInterval(() => {
+                //calculate elapsed time
+                this.stopwatch.elapsedTime = Date.now() - this.stopwatch.startTime;
+                this.currentTime = this.stopwatch.frozenCurrentTime + Math.floor(this.stopwatch.elapsedTime / 1000);
+                this.timeChanged();
+            }, 100);
+        }
+
         timelinePlay = () => {
             this.timelineState = "play";
             this.playButton.innerHTML = "Pause";
+            this.startStopwatch();
             this.setNewMeasure();
             // TODO: Fire the LinkController here so that everything starts synchronos.
             const changedPlayPauseStatus = new CustomEvent('changed-play-pause-status', {
@@ -306,6 +320,7 @@ function define(html) {
         timelinePause = () => {
             this.timelineState = "pause";
             this.playButton.innerHTML = "Play";
+            clearInterval(this.stopwatch.intervalId);
             const changedPlayPauseStatus = new CustomEvent('changed-play-pause-status', {
                 detail: { newStatus: this.timelineState },
                 bubbles: true

@@ -274,7 +274,7 @@ function define(html) {
 
         setNewMeasure = () => {
             var newMeasure = this.getMeasureFromSeconds(this.currentTime);
-            if (newMeasure !== false && newMeasure.measureLabel !== this.index) { // TODO: change naming of measure to index
+            if (newMeasure !== false && parseInt(newMeasure.measureLabel) !== this.index) { // TODO: change naming of measure to index
                 var success = this.updateIndex(newMeasure.measureLabel);
                 if (success) {
                     this.showConnection();

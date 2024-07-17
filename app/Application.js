@@ -107,7 +107,7 @@ Ext.define('EdiromOnline.Application', {
         });
 
         me.getController('PreferenceController').initPreferences(me.activeEdition);
-        if(getPreference('use_secrets'))
+        if(getPreference('use_secrets') === "true")
             me.getController('SecretController').initSecrets(me.activeEdition);
         me.getController('LanguageController').initLangFile(me.activeEdition, 'de');
         me.getController('LanguageController').initLangFile(me.activeEdition, 'en');

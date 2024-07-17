@@ -86,6 +86,7 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
 
         if (getPreference('use_secrets') === "true") {
             openseadragonOpts.ajaxWithCredentials = getPreference('ajax_with_credentials') === "true" ? true : false ;
+            openseadragonOpts.loadTilesWithAjax = true;
             openseadragonOpts.ajaxHeaders = {
                 auth: {
                     username: getSecret('imagesUser'),

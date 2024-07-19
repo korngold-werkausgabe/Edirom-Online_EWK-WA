@@ -398,9 +398,11 @@ function define(html) {
 
             if (updateTime && this.timelineBasis) {
                 var basisMeasure = this.timelineBasis.measures.find(measure => measure.measureLabel === this.getEnhancedValue());
-                console.log("Updating time!");
-                this.currentTime = basisMeasure.begin;
-                this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
+                if (basisMeasure) {
+                    console.log("Updating time!");
+                    this.currentTime = basisMeasure.begin;
+                    this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
+                }
             }
             return true;
         }

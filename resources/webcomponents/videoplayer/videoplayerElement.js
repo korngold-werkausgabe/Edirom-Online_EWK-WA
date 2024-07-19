@@ -178,7 +178,8 @@ function define(html) {
                 if (newMeasure !== false) {
                     console.log("target:", newMeasure.begin);
                     console.log("current:", this.video.currentTime);
-                    if (Math.ceil(this.video.currentTime) != newMeasure.begin) { // here I am working with tolarance by rounding up because the timer of the concardance navigator is slightly ahead. Is this the best solution?
+                    if (Math.abs(this.video.currentTime - newMeasure.begin) > 0.6) { // here I am working with tolarance because the video.currentTime is not accurate. Is this the best solution? The tolarance is so big because jumping to a time in the video is very slow and then behind the time of the concordance navigator
+                        console.log("difference too big, syncing");
                         this.video.currentTime = newMeasure.begin;
                     }
                 }

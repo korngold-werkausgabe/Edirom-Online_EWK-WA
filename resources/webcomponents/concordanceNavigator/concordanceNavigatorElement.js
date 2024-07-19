@@ -48,18 +48,25 @@ function define(html) {
             this.groupSelector.addEventListener("change", function () { me.switchGroup(this.value) });
             this.timelineBasisSelector.addEventListener("change", function () { me.switchTimelineBasis(this.value) });
             this.itemSlider.addEventListener("input", function () {
+                me.timelinePause();
                 me.updateIndex(this.value);
             });
             this.itemSelector.addEventListener("keypress", function (e) {
                 me.specialKeyOnInput(this, e);
             });
+            this.itemSelector.addEventListener("focus", () => {
+                me.timelinePause();
+            });
             this.showConnectionButton.addEventListener("click", function () {
+                me.timelinePause();
                 me.showConnection();
             });
             this.prevConnectionButton.addEventListener("click", function () {
+                me.timelinePause();
                 me.showPrevConnection();
             });
             this.nextConnectionButton.addEventListener("click", function () {
+                me.timelinePause();
                 me.showNextConnection();
             });
             this.playButton.addEventListener("click", function () {
@@ -272,13 +279,11 @@ function define(html) {
             }
         }
 
-        setNewMeasure = () => {
+        checkForNewMeasure = () => { // TODO: Rename Function.
             var newMeasure = this.getMeasureFromSeconds(this.currentTime);
-            if (newMeasure !== false && parseInt(newMeasure.measureLabel) !== this.index) { // TODO: change naming of measure to index
-                var success = this.updateIndex(newMeasure.measureLabel);
-                if (success) {
-                    this.showConnection();
-                }
+            if (newMeasure !== false && newMeasure.measureLabel !== this.getEnhancedValue()) { // TODO: change naming of measure to index
+                this.updateIndex(this.data.findIndex(item => item[this.labelField] === newMeasure.measureLabel), false);
+                this.showConnection();
             }
         }
 
@@ -287,7 +292,7 @@ function define(html) {
                 this.timelinePause();
                 this.currentTime = this.timelineBasis.end;
             }
-            this.setNewMeasure();
+            this.checkForNewMeasure();
 
             this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
         }
@@ -308,7 +313,7 @@ function define(html) {
             this.timelineState = "play";
             this.playButton.innerHTML = "Pause";
             this.startStopwatch();
-            this.setNewMeasure();
+            this.showConnection();
             // TODO: Fire the LinkController here so that everything starts synchronos.
             const changedPlayPauseStatus = new CustomEvent('changed-play-pause-status', {
                 detail: { newStatus: this.timelineState },
@@ -337,6 +342,7 @@ function define(html) {
             return false;
         }
 
+
         makeRequest = (url) => {
             return fetch(url)
                 .then(response => {
@@ -359,6 +365,7 @@ function define(html) {
         }
 
         showConnection = () => {
+            console.log("showing!");
             // Send showConnection event to host
             const showConnectionRequest = new CustomEvent('show-connection-request', {
                 detail: { plist: this.data[this.index]["plist"] },
@@ -381,12 +388,20 @@ function define(html) {
             }
         }
 
-        updateIndex = (newIndex) => {
+        updateIndex = (newIndex, updateTime = true) => {
+            console.log(updateTime);
             var newIndex = parseInt(newIndex);
             if (newIndex < 0 || newIndex > this.maxIndex) return false; // Prevent out of bounds
             this.index = newIndex;
             this.itemSlider.value = this.index;
             this.itemSelector.value = this.getEnhancedValue();
+
+            if (updateTime && this.timelineBasis) {
+                var basisMeasure = this.timelineBasis.measures.find(measure => measure.measureLabel === this.getEnhancedValue());
+                console.log("Updating time!");
+                this.currentTime = basisMeasure.begin;
+                this.currentTimeElem.value = this.secondsToHhmmss(this.currentTime);
+            }
             return true;
         }
 

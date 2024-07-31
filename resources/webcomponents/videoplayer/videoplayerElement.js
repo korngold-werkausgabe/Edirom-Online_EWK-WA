@@ -21,8 +21,12 @@ function define(html) {
             this.currentTimeElem = this.shadow.querySelector("#current-time");
             this.totalTimeElem = this.shadow.querySelector(".total-time");
             this.currentMeasureElem = this.shadow.querySelector("#current-measure");
+            this.volumeContainer = this.shadow.querySelector("#volume-container");
+            this.volumeSlider = this.shadow.querySelector("#volume-slider");
+            this.muteBtn = this.shadow.querySelector("#mute-btn");
             this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
             this.isScrubbing = false;
+            this.volumeBeforeMute = 0.5;
 
             this.canvas.addEventListener("click", () => {
                 if (this.state == "play") {
@@ -107,6 +111,34 @@ function define(html) {
                 this.state = "pause";
             });
 
+            this.volumeSlider.addEventListener("input", e => {
+                this.video.volume = parseFloat(e.target.value);
+            });
+
+            this.muteBtn.addEventListener("click", () => {
+                if (this.video.muted) {
+                    this.video.muted = false;
+                    this.video.volume = this.volumeBeforeMute;
+                }
+                else {
+                    this.video.muted = true;
+                    this.volumeBeforeMute = this.video.volume;
+                    this.video.volume = 0;
+                }
+            });
+
+            this.video.addEventListener("volumechange", () => {
+                if (this.video.volume === 0) {
+                    this.video.muted = true;
+                }
+                else {
+                    this.video.muted = false;
+                }
+
+                this.adjustVolumeSlider();
+                this.adjustVolumeIcon();
+            });
+
         }
 
         static get observedAttributes() {
@@ -146,6 +178,8 @@ function define(html) {
         // Gets exectuted when the element is added to the DOM
         connectedCallback() {
             setInterval(this.drawScreen, 33); // The 33 is still hard coded!
+            this.adjustVolumeIcon();
+            this.adjustVolumeSlider();
         }
 
         disconnectedCallback() {
@@ -338,6 +372,24 @@ function define(html) {
                 .then(data => {
                     this.measuresData = data;
                 });
+        }
+
+        adjustVolumeSlider = () => {
+            if (this.volumeSlider.value != this.video.volume) {
+                this.volumeSlider.value = this.video.volume;
+            }
+        }
+
+        adjustVolumeIcon = () => {
+            let volumeLevel;
+            if (this.video.muted || this.video.volume === 0) {
+                volumeLevel = "muted";
+            } else if (this.video.volume >= 0.5) {
+                volumeLevel = "high";
+            } else {
+                volumeLevel = "low";
+            }
+            this.volumeContainer.dataset.volumeLevel = volumeLevel;
         }
     }
 

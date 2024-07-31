@@ -125,3 +125,38 @@ video {
 #current-time, #current-measure {
     text-align: center;
 }
+
+#volume-high-icon,
+#volume-low-icon,
+#volume-muted-icon {
+    display: none;
+}
+
+#volume-container[data-volume-level="high"] #volume-high-icon {
+    display: block;
+}
+
+#volume-container[data-volume-level="low"] #volume-low-icon {
+    display: block;
+}
+
+#volume-container[data-volume-level="muted"] #volume-muted-icon {
+    display: block;
+}
+
+#volume-container {
+    display: flex;
+    align-items: center;
+}
+
+#volume-slider {
+    width: 0;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: width 150ms ease-in-out, transform 150ms ease-in-out;
+}
+
+#volume-container:hover #volume-slider{
+    width: 90px;
+    transform: scaleX(1);
+}

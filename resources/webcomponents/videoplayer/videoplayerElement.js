@@ -24,6 +24,8 @@ function define(html) {
             this.volumeContainer = this.shadow.querySelector("#volume-container");
             this.volumeSlider = this.shadow.querySelector("#volume-slider");
             this.muteBtn = this.shadow.querySelector("#mute-btn");
+            this.loopContainer = this.shadow.querySelector("#loop-container");
+            this.loopCheckbox = this.shadow.querySelector("#loop-checkbox");
             this.leadingZeroFormatter = new Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 });
             this.isScrubbing = false;
             this.volumeBeforeMute = 0.5;
@@ -137,6 +139,17 @@ function define(html) {
 
                 this.adjustVolumeSlider();
                 this.adjustVolumeIcon();
+            });
+
+            this.loopCheckbox.addEventListener("change", () => {
+                console.log("checkbox clicked");
+                if (this.loopCheckbox.checked) {
+                    console.log("Checkbox is checked..");
+                    this.loopContainer.dataset.loop = "true";
+                } else {
+                    console.log("Checkbox is not checked..");
+                    this.loopContainer.dataset.loop = "false";
+                }
             });
 
         }

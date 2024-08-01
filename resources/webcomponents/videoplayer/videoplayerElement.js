@@ -52,13 +52,6 @@ function define(html) {
                 const percent = this.video.currentTime / this.video.duration;
                 this.timelineContainer.style.setProperty("--progress-position", percent);
                 this.updateMeasureForm();
-
-                // Send timeupdate event to host
-                const communicateTimeupdateEvent = new CustomEvent('communicate-time-update', {
-                    detail: { time: this.video.currentTime },
-                    bubbles: true
-                });
-                this.dispatchEvent(communicateTimeupdateEvent);
             });
 
             this.video.addEventListener("loadedmetadata", () => { // when metadata is loaded we can access the time data

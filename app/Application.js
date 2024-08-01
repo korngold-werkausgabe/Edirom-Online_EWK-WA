@@ -20,12 +20,13 @@ Ext.define('EdiromOnline.Application', {
     name: 'EdiromOnline',
 
     extend: 'Ext.app.Application',
-    
+
     controllers: [
         'AJAXController',
         'CookieController',
         'LanguageController',
         'PreferenceController',
+        'SecretController',
         'ToolsController',
         'LinkController',
         'desktop.Desktop',
@@ -42,6 +43,7 @@ Ext.define('EdiromOnline.Application', {
         'window.XmlView',
         'window.concordanceNavigator.ConcordanceNavigator',
         'window.audio.AudioView',
+        'window.video.VideoView',
         'window.search.SearchWindow',
         'window.source.SourceView',
         'window.source.PageBasedView',
@@ -51,46 +53,46 @@ Ext.define('EdiromOnline.Application', {
         'window.text.TextFacsimileSplitView',
         'window.text.TextView'
     ],
-    
+
     models: [
         'EdiromOnline.model.Edition',
         'EdiromOnline.model.Work'
     ],
-    
+
     requires: [
         'EdiromOnline.view.desktop.App'
     ],
-    
-    activeEdition: '',
-    activeWork: '', 
 
-    launch: function() {
+    activeEdition: '',
+    activeWork: '',
+
+    launch: function () {
         var me = this;
-        
+
         window.getActiveEdition = Ext.bind(this.getActiveEdition, this);
 
         me.addEvents('workSelected');
-        
+
         var editionParam = me.getURLParameter('edition');
-        if(editionParam !== null)
+        if (editionParam !== null)
             me.activeEdition = editionParam;
-        
+
         Ext.Ajax.request({
             url: 'data/xql/getEditionURI.xql',
             async: false,
             method: 'GET',
             params: {
                 uri: me.activeEdition
-            },success: function(response){
+            }, success: function (response) {
                 this.activeEdition = response.responseText;
             },
             scope: this
         });
-        
+
         var workParam = me.getURLParameter('work');
-        if(workParam !== null)
+        if (workParam !== null)
             me.activeWork = workParam;
-        
+
         Ext.Ajax.request({
             url: 'data/xql/getWorkID.xql',
             async: false,
@@ -98,47 +100,49 @@ Ext.define('EdiromOnline.Application', {
             params: {
                 uri: me.activeEdition,
                 workId: me.activeWork
-            },success: function(response){
+            }, success: function (response) {
                 this.activeWork = response.responseText;
             },
             scope: this
         });
-        
+
         me.getController('PreferenceController').initPreferences(me.activeEdition);
+        if(getPreference('use_secrets') === "true")
+            me.getController('SecretController').initSecrets(me.activeEdition);
         me.getController('LanguageController').initLangFile(me.activeEdition, 'de');
         me.getController('LanguageController').initLangFile(me.activeEdition, 'en');
         me.initDataStores();
 
-        var app = Ext.create('EdiromOnline.view.desktop.App', {app: this});
+        var app = Ext.create('EdiromOnline.view.desktop.App', { app: this });
 
         var match,
-            pl     = /\+/g,  // Regex for replacing addition symbol with a space
+            pl = /\+/g,  // Regex for replacing addition symbol with a space
             search = /([^&=]+)=?([^&]*)/g,
             decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
-            query  = window.location.search.substring(1);
+            query = window.location.search.substring(1);
 
         urlParams = {};
         while (match = search.exec(query))
             urlParams[decode(match[1])] = decode(match[2]);
-            
-        if(typeof urlParams.uri != 'undefined') {
-            if(window.location.hash != '')
-                urlParams.uri = urlParams.uri + window.location.hash; 
-        
-            app.on('ready', Ext.bind(window.loadLink, me, [urlParams.uri, {sort:'sortGrid'}], false), me, {single: true});
-        }else {
-            app.on('ready', Ext.bind(me.openStartDocuments, me), me, {single: true});
+
+        if (typeof urlParams.uri != 'undefined') {
+            if (window.location.hash != '')
+                urlParams.uri = urlParams.uri + window.location.hash;
+
+            app.on('ready', Ext.bind(window.loadLink, me, [urlParams.uri, { sort: 'sortGrid' }], false), me, { single: true });
+        } else {
+            app.on('ready', Ext.bind(me.openStartDocuments, me), me, { single: true });
         }
     },
-    
-    initDataStores: function() {
+
+    initDataStores: function () {
 
         var edition = Ext.create('Ext.data.Store', {
             model: 'EdiromOnline.model.Edition',
             storeId: 'Editions'
         });
 
-        edition.getProxy().extraParams = {id: this.activeEdition};
+        edition.getProxy().extraParams = { id: this.activeEdition };
         edition.load();
 
         var works = Ext.create('Ext.data.Store', {
@@ -146,41 +150,41 @@ Ext.define('EdiromOnline.Application', {
             storeId: 'Works'
         });
 
-        works.getProxy().extraParams = {editionId: this.activeEdition, lang: getPreference('application_language')};
+        works.getProxy().extraParams = { editionId: this.activeEdition, lang: getPreference('application_language') };
         works.load();
     },
-    
-    getActiveEdition: function() {
+
+    getActiveEdition: function () {
         return this.activeEdition;
     },
-    
-    selectEdition: function(editionId) {
+
+    selectEdition: function (editionId) {
         this.activeEdition = editionId;
         this.fireEvent('editionSelected', editionId);
         window.open(window.location.pathname + '?edition=' + editionId, "_self");
     },
-    
-    selectWork: function(workId) {
+
+    selectWork: function (workId) {
         this.activeWork = workId;
         this.fireEvent('workSelected', workId);
     },
-    
-    callFunctionOfEdition: function(win, fnName, callback, args) {
+
+    callFunctionOfEdition: function (win, fnName, callback, args) {
         var me = this;
 
-        var arguments = Ext.apply({workId: me.activeWork}, args);
+        var arguments = Ext.apply({ workId: me.activeWork }, args);
         var editions = Ext.getStore('Editions');
         var editionIndex = editions.find('doc', me.activeEdition);
         var edition = editions.getAt(editionIndex);
-        
+
         edition[fnName](callback, arguments);
-	},
-	
-	getURLParameter: function(parameter) {
+    },
+
+    getURLParameter: function (parameter) {
         return decodeURIComponent((new RegExp('[?|&]' + parameter + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
     },
-    
-    openStartDocuments: function() {
+
+    openStartDocuments: function () {
         var me = this;
         var uris = me.getController('PreferenceController').getPreference('start_documents_uri');
         window.loadLink(uris);

@@ -33,6 +33,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "EdiromOnline.controller.LanguageController": [],
   "EdiromOnline.controller.LinkController": [],
   "EdiromOnline.controller.PreferenceController": [],
+  "EdiromOnline.controller.SecretController": [],
   "EdiromOnline.controller.ToolsController": [],
   "EdiromOnline.controller.desktop.Desktop": [],
   "EdiromOnline.controller.desktop.TaskBar": [],
@@ -56,6 +57,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "EdiromOnline.controller.window.text.FacsimileView": [],
   "EdiromOnline.controller.window.text.TextFacsimileSplitView": [],
   "EdiromOnline.controller.window.text.TextView": [],
+  "EdiromOnline.controller.window.video.VideoView": [],
   "EdiromOnline.model.Annotation": [],
   "EdiromOnline.model.AnnotationParticipant": [],
   "EdiromOnline.model.Edition": [],
@@ -105,6 +107,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "EdiromOnline.view.window.text.TextFacsimileSplitView": [],
   "EdiromOnline.view.window.text.TextView": [],
   "EdiromOnline.view.window.util.PageSpinner": [],
+  "EdiromOnline.view.window.video.VideoView": [],
   "Ext.AbstractComponent": [],
   "Ext.AbstractManager": [],
   "Ext.AbstractPlugin": [],
@@ -947,6 +950,7 @@ Ext.ClassManager.addNameAliasMappings({
   "EdiromOnline.controller.LanguageController": [],
   "EdiromOnline.controller.LinkController": [],
   "EdiromOnline.controller.PreferenceController": [],
+  "EdiromOnline.controller.SecretController": [],
   "EdiromOnline.controller.ToolsController": [],
   "EdiromOnline.controller.desktop.Desktop": [],
   "EdiromOnline.controller.desktop.TaskBar": [],
@@ -970,6 +974,7 @@ Ext.ClassManager.addNameAliasMappings({
   "EdiromOnline.controller.window.text.FacsimileView": [],
   "EdiromOnline.controller.window.text.TextFacsimileSplitView": [],
   "EdiromOnline.controller.window.text.TextView": [],
+  "EdiromOnline.controller.window.video.VideoView": [],
   "EdiromOnline.model.Annotation": [],
   "EdiromOnline.model.AnnotationParticipant": [],
   "EdiromOnline.model.Edition": [],
@@ -1079,6 +1084,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "EdiromOnline.view.window.util.PageSpinner": [
     "widget.pageSpinner"
+  ],
+  "EdiromOnline.view.window.video.VideoView": [
+    "widget.videoView"
   ],
   "Ext.AbstractComponent": [],
   "Ext.AbstractManager": [],

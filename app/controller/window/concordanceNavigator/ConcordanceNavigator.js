@@ -68,6 +68,14 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
             var linkController = app.getController('LinkController');
             linkController.loadLink(plist, { useExisting: true, onlyExisting: true });
         });
+        me.ediromConcordanceNavigator.addEventListener('changed-play-pause-status', function (e) {
+            // Or should it's own controller be responsible for this?
+            var newStatus = e.detail.newStatus;
+            var ediromVideoplayer = document.querySelector(`edirom-videoplayer`);
+            if (ediromVideoplayer) {
+                ediromVideoplayer.setAttribute("state", newStatus);
+            }
+        });
     },
 
     concordancesLoaded: function (concordanceStore, concordanceWindow) {
@@ -77,6 +85,6 @@ Ext.define('EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavig
         for (let concordance of concordanceStore.data.items) {
             concordanceStoreRaw.push(concordance.raw);
         }
-        me.ediromConcordanceNavigator.setAttribute("data-concordances", JSON.stringify(concordanceStoreRaw)); // set concordances as attribute to the web component
+        me.ediromConcordanceNavigator.setAttribute("concordances-data", JSON.stringify(concordanceStoreRaw)); // set concordances as attribute to the web component
     },
 });

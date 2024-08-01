@@ -1,0 +1,44 @@
+<div>
+    <link rel="stylesheet" href="resources/webcomponents/videoplayer/videoplayerElement.css">
+    </link>
+    <div id="player-container">
+        <video></video>
+        <canvas id="video-canvas" width="640" height="480"></canvas>
+        <div id="player-controls-container">
+            <div id="timelines">
+                <div id="main-timeline-container" class="timeline-container">
+                    <div id="main-timeline" class="timeline">
+                        <div class="position-indicator-arrow"></div>
+                        <div class="position-indicator-line"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="controls">
+                <button id="play-pause-btn">
+                    <img id="play-icon" src="https://www.svgrepo.com/download/522226/play.svg" height="20px" width="20px"></img>
+                    <img id="pause-icon" src="https://www.svgrepo.com/download/522219/pauze.svg" height="20px" width="20px"></img>
+                </button>
+                <div id="volume-container" data-volume-level="high">
+                    <button id="mute-btn">
+                        <svg id="volume-high-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#00000">
+                            <path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320ZM400-606l-86 86H200v80h114l86 86v-252ZM300-480Z"></path>
+                        </svg>
+                        <svg id="volume-low-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#00000">
+                            <path d="M200-360v-240h160l200-200v640L360-360H200Zm440 40v-322q45 21 72.5 65t27.5 97q0 53-27.5 96T640-320ZM480-606l-86 86H280v80h114l86 86v-252ZM380-480Z"></path>
+                        </svg>
+                        <svg id="volume-muted-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#00000">
+                            <path d="M792-56 671-177q-25 16-53 27.5T560-131v-82q14-5 27.5-10t25.5-12L480-368v208L280-360H120v-240h128L56-792l56-56 736 736-56 56Zm-8-232-58-58q17-31 25.5-65t8.5-70q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 53-14.5 102T784-288ZM650-422l-90-90v-130q47 22 73.5 66t26.5 96q0 15-2.5 29.5T650-422ZM480-592 376-696l104-104v208Zm-80 238v-94l-72-72H200v80h114l86 86Zm-36-130Z"></path>
+                        </svg>
+                    </button>
+                    <input id="volume-slider" type="range" min="0" max="1" step="any"></input>
+                </div>
+                <div id="duration-container">
+                    <input type="text" id="current-time" value="0:00" size="5"></input>
+                    /
+                    <div class="total-time"></div>
+                </div>
+                <input type="text" id="current-measure" value="0" size="2"></input>
+            </div>
+        </div>
+    </div>
+</div>

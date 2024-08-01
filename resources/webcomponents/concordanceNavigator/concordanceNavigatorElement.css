@@ -22,6 +22,16 @@ h1 {
     flex-grow: 1;
 }
 
+#time-container {
+    display: none;
+}
+
+.duration-container {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 button {
     margin: 3px;
 }

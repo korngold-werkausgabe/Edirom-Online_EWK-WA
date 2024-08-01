@@ -132,6 +132,12 @@ function define(html) {
                 this.adjustVolumeIcon();
             });
 
+            this.video.addEventListener("pause", () => {
+                if (this.state == "play") {
+                    this.state = "pause";
+                }
+            });
+
         }
 
         static get observedAttributes() {

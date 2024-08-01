@@ -8,8 +8,16 @@ h1 {
     flex-direction: column;
 }
 
+#item-selector-container, #group-selector-container, #concordance-selector-container, #time-container {
+    margin: 5px;
+}
+
 #concordance-selector, #group-selector, #item-selector {
     text-align: center;
+}
+
+#item-slider, #item-selector, #timeline-basis-selector, #duration-container {
+    margin-bottom: 3px;
 }
 
 #buttons-container {
@@ -26,7 +34,7 @@ h1 {
     display: none;
 }
 
-.duration-container {
+#duration-container {
     display: flex;
     align-items: center;
     gap: 0.25rem;

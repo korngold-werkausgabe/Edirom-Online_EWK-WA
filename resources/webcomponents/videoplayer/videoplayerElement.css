@@ -16,7 +16,7 @@ video {
 }
 
 
-.player-controls-container {
+#player-controls-container {
     z-index: 100;
     margin: 0;
     width: 100%;
@@ -97,26 +97,26 @@ video {
     width: 2px;
 }
 
-.player-controls-container .controls {
+#player-controls-container #controls {
     display: flex;
     gap: .5rem;
     padding: .25rem;
     align-items: center;
 }
 
-.player-controls-container .controls button {
+#player-controls-container #controls button {
     cursor: pointer;
 }
 
-:host([state="play"]) .play-icon {
+:host([state="play"]) #play-icon {
     display: none;
 }
 
-:host([state="pause"]) .pause-icon {
+:host([state="pause"]) #pause-icon {
     display: none;
 }
 
-.duration-container {
+#duration-container {
     display: flex;
     align-items: center;
     gap: 0.25rem;

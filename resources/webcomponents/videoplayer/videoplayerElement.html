@@ -4,7 +4,7 @@
     <div id="player-container">
         <video></video>
         <canvas id="video-canvas" width="640" height="480"></canvas>
-        <div class="player-controls-container">
+        <div id="player-controls-container">
             <div id="timelines">
                 <div id="main-timeline-container" class="timeline-container">
                     <div id="main-timeline" class="timeline">
@@ -13,10 +13,10 @@
                     </div>
                 </div>
             </div>
-            <div class="controls">
-                <button class="play-pause-btn">
-                    <img class="play-icon" src="https://www.svgrepo.com/download/522226/play.svg" height="20px" width="20px"></img>
-                    <img class="pause-icon" src="https://www.svgrepo.com/download/522219/pauze.svg" height="20px" width="20px"></img>
+            <div id="controls">
+                <button id="play-pause-btn">
+                    <img id="play-icon" src="https://www.svgrepo.com/download/522226/play.svg" height="20px" width="20px"></img>
+                    <img id="pause-icon" src="https://www.svgrepo.com/download/522219/pauze.svg" height="20px" width="20px"></img>
                 </button>
                 <div id="volume-container" data-volume-level="high">
                     <button id="mute-btn">
@@ -32,7 +32,7 @@
                     </button>
                     <input id="volume-slider" type="range" min="0" max="1" step="any"></input>
                 </div>
-                <div class="duration-container">
+                <div id="duration-container">
                     <input type="text" id="current-time" value="0:00" size="5"></input>
                     /
                     <div class="total-time"></div>

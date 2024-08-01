@@ -15,8 +15,8 @@ function define(html) {
             this.canvas = this.shadow.querySelector('#video-canvas');
             this.ctx = this.canvas.getContext('2d');
             this.playerContainer = this.shadow.querySelector('#player-container');
-            this.playerControlsContainer = this.shadow.querySelector('.player-controls-container');
-            this.playPauseBtn = this.shadow.querySelector('.play-pause-btn');
+            this.playerControlsContainer = this.shadow.querySelector('#player-controls-container');
+            this.playPauseBtn = this.shadow.querySelector('#play-pause-btn');
             this.timelineContainer = this.shadow.querySelector(".timeline-container");
             this.currentTimeElem = this.shadow.querySelector("#current-time");
             this.totalTimeElem = this.shadow.querySelector(".total-time");

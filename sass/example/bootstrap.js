@@ -41,6 +41,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "EdiromOnline.controller.window.XmlView": [],
   "EdiromOnline.controller.window.audio.AudioView": [],
   "EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavigator": [],
+  "EdiromOnline.controller.webSocket.WebSocket": [],
   "EdiromOnline.controller.window.iFrameView": [],
   "EdiromOnline.controller.window.search.SearchWindow": [],
   "EdiromOnline.controller.window.source.MeasureBasedView": [],
@@ -77,6 +78,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "EdiromOnline.view.window.annotationLayouts.AnnotationLayout3": [],
   "EdiromOnline.view.window.audio.AudioView": [],
   "EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator": [],
+  "EdiromOnline.view.webSocket.WebSocket": [],
   "EdiromOnline.view.window.iFrameView": [],
   "EdiromOnline.view.window.image.ImageLoader": [],
   "EdiromOnline.view.window.image.ImageViewer": [],
@@ -949,6 +951,7 @@ Ext.ClassManager.addNameAliasMappings({
   "EdiromOnline.controller.window.XmlView": [],
   "EdiromOnline.controller.window.audio.AudioView": [],
   "EdiromOnline.controller.window.concordanceNavigator.ConcordanceNavigator": [],
+  "EdiromOnline.controller.webSocket.WebSocket": [],
   "EdiromOnline.controller.window.iFrameView": [],
   "EdiromOnline.controller.window.search.SearchWindow": [],
   "EdiromOnline.controller.window.source.MeasureBasedView": [],
@@ -1014,6 +1017,9 @@ Ext.ClassManager.addNameAliasMappings({
   ],
   "EdiromOnline.view.window.concordanceNavigator.ConcordanceNavigator": [
     "widget.concordanceNavigator"
+  ],
+  "EdiromOnline.view.webSocket.WebSocket": [
+    "widget.webSocket"
   ],
   "EdiromOnline.view.window.iFrameView": [
     "widget.iFrameView"

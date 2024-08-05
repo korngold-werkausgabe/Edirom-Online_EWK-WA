@@ -13,7 +13,7 @@ function define(html) {
             this.shadow = this.attachShadow({ mode: "open" });
             this.shadow.innerHTML = html;
             this.webSocket = new WebSocket("http://localhost:3000/1234");
-            this.sendBtn = this.shadow.querySelector("#send-btn");
+            this.webSocketContainer = this.shadow.querySelector("#web-socket-container");
             this.sessionIdSpan = this.shadow.querySelector("#session-id");
             this.sessionId = null;
 
@@ -23,9 +23,13 @@ function define(html) {
             // Event listeners
             this.webSocket.onopen = (event) => {
                 console.log("Connection opened!");
+                this.webSocketContainer.classList.remove("disconnected");
+                this.webSocketContainer.classList.add("connected");
             };
             this.webSocket.onclose = (event) => {
                 console.log("Connection closed!");
+                this.webSocketContainer.classList.remove("connected");
+                this.webSocketContainer.classList.add("disconnected");
             };
             this.webSocket.onmessage = (event) => {
                 console.log("Received data!");
@@ -36,14 +40,6 @@ function define(html) {
                 }
 
             };
-
-
-            console.log(this.sendBtn);
-
-            this.sendBtn.addEventListener("click", (event) => {
-                console.log("Sending data!");
-                this.webSocket.send("Data from button!");
-            });
         }
 
         static get observedAttributes() {

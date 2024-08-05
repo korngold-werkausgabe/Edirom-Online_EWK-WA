@@ -25,6 +25,8 @@ function define(html) {
                 console.log("Connection opened!");
                 this.webSocketContainer.classList.remove("disconnected");
                 this.webSocketContainer.classList.add("connected");
+
+                this.webSocket.send(JSON.stringify({ "request": "giveSessionId" }));
             };
             this.webSocket.onclose = (event) => {
                 console.log("Connection closed!");

@@ -40,6 +40,14 @@ function define(html) {
                 if (dataJson.sessionId && this.sessionId === null) {
                     this.setSessionId(dataJson.sessionId);
                 }
+                else if (dataJson.message) { // TODO: Implmement better filtering of the different types of messages
+                    console.log("Received message!");
+                    const receivedMessage = new CustomEvent('received-message', {
+                        detail: dataJson,
+                        bubbles: true
+                    });
+                    this.dispatchEvent(receivedMessage);
+                }
 
             };
         }

@@ -27,14 +27,30 @@ Ext.define('EdiromOnline.controller.webSocket.WebSocket', {
     ],
 
     init: function () {
+        this.control({
+            'webSocket': {
+                render: this.onRendered
+            }
+        });
     },
 
-    onWindowRendered: function (win) {
+    onRendered: function (component) {
         var me = this;
 
-        if (win.initialized) return;
-        win.initialized = true;
+        if (component.initialized) return;
+        component.initialized = true;
 
-
+        var app = me.application;
+        me.ediromWebSocket = document.querySelector("#web-socket");
+        console.log("Element:");
+        console.log(me.ediromWebSocket);
+        me.ediromWebSocket.addEventListener('received-message', function (e) {
+            console.log("Received Event!");
+            console.log("detail:");
+            console.log(e.detail);
+            var plist = e.detail.links;
+            var linkController = app.getController('LinkController');
+            linkController.loadLink(plist, { useExisting: true, onlyExisting: false });
+        });
     },
 });

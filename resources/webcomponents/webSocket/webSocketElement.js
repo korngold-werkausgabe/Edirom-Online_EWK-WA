@@ -15,8 +15,11 @@ function define(html) {
             this.webSocket = new WebSocket("http://localhost:3000/1234");
             this.webSocketContainer = this.shadow.querySelector("#web-socket-container");
             this.sessionIdSpan = this.shadow.querySelector("#session-id");
+            this.connectionPopover = this.shadow.querySelector("#connection-popover");
             this.sessionId = null;
 
+
+            this.connectionPopover.showPopover();
 
             // Elements
 

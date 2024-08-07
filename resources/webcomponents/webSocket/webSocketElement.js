@@ -15,13 +15,15 @@ function define(html) {
             this.webSocket = new WebSocket("http://localhost:3000/1234");
             this.webSocketContainer = this.shadow.querySelector("#web-socket-container");
             this.sessionIdSpan = this.shadow.querySelector("#session-id");
-            this.connectionPopover = this.shadow.querySelector("#connection-popover");
+            this.connectionNewsPopover = this.shadow.querySelector("#connection-news-popover");
             this.sessionId = null;
             this.sessionMembersNumberP = this.shadow.querySelector("#session-members-number");
+            this.infoPopover = this.shadow.querySelector("#info-popover");
 
             // Elements
 
             // Event listeners
+
 
             this.webSocket.onopen = (event) => {
                 console.log("Connection opened!");
@@ -57,6 +59,10 @@ function define(html) {
                 }
 
             };
+            this.webSocketContainer.addEventListener("click", (event) => {
+                console.log("WebSocket Webcomponent clicked!");
+                this.infoPopover.togglePopover();
+            });
         }
 
         static get observedAttributes() {
@@ -94,13 +100,13 @@ function define(html) {
             newButton.addEventListener("click", (event) => {
                 newDiv.remove();
                 if (this.shadow.querySelectorAll(".connection-news-div").length === 0) {
-                    this.connectionPopover.hidePopover();
+                    this.connectionNewsPopover.hidePopover();
                 }
             });
             newDiv.appendChild(newP);
             newDiv.appendChild(newButton);
-            this.connectionPopover.appendChild(newDiv);
-            this.connectionPopover.showPopover();
+            this.connectionNewsPopover.appendChild(newDiv);
+            this.connectionNewsPopover.showPopover();
 
             this.sessionMembersNumberP.textContent = data.numberOfSessionMembers;
         }

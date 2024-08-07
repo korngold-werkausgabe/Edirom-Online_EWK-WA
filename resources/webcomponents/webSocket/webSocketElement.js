@@ -85,7 +85,7 @@ function define(html) {
             newDiv.classList.add("connection-news-div");
             newDiv.classList.add("connect");
             let newP = document.createElement("p");
-            newP.textContent = "Ein neues Gerät ist Ihrer Sitzung beigetreten!";
+            newP.textContent = `Ein neues Gerät "${data.deviceInfo}" ist Ihrer Sitzung beigetreten!`;
             let newButton = document.createElement("button");
             newButton.classList.add("connection-news-btn");
             newButton.textContent = "Ok";

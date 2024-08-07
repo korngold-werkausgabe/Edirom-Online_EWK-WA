@@ -1,6 +1,3 @@
-p {
-    color: red;
-}
 
 #web-socket-container {
     background-color: yellow;
@@ -30,20 +27,29 @@ svg {
 #connection-popover {
     position: absolute;
     inset: unset;
-    top: 50px;
+    top: 42px;
     left: 50%;
     transform: translate(-50%, 0);
+    background-color: transparent;
+    max-width: 90%;
+    border: none;
+}
+
+.connection-news-div {
     background-color: #83c702;
     color: black;
     text-align: center;
-    /* padding: 5px 0; */
-    border-radius: 6px;
+    border-radius: 8px;
     border: none;
     font-size: 1.3rem;
+    padding: 10px;
+    margin: 10px;
 }
-#connection-popover[class="new-connection"] {
-    background-color: #58cf39;
+
+.connection-news-div p {
+    margin: 0;
 }
+
 
 
 

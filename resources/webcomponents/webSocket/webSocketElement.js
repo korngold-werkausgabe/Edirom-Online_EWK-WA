@@ -18,12 +18,10 @@ function define(html) {
             this.connectionPopover = this.shadow.querySelector("#connection-popover");
             this.sessionId = null;
 
-
-            this.connectionPopover.showPopover();
-
             // Elements
 
             // Event listeners
+
             this.webSocket.onopen = (event) => {
                 console.log("Connection opened!");
                 this.webSocketContainer.classList.remove("disconnected");
@@ -51,6 +49,9 @@ function define(html) {
                     });
                     this.dispatchEvent(receivedMessage);
                 }
+                else if (dataJson.response === "sessionConnected") {
+                    this.handleNewDeviceConnection(dataJson);
+                }
 
             };
         }
@@ -75,6 +76,28 @@ function define(html) {
         setSessionId = (sessionId) => {
             this.sessionId = sessionId;
             this.sessionIdSpan.textContent = sessionId;
+        }
+
+        handleNewDeviceConnection = (data) => {
+            console.log("New device connected!");
+            let newDiv = document.createElement("div");
+            newDiv.classList.add("connection-news-div");
+            newDiv.classList.add("connect");
+            let newP = document.createElement("p");
+            newP.textContent = "Ein neues Gerät ist Ihrer Sitzung beigetreten!";
+            let newButton = document.createElement("button");
+            newButton.classList.add("connection-news-btn");
+            newButton.textContent = "Ok";
+            newButton.addEventListener("click", (event) => {
+                newDiv.remove();
+                if (this.shadow.querySelectorAll(".connection-news-div").length === 0) {
+                    this.connectionPopover.hidePopover();
+                }
+            });
+            newDiv.appendChild(newP);
+            newDiv.appendChild(newButton);
+            this.connectionPopover.appendChild(newDiv);
+            this.connectionPopover.showPopover();
         }
 
 

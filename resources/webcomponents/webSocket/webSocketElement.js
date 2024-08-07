@@ -34,6 +34,7 @@ function define(html) {
                 console.log("Connection closed!");
                 this.webSocketContainer.classList.remove("connected");
                 this.webSocketContainer.classList.add("disconnected");
+                this.sessionMembersNumberP.textContent = "0";
             };
             this.webSocket.onmessage = (event) => {
                 console.log("Received data!");
@@ -41,6 +42,7 @@ function define(html) {
                 const dataJson = JSON.parse(event.data);
                 if (dataJson.sessionId && this.sessionId === null) {
                     this.setSessionId(dataJson.sessionId);
+                    this.sessionMembersNumberP.textContent = "1";
                 }
                 else if (dataJson.message) { // TODO: Implmement better filtering of the different types of messages
                     console.log("Received message!");

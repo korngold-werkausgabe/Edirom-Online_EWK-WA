@@ -17,6 +17,7 @@ function define(html) {
             this.sessionIdSpan = this.shadow.querySelector("#session-id");
             this.connectionPopover = this.shadow.querySelector("#connection-popover");
             this.sessionId = null;
+            this.sessionMembersNumberP = this.shadow.querySelector("#session-members-number");
 
             // Elements
 
@@ -98,6 +99,8 @@ function define(html) {
             newDiv.appendChild(newButton);
             this.connectionPopover.appendChild(newDiv);
             this.connectionPopover.showPopover();
+
+            this.sessionMembersNumberP.textContent = data.numberOfSessionMembers;
         }
 
 

@@ -35,6 +35,9 @@ Ext.define('EdiromOnline.view.webSocket.WebSocket', {
         webSocketJsElement.setAttribute("src", "resources/webcomponents/webSocket/webSocketElement.js")
         document.querySelector("head").appendChild(webSocketJsElement);
 
+
+
+
         me.html = `<edirom-web-socket id="web-socket"></edirom-web-socket>`;
 
         me.callParent();

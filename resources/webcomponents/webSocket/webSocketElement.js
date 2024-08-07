@@ -12,7 +12,7 @@ function define(html) {
             let me = this;
             this.shadow = this.attachShadow({ mode: "open" });
             this.shadow.innerHTML = html;
-            this.webSocket = new WebSocket("http://localhost:3000/1234");
+            this.webSocket;
             this.webSocketContainer = this.shadow.querySelector("#web-socket-container");
             this.sessionIdSpan = this.shadow.querySelector("#session-id");
             this.connectionNewsPopover = this.shadow.querySelector("#connection-news-popover");
@@ -20,11 +20,30 @@ function define(html) {
             this.sessionMembersNumberP = this.shadow.querySelector("#session-members-number");
             this.infoPopover = this.shadow.querySelector("#info-popover");
 
+            // Libraries
+            let qrCodeJsElement = document.createElement("script");
+            qrCodeJsElement.setAttribute("defer", "defer");
+            qrCodeJsElement.setAttribute("src", "resources/webcomponents/webSocket/qrcode.js")
+            document.querySelector("head").appendChild(qrCodeJsElement);
+
             // Elements
 
             // Event listeners
 
 
+
+            this.webSocketContainer.addEventListener("click", (event) => {
+                console.log("WebSocket Webcomponent clicked!");
+                this.infoPopover.togglePopover();
+            });
+        }
+
+        static get observedAttributes() {
+            return [];
+        }
+
+        connectedCallback() {
+            this.webSocket = new WebSocket("http://localhost:3000/1234");
             this.webSocket.onopen = (event) => {
                 console.log("Connection opened!");
                 this.webSocketContainer.classList.remove("disconnected");
@@ -59,17 +78,6 @@ function define(html) {
                 }
 
             };
-            this.webSocketContainer.addEventListener("click", (event) => {
-                console.log("WebSocket Webcomponent clicked!");
-                this.infoPopover.togglePopover();
-            });
-        }
-
-        static get observedAttributes() {
-            return [];
-        }
-
-        connectedCallback() {
         }
 
         disconnectedCallback() {
@@ -85,6 +93,10 @@ function define(html) {
         setSessionId = (sessionId) => {
             this.sessionId = sessionId;
             this.sessionIdSpan.textContent = sessionId;
+            var qr = qrcode(0, "L");
+            qr.addData(sessionId.toString());
+            qr.make();
+            this.shadow.querySelector('#qr-code-placeholder').innerHTML = qr.createImgTag(6);
         }
 
         handleNewDeviceConnection = (data) => {

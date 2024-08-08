@@ -4,6 +4,12 @@ fetch("resources/webcomponents/webSocket/webSocketElement.html")
     .then(stream => stream.text())
     .then(text => define(text));
 
+// Libraries
+let qrCodeJsElement = document.createElement("script");
+qrCodeJsElement.setAttribute("defer", "defer");
+qrCodeJsElement.setAttribute("src", "resources/webcomponents/webSocket/qrcode.js")
+document.querySelector("head").appendChild(qrCodeJsElement);
+
 
 function define(html) {
     class webSocketElement extends HTMLElement {
@@ -19,12 +25,6 @@ function define(html) {
             this.sessionId = null;
             this.sessionMembersNumberP = this.shadow.querySelector("#session-members-number");
             this.infoPopover = this.shadow.querySelector("#info-popover");
-
-            // Libraries
-            let qrCodeJsElement = document.createElement("script");
-            qrCodeJsElement.setAttribute("defer", "defer");
-            qrCodeJsElement.setAttribute("src", "resources/webcomponents/webSocket/qrcode.js")
-            document.querySelector("head").appendChild(qrCodeJsElement);
 
             // Elements
 

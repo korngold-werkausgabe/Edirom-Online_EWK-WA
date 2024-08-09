@@ -26,6 +26,7 @@ function define(html) {
             this.sessionId = null;
             this.sessionMembersNumberP = this.shadow.querySelector("#session-members-number");
             this.infoPopover = this.shadow.querySelector("#info-popover");
+            this.sessionMembersList = this.shadow.querySelector("#session-members-list");
 
             // Elements
 
@@ -102,6 +103,7 @@ function define(html) {
 
         handleNewDeviceConnection = (data) => {
             console.log("New device connected!");
+            // Popover
             let newDiv = document.createElement("div");
             newDiv.classList.add("connection-news-div");
             newDiv.classList.add("connect");
@@ -121,7 +123,13 @@ function define(html) {
             this.connectionNewsPopover.appendChild(newDiv);
             this.connectionNewsPopover.showPopover();
 
+            // small info window
             this.sessionMembersNumberP.textContent = data.numberOfSessionMembers;
+
+            // member list
+            const newMember = document.createElement("li");
+            newMember.textContent = data.deviceInfo;
+            this.sessionMembersList.appendChild(newMember);
         }
 
 

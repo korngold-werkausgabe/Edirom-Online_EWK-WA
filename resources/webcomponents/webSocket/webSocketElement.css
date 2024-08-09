@@ -59,12 +59,11 @@ svg {
 }
 
 #info-popover {
-    width: 400px;
-    height: 400px;
+    width: 600px;
+    height: 600px;
     padding: 10px;
     background-color: rgb(221, 221, 221);
     border: 1px solid black;
-    border-radius: 4px;
     box-shadow: 5.0px 10px 10px hsl(0deg 0% 0% / 0.55);
 }
 

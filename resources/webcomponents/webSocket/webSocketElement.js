@@ -20,6 +20,7 @@ function define(html) {
             this.shadow.innerHTML = html;
             this.webSocket;
             this.webSocketContainer = this.shadow.querySelector("#web-socket-container");
+            this.smallInfoContainer = this.shadow.querySelector("#small-info-container");
             this.sessionIdSpan = this.shadow.querySelector("#session-id");
             this.connectionNewsPopover = this.shadow.querySelector("#connection-news-popover");
             this.sessionId = null;
@@ -32,8 +33,8 @@ function define(html) {
 
 
 
-            this.webSocketContainer.addEventListener("click", (event) => {
-                console.log("WebSocket Webcomponent clicked!");
+            this.smallInfoContainer.addEventListener("click", (event) => {
+                console.log("SmallInfoContainer clicked!");
                 this.infoPopover.togglePopover();
             });
         }
@@ -46,15 +47,15 @@ function define(html) {
             this.webSocket = new WebSocket("http://localhost:3000/1234");
             this.webSocket.onopen = (event) => {
                 console.log("Connection opened!");
-                this.webSocketContainer.classList.remove("disconnected");
-                this.webSocketContainer.classList.add("connected");
+                this.smallInfoContainer.classList.remove("disconnected");
+                this.smallInfoContainer.classList.add("connected");
 
                 this.webSocket.send(JSON.stringify({ "request": "giveSessionId" }));
             };
             this.webSocket.onclose = (event) => {
                 console.log("Connection closed!");
-                this.webSocketContainer.classList.remove("connected");
-                this.webSocketContainer.classList.add("disconnected");
+                this.smallInfoContainer.classList.remove("connected");
+                this.smallInfoContainer.classList.add("disconnected");
                 this.sessionMembersNumberP.textContent = "0";
             };
             this.webSocket.onmessage = (event) => {

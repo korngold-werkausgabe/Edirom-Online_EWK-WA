@@ -45,7 +45,7 @@ function define(html) {
         }
 
         connectedCallback() {
-            this.webSocket = new WebSocket("http://localhost:3000/1234");
+            this.webSocket = new WebSocket("ws://localhost:3000");
             this.webSocket.onopen = (event) => {
                 console.log("Connection opened!");
                 this.smallInfoContainer.classList.remove("disconnected");

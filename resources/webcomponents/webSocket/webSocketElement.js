@@ -75,7 +75,8 @@ function define(html) {
                     });
                     this.dispatchEvent(receivedMessage);
                 }
-                else if (dataJson.response === "sessionConnected") {
+                else if (dataJson.response === "clientConnected") {
+                    console.log("Client connected!");
                     this.handleNewDeviceConnection(dataJson);
                 }
 

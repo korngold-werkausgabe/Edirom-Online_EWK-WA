@@ -1,58 +1,57 @@
 # Edirom Online Contributing Guidelines
 
-# General Guidelines
+- [How to contribute](#how-to-contribute)
+  * [Bug reports](#bug-reports)
+  * [Feature requests](#feature-requests)
+  * [Contributing code and documentation](#contributing-code-and-documentation)
+    + [Commit messages](#commit-messages) 
+- [Release Process](#release-process)
+- [Versioning](#versioning)
 
-* do not combine code-linting and content work in one commit
+## How to contribute
 
-## Whitespace handling
+Edirom-Online is a free and open-source software and we appreciate to receive contributions from our community!  
+So first of all, thank you for considering contributing to Edirom-Online! When you do so, please try to follow these guidelines.
 
-1. Use whitespaces, not tabs to indent code
-2. Close file with a newline character
+### Bug reports
+
+If you think you found a bug in Edirom-Online, first please search our [issues list](https://github.com/Edirom/Edirom-Online/issues) in case a similar issue has already been opened. If not, please open an issue. We implemented a [template](https://github.com/Edirom/Edirom-Online/blob/develop/.github/ISSUE_TEMPLATE/problem-report.md) for problems and bugs to get as much information about the bug as possible, e.g. how the problem can be reproduced. Provide as much information as you can.
+
+### Feature requests
+
+If you think, Edirom-Online should have a feature that does not exist already, please search our [issues list](https://github.com/Edirom/Edirom-Online/issues) in case a wish for a similar feature was already reported. If not, please open an issue and describe the feature using our [template](https://github.com/Edirom/Edirom-Online/blob/develop/.github/ISSUE_TEMPLATE/feature_request.md) for new features. 
+
+### Contributing code and documentation
+
+If you would like to contribute to Edirom-Online developing a new feature or working on a bug fix, your contribution is highly appreciated and we kindly ask you to take the following guidelines into concern. 
+The active contributors have agreed to organise their work along the so-called 'git-flow-workflow' ([Driessen 2010](https://nvie.com/posts/a-successful-git-branching-model/)) to foster a clean and traceable development process. The following instructions will ensure this workflow.
+
+* Check the [network graph](https://github.com/Edirom/Edirom-Online/network) to see all the other forks of other persons to make sure, nobody else is already working on the topic, you want to start to address.
+* Please discuss your idea first in an [issue](https://github.com/Edirom/Edirom-Online/issues). If there is no issue for your idea yet, please **open an issue**. There might be different ways to solve a problem and we want to make sure to find the right approach before spending time on a PR that cannot be merged.
+* Fork the `Edirom/Edirom-Online` repository into your own account, e.g. `username/Edirom-Online`.
+* Create a dedicated branch for your fix or feature on your repository, e.g. `ftr-some-new-feature`.
+* Make your changes, while you can commit to your branch as many times as you like.
+* After finishing your work, you can open a pull request to `Edirom/Edirom-Online` and fill in our [PR-template](https://github.com/Edirom/Edirom-Online/tree/develop/.github/pull_request_template.md) to describe what your pull request wants to implement. Make sure, that you MUST address the developer-branch.
+* Each pull request should implement ONE feature or bugfix. If you want to add or fix more than one thing, submit more than one pull request.
+* Your submission will be reviewed afterwards. If you are asked to make changes, you can push these changes to your original branch and the pull request will be automatically updated.
+* You may then delete your dedicated branch, after your pull request was merged into the `Edirom/Edirom-Online` repository.
+
+#### Commit messages
+
+Please make sure to provide meaningful and understandable commit messsages, that should have the following structure and content:
+* `summary`: use imperative and summarize changes in around 50 characters or less, e.g. "Remove deprecated methods"  
+* `body`: explain what, why and how e.g. "This commit adds ... Specifically, we have added ..."
+* `footer`: reference or close issues using e.g. `Refs #123, 456` or `Refs #206`or `Fixes #210` or `Closes #789`
+
+## Release Process
+
+Releases are discussed and declared by the Edirom community. The planned scope of features and bug fixes of upcoming releases can be read from corresponding [milestones](https://github.com/Edirom/Edirom-Online/milestones), and eventually you can also see here  where contributions are most urgent needed. The Edirom community uses the functionality of Github projects to track the development of Edirom-Online using the project [Edirom Development](https://github.com/orgs/Edirom/projects/4/views/1). 
+
+The most recent 'stable' version of MEI is always found on the 'main' branch, where all releases are tagged from. The most recent 'work in progress' is found on the 'develop' branch. 
+
+## Versioning
+
+The Edirom-Online Versions follow the ['semantic' versioning scheme](http://semver.org), 'X.Y.Z'. 'X' is a major release, often defined by the presence of backward-incompatible changes to the schema. 'Y' is a minor release, defined by backward compatible changes (i.e., added, but not removed, features). 'Z' is the 'patch' number, indicating a release that fixes or clarifies existing functionality.
 
 
-# XQuery
 
-## xqDoc
-
-We use [xqDoc](https://xqdoc.org) for documenting the XQueries in this repository. Please refer to the section [xqDoc Comments](https://xqdoc.org/xqdoc_comments_doc.html) of the xyDoc-website for details on formatting the documentation comment blocks.
-
-* XQuery modules must have a library module xqDoc comment preceding the module declaration.
-* Function declarations must have a library module xqDoc function comment preceding the function.
-
-## XQuery document structure
-
-### XQuery version
-
-```xquery
-xquery version 3.1;
-```
-
-### License Statement
-
-```xquery
-(:
-For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
-:)
-```
-
-### File Header
-
-1. `declare namespace` statements
-   * sort alphabetically by prefix
-2. `import module namespace` statements of registered modules
-   * sort alphabetically by prefix
-3. `import module namespace` statements of custom modules
-   * sort alphabetically by prefix
-   * Always use relative URIs for `import module namespace` statements that import for modules not registered with eXist-db.
-
-### Declare variables
-
-* Use `declare variable` statements for all required external parameters
-
-### Function declarations
-
-* functions have to be preceded by an xqDoc comment
-
-### XQuery body
-
-* Strings: escape with U+00027 APOSTROPHE: `'`

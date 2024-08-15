@@ -43,7 +43,6 @@ svg {
 }
 
 .connection-news-div {
-    background-color: #83c702;
     color: black;
     text-align: center;
     border-radius: 8px;
@@ -52,6 +51,13 @@ svg {
     font-size: 1.3rem;
     padding: 10px;
     margin: 10px;
+}
+
+.connection-news-div.connect {
+    background-color: #83c702;
+}
+.connection-news-div.disconnect {
+    background-color: red;
 }
 
 .connection-news-div p {

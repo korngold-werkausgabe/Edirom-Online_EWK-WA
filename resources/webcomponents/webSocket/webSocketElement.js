@@ -84,6 +84,17 @@ function define(html) {
                 else if (dataJson.response === "clientConnected") {
                     console.log("Client connected!");
                     this.handleNewDeviceConnection(dataJson);
+
+                }
+                else if (dataJson.response === "clientConnected") {
+                    console.log("Client connected!");
+                    this.handleNewDeviceConnection(dataJson);
+
+                }
+                else if (dataJson.response === "clientDisconnected") {
+                    console.log("Client disconnected!");
+                    this.handleDeviceDisconnection(dataJson);
+
                 } else if (dataJson.sessionData) { // The filtering of messages is getting out of control and depends on the order of the messages at this point. Improving this should be high priority!
                     this.sessionData = dataJson.sessionData;
                     this.handleSessionDataUpdate();
@@ -116,6 +127,13 @@ function define(html) {
             this.sessionData = data.sessionData;
             this.handleSessionDataUpdate();
             this.showConnectionNewsPopover(data.clientData, "connect");
+        }
+
+        handleDeviceDisconnection = (data) => {
+            console.log("A Device disconnected!");
+            this.sessionData = data.sessionData;
+            this.handleSessionDataUpdate();
+            this.showConnectionNewsPopover(data.clientData, "disconnect");
         }
 
         handleSessionDataUpdate = () => {

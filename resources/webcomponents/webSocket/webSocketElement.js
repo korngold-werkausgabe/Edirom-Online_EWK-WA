@@ -53,7 +53,7 @@ function define(html) {
 
                 this.webSocket.send(JSON.stringify({ "request": "giveClientId" }));
                 this.webSocket.send(JSON.stringify({ "request": "giveSessionId" })); // TODO: Can't I just do this with "giveSessionData"?
-                this.sendClientMetadata();
+                this.sendUserAgent();
                 this.webSocket.send(JSON.stringify({ "request": "giveSessionData" }));
             };
             this.webSocket.onclose = (event) => {
@@ -182,70 +182,9 @@ function define(html) {
             this.connectionNewsPopover.showPopover();
         }
 
-        getOs = () => {
+        sendUserAgent = () => {
             const userAgent = navigator.userAgent;
-            if (userAgent.includes("Windows")) {
-                return "Windows";
-            }
-            else if (userAgent.includes("Android")) {
-                return "Android";
-            }
-            else if (userAgent.includes("Linux")) {
-                return "Linux";
-            }
-            else if (userAgent.includes("iPhone") || userAgent.includes("iPad")) {
-                return "iOS";
-            }
-            else if (userAgent.includes("Mac")) {
-                return "MacOS";
-            } else {
-                return "Unknown";
-            }
-        }
-
-        getDeviceType = () => {
-            const deviceType = this.getOs();
-            if (deviceType === "Windows" || deviceType === "Linux" || deviceType === "MacOS") {
-                return "Desktop";
-            }
-            else if (deviceType === "Android" || deviceType === "iOS") {
-                return "Mobilgerät";
-            }
-            else {
-                return "Unknown";
-            }
-        }
-
-        getBrowser = () => { // that can be improved
-            const userAgent = navigator.userAgent;
-            if (userAgent.includes("Firefox")) {
-                return "Firefox";
-            }
-            else if (userAgent.includes("Chrome")) {
-                return "Chrome";
-            }
-            else if (userAgent.includes("Safari")) {
-                return "Safari";
-            }
-            else if (userAgent.includes("Edge")) {
-                return "Edge";
-            }
-            else {
-                return "Unknown";
-            }
-        }
-
-        getDeviceMetadata = () => { // TODO: The clients should only send the userAgent string to the server and the server should parse it. Then I have the weird parsing in one place
-            return {
-                deviceType: this.getDeviceType(),
-                os: this.getOs(),
-                browser: this.getBrowser()
-            };
-        }
-
-        sendClientMetadata = () => {
-            const deviceMetadata = this.getDeviceMetadata();
-            const messageString = JSON.stringify({ message: "clientMetadata", clientmetadata: deviceMetadata });
+            const messageString = JSON.stringify({ message: "userAgent", userAgent: userAgent });
             this.webSocket.send(messageString);
         }
 

@@ -78,14 +78,15 @@ Ext.define('EdiromOnline.view.window.image.OpenSeaDragonViewer', {
         var me = this;
         
         var openseadragonOpts = {
-            id: me.id + "_openseadragon",
+            id: me.id + '_openseadragon',
             showNavigator: false,
             showNavigationControl: false,
             tileSources: [],
+            drawer: 'canvas',
         }
 
-        if (getPreference('use_secrets') === "true") {
-            openseadragonOpts.ajaxWithCredentials = getPreference('ajax_with_credentials') === "true" ? true : false ;
+        if (getPreference('use_secrets') === 'true') {
+            openseadragonOpts.ajaxWithCredentials = getPreference('ajax_with_credentials') === 'true' ? true : false ;
             openseadragonOpts.loadTilesWithAjax = true;
             openseadragonOpts.ajaxHeaders = {
                 auth: {

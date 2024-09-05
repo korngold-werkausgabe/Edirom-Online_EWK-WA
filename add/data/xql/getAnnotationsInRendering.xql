@@ -1,24 +1,7 @@
 xquery version "3.0";
 (:
-  Edirom Online
-  Copyright (C) 2011 The Edirom Project
-  http://www.edirom.de
-
-  Edirom Online is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  Edirom Online is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with Edirom Online.  If not, see <http://www.gnu.org/licenses/>.
-
-  ID: $Id: getAnnotationsOnPage.xql 1457 2012-10-12 08:05:03Z daniel $
-:)
+ : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
+ :)
 
 (:~
     Returns a JSON sequence with all anotations on a specific page.
@@ -26,16 +9,23 @@ xquery version "3.0";
     @author <a href="mailto:roewenstrunk@edirom.de">Daniel Röwenstrunk</a>
 :)
 
+(: IMPORTS ================================================================= :)
+
 import module namespace functx = "http://www.functx.com";
 
 import module namespace eutil="http://www.edirom.de/xquery/util" at "../xqm/util.xqm";
 
+(: NAMESPACE DECLARATIONS ================================================== :)
+
 declare namespace mei="http://www.music-encoding.org/ns/mei";
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 declare namespace xlink="http://www.w3.org/1999/xlink";
+declare namespace request = "http://exist-db.org/xquery/request";
 
-declare namespace request="http://exist-db.org/xquery/request";
+(: OPTION DECLARATIONS ===================================================== :)
 
-declare option exist:serialize "method=text media-type=text/plain omit-xml-declaration=yes";
+declare option output:media-type "text/plain";
+declare option output:method "text";
 
 declare function local:getAnnotations($edition as xs:string, $edition_path as xs:string, $uri as xs:string, $elemIds as xs:string*) as xs:string* {
     

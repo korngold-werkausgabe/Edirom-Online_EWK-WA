@@ -25,7 +25,7 @@ declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
 declare option output:method "text";
-declare option output:media-type "text/html";
+declare option output:media-type "text/plain";
 
 declare function local:getParticipants($annot as element()) as xs:string* {
     

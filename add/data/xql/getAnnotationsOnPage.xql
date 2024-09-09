@@ -5,7 +5,7 @@ xquery version "3.1";
 
 (:~
  :  Returns a JSON sequence with all anotations on a specific page.
- :  
+ :
  :  @author <a href="mailto:roewenstrunk@edirom.de">Daniel Röwenstrunk</a>
  :  @author <a href="mailto:bohl@edirom.de">Benjamin W. Bohl</a>
  :)
@@ -18,9 +18,7 @@ import module namespace functx = "http://www.functx.com";
 import module namespace eutil = "http://www.edirom.de/xquery/util" at "../xqm/util.xqm";
 
 
-declare namespace mei="http://www.music-encoding.org/ns/mei";
-declare namespace xlink="http://www.w3.org/1999/xlink";
-declare namespace svg="http://www.w3.org/2000/svg";
+(: NAMESPACE DECLARATIONS ================================================== :)
 
 declare namespace ft = "http://exist-db.org/xquery/lucene";
 
@@ -55,7 +53,6 @@ declare option output:media-type "application/json";
  :
  : @returns a JSON array of annotations
  :)
-
 declare function local:getAnnotations($sourceUriSharp as xs:string, $surfaceId as xs:string, $annotations as element()*, $elems as element()*) as map(*)* {
     
     for $annotation in $annotations
@@ -84,17 +81,17 @@ declare function local:getAnnotations($sourceUriSharp as xs:string, $surfaceId a
     let $svgList := local:getAnnotSVGs($id, $plist.raw, $elems)
     
     let $plist := local:getParticipants($id, $plist.raw, $elems)
-	return
-	   map {
-	       'id': $id,
-	       'plist': array { $plist },
-	       'svgList': array { $svgList },
-	       'fn': 'loadLink("' || $uri || '")',
-	       'uri': $uri,
-	       'priority': $prio,
-	       'categories': $cat
-	   }
-	
+    
+    return
+        map {
+            'id': $id,
+            'plist': array {$plist},
+            'svgList': array {$svgList},
+            'fn': 'loadLink("' || $uri || '")',
+            'uri': $uri,
+            'priority': $prio,
+            'categories': $cat
+        }
 };
 
 (:~
@@ -107,10 +104,11 @@ declare function local:getAnnotations($sourceUriSharp as xs:string, $surfaceId a
  : @returns A sequence of mei:annot elements
  :)
 declare function local:findAnnotations($edition as xs:string, $uri as xs:string, $elemIds as xs:string*) as element()* {
-
+    
     (: TODO: search in other documents and in other collections :)
     (: TODO: check if annotations hold URIs or IDRefs :)
-    functx:distinct-deep(
+    let $annots := collection(eutil:getPreference('edition_path', $edition))//mei:annot
+    let $ret :=
         for $id in $elemIds
         
         let $uriPlusId := concat($uri, '#', $id)
@@ -118,7 +116,6 @@ declare function local:findAnnotations($edition as xs:string, $uri as xs:string,
         let $hashId := '#' || $id
         
         (: all mei:annot elements in the editions 'edition_path' collection :)
-        let $annots := collection(eutil:getPreference('edition_path', $edition))//mei:annot
         
         return
             (:
@@ -127,19 +124,20 @@ declare function local:findAnnotations($edition as xs:string, $uri as xs:string,
              :)
             $annots[contains(@plist, $uriPlusId)][$uriPlusId = tokenize(@plist, '\s')] |
             $annots[contains(@plist, $hashId)][$hashId = tokenize(@plist, '\s')]
-    )
+    return functx:distinct-deep($ret)
 };
 
 (:~
-    Returns a JSON representation of all participants of an annotation
-    
-    @param $annotId The id of the annotation to process
-    @param $plist The list of participants referenced by the annotation
-    @param $elem A sequence of elements which could be relevant
-    @returns A JSON representation of the perticipants
-:)
+ : Returns a JSON representation of all participants of an annotation
+ :
+ : @param $annotId The id of the annotation to process
+ : @param $plist The list of participants referenced by the annotation
+ : @param $elem A sequence of elements which could be relevant
+ :
+ : @returns A JSON representation of the perticipants
+ :)
 declare function local:getParticipants($annoId as xs:string, $plist as xs:string*, $elems as element()*) as map(*)* {
-
+    
     let $participants := $elems[@xml:id = $plist]
     
     return
@@ -159,18 +157,19 @@ declare function local:getParticipants($annoId as xs:string, $plist as xs:string
 };
 
 (:~
-    Returns a JSON representation of all participants of an annotation
-    
-    @param $annotId The id of the annotation to process
-    @param $plist The list of participants referenced by the annotation
-    @param $elem A sequence of elements which could be relevant
-    @returns A JSON representation of the perticipants
-:)
+ : Returns a JSON representation of all participants of an annotation
+ :
+ : @param $annotId The id of the annotation to process
+ : @param $plist The list of participants referenced by the annotation
+ : @param $elem A sequence of elements which could be relevant
+ :
+ : @returns A JSON representation of the perticipants
+ :)
 declare function local:getAnnotSVGs($annoId as xs:string, $plist as xs:string*, $elems as element()*) as map(*)* {
-
-    let $participants := $elems[@id = $plist]
-    return
     
+    let $participants := $elems[@id = $plist]
+    
+    return
         for $svg in $participants
         
         let $id := $svg/@id
@@ -183,10 +182,16 @@ declare function local:getAnnotSVGs($annoId as xs:string, $plist as xs:string*, 
 };
 
 (:~
- : Reads the coordinates of an element
- : 
+ : Reads the coordinates of an element referenced from an mei:annot/@plist
+ : If the element name is 'measure' or 'staff' theses will be fetched from
+ : a zone referenced with the @facs attribute
+ : If the zone does not have an @ulx attribute or if there is no zone being referenced
+ : the function will return -1 as avalue for all coordinates
+ :
  : @param $participant The element to process
+ :
  : @returns A sequence with coordinates (ulx, uly, lrx, lry)
+ : @error A fallback sequence wit -1 as all values: (-1, -1, -1, -1)
 :)
 declare function local:getCoordinates($participant as element()) as xs:integer+ {
 
@@ -225,9 +230,14 @@ let $zones := $surface//mei:zone
 :)
 let $measureLike :=
     for $id in $zones[@type = 'measure' or @type = 'staff']/string(@xml:id)
-	let $ref := concat('#', $id)
-	return $mei//*[$ref = tokenize(@facs,'\s')]
-	
+    let $ref := concat('#', $id)
+    return
+        (:
+         : The first predicate with `contains` is just a rough estimate to narrow down the result set.
+         : It uses the index and is fast while the second (exact) predicate is generally too slow
+         :)
+        $mei//*[contains(@facs, $ref)][$ref = tokenize(@facs, '\s+')]
+
 let $svgLike := $surface//svg:svg
 
 let $targetLike := $zones | $measureLike | $svgLike
@@ -239,4 +249,4 @@ let $annotations := local:findAnnotations($edition, $sourceUri, $targetLikeIds)
 let $annots := local:getAnnotations($sourceUriSharp, $surfaceId, $annotations, $targetLike)
 
 return
-    array { $annots }
+    array {$annots}

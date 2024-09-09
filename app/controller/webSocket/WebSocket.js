@@ -50,7 +50,7 @@ Ext.define('EdiromOnline.controller.webSocket.WebSocket', {
             console.log(e.detail);
             var plist = e.detail.links;
             var linkController = app.getController('LinkController');
-            linkController.loadLink(plist, { useExisting: true, onlyExisting: false });
+            linkController.loadLink(plist, { useExisting: true, onlyExisting: false, sort: "sortHorizontally" });
         });
     },
 });

@@ -1,24 +1,7 @@
 xquery version "3.1";
 (:
-  Edirom Online
-  Copyright (C) 2011 The Edirom Project
-  http://www.edirom.de
-
-  Edirom Online is free software: you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
-
-  Edirom Online is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with Edirom Online.  If not, see <http://www.gnu.org/licenses/>.
-
-  ID: $Id: util.xqm 1334 2012-06-14 12:40:33Z daniel $
-:)
+ : For LICENSE-Details please refer to the LICENSE file in the root directory of this repository.
+ :)
 
 (:~
 : This module provides library utility functions
@@ -30,19 +13,26 @@ xquery version "3.1";
 
 module namespace eutil = "http://www.edirom.de/xquery/util";
 
-import module namespace work="http://www.edirom.de/xquery/work" at "work.xqm";
+(: IMPORTS ================================================================= :)
+
+import module namespace functx = "http://www.functx.com";
+
+import module namespace annotation="http://www.edirom.de/xquery/annotation" at "../xqm/annotation.xqm";
+import module namespace edition="http://www.edirom.de/xquery/edition" at "../xqm/edition.xqm";
 import module namespace source="http://www.edirom.de/xquery/source" at "source.xqm";
 import module namespace teitext="http://www.edirom.de/xquery/teitext" at "teitext.xqm";
-import module namespace edition="http://www.edirom.de/xquery/edition" at "../xqm/edition.xqm";
-import module namespace functx = "http://www.functx.com";
-import module namespace annotation="http://www.edirom.de/xquery/annotation" at "../xqm/annotation.xqm";
+import module namespace work="http://www.edirom.de/xquery/work" at "work.xqm";
 
+(: NAMESPACE DECLARATIONS ================================================== :)
+
+declare namespace edirom="http://www.edirom.de/ns/1.3";
+declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace request="http://exist-db.org/xquery/request";
 declare namespace system="http://exist-db.org/xquery/system";
-declare namespace util="http://exist-db.org/xquery/util";
-declare namespace mei="http://www.music-encoding.org/ns/mei";
 declare namespace tei="http://www.tei-c.org/ns/1.0";
-declare namespace edirom="http://www.edirom.de/ns/1.3";
+declare namespace util="http://exist-db.org/xquery/util";
+
+(: FUNCTION DECLARATIONS =================================================== :)
 
 (:~
 : Returns the namespace (standardized prefix)
@@ -255,35 +245,21 @@ declare function eutil:getLanguageString($key as xs:string, $values as xs:string
 };
 
 (:~
-: Return a value of preference to key
-:
-: @param $key The key to search for
-: @return The string
-:)
+ : Returns a value from the preferences for a given key
+ :
+ : @param $key The key to look up
+ : @param $edition The current edition URI
+ : @return The preference value
+ :)
 declare function eutil:getPreference($key as xs:string, $edition as xs:string?) as xs:string {
 
-     let $file := doc('../prefs/edirom-prefs.xml')
-     let $projectFile := doc(edition:getPreferencesURI($edition))
-     
-     return
-        if($projectFile != 'null' and $projectFile//entry[@key = $key]) then ($projectFile//entry[@key = $key]/string(@value))
-        else ($file//entry[@key = $key]/string(@value))
-};
+    let $preferencesFile := 
+        try { doc(edition:getPreferencesURI($edition)) }
+        catch * { util:log-system-out('Failed to load preferences') }
 
-(:~
-: Return a value of secret to key
-:
-: @param $key The key to search for
-: @return The string
-:)
-declare function eutil:getSecret($key as xs:string, $edition as xs:string?) as xs:string {
+    return
+        $preferencesFile//entry[@key = $key]/@value => string()
 
-     let $file := doc('../prefs/secrets.xml')
-     let $projectFile := doc(edition:getSecretsURI($edition))
-     
-     return
-        if($projectFile != 'null' and $projectFile//entry[@key = $key]) then ($projectFile//entry[@key = $key]/string(@value))
-        else ($file//entry[@key = $key]/string(@value))
 };
 
 (:~

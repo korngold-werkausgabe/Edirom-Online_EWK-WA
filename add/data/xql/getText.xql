@@ -40,7 +40,6 @@ let $doc := eutil:getDoc($uri)/root()
 let $contextPath := request:get-context-path()
 let $xslInstruction := $doc//processing-instruction(xml-stylesheet)
 
-let $base := replace(system:get-module-load-path(), 'embedded-eXist-server', '') (:TODO:)
 let $xslInstruction :=
     for $i in fn:serialize($xslInstruction, ())
     return
@@ -79,12 +78,9 @@ let $doc :=
 
 let $base := replace(system:get-module-load-path(), 'embedded-eXist-server', '')
 let $edition := request:get-parameter('edition', '')
-let $imageserver :=  eutil:getPreference('image_server', $edition)
-let $imagePrefix := if($imageserver = 'leaflet')
-	then(eutil:getPreference('leaflet_prefix', $edition))
-	else(eutil:getPreference('image_prefix', $edition))
+let $imageserver := eutil:getPreference('image_server', $edition)
 
-(:let $imagePrefix := eutil:getPreference('image_prefix', request:get-parameter('edition', '')):)
+let $imagePrefix := eutil:getPreference('image_prefix', $edition)
 
 let $xsl :=
     if ($xslInstruction) then
@@ -92,6 +88,7 @@ let $xsl :=
     else
         ('../xslt/tei/profiles/edirom-body/teiBody2HTML.xsl')
 
+(:TODO introduce injection-point for tei-stylesheet parameters :)
 let $params := (
     (: parameters for Edirom-Online :)
     <param name="lang" value="{eutil:getLanguage($edition)}"/>,
@@ -123,6 +120,10 @@ let $body := $doc//xhtml:body
 
 return
     element div {
-        for $attribute in $body/@* return $attribute,
-        for $node in $body/node() return $node
+        for $attribute in $body/@*
+        return
+            $attribute,
+        for $node in $body/node()
+        return
+            $node
     }

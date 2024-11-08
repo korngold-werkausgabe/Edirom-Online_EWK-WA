@@ -29,7 +29,7 @@ declare option exist:serialize "method=xml media-type=text/xml omit-xml-declarat
 
 let $uri := request:get-parameter('uri', '')
 let $internalId := request:get-parameter('internalId', '')
-let $doc := doc($uri)/root()
+let $doc := eutil:getDoc($uri)/root()
 let $internal := $doc/id($internalId)
 
 return

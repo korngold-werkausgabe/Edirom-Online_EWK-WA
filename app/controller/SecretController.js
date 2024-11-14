@@ -47,17 +47,6 @@ Ext.define('EdiromOnline.controller.SecretController', {
     setSecrets: function(secrets) {
         var me = this;
         me.secrets = secrets;
-
-        for(var key in me.secrets) {
-                Ext.Ajax.request({
-                    url: me.secrets[key],
-                    method: 'GET',
-                    success: function(response){
-                        eval(response.responseText);
-                    },
-                    scope: this
-                });
-        }
     },
 
     getSecret: function(key, lax) {

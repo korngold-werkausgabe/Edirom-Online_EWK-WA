@@ -22,10 +22,10 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
     requires: [
     ],
 
-    alias : 'widget.textView',
+    alias: 'widget.textView',
 
     layout: 'fit',
-    
+
     cls: 'textView',
 
     annotationsVisible: false,
@@ -46,82 +46,82 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
 
         this.callParent();
 
-        this.on('afterrender', this.createToolbarEntries, this, {single: true});
+        this.on('afterrender', this.createToolbarEntries, this, { single: true });
         this.window.on('loadInternalLink', this.loadInternalId, this);
     },
 
-    createToolbarEntries: function() {
+    createToolbarEntries: function () {
 
         var me = this;
 
         //TODO: überprüfen
-/*        me.notesVisibility = Ext.create('Ext.button.Button', {
-            text: 'Notes',
-            handler: Ext.bind(me.toggleNotesVisibility, me),
-            enableToggle: true,
-            pressed: true
-        });
-        me.pbsVisibility = Ext.create('Ext.button.Button', {
-            text: 'Pagebreaks',
-            handler: Ext.bind(me.togglePbVisibility, me),
-            enableToggle: true,
-            pressed: true
-        });
-
-        me.window.getTopbar().addViewSpecificItem(me.notesVisibility, me.id);
-        me.window.getTopbar().addViewSpecificItem(me.pbsVisibility, me.id);
-*/
+        /*        me.notesVisibility = Ext.create('Ext.button.Button', {
+                    text: 'Notes',
+                    handler: Ext.bind(me.toggleNotesVisibility, me),
+                    enableToggle: true,
+                    pressed: true
+                });
+                me.pbsVisibility = Ext.create('Ext.button.Button', {
+                    text: 'Pagebreaks',
+                    handler: Ext.bind(me.togglePbVisibility, me),
+                    enableToggle: true,
+                    pressed: true
+                });
+        
+                me.window.getTopbar().addViewSpecificItem(me.notesVisibility, me.id);
+                me.window.getTopbar().addViewSpecificItem(me.pbsVisibility, me.id);
+        */
     },
 
-    checkGlobalAnnotationVisibility: function(visible) {
-        
+    checkGlobalAnnotationVisibility: function (visible) {
+
         var me = this;
-        
-        if(me.annotationsVisibilitySetLocaly) return;
-        
+
+        if (me.annotationsVisibilitySetLocaly) return;
+
         me.annotationsVisible = visible;
-        if(typeof me.toggleAnnotationVisibility != 'undefined')
+        if (typeof me.toggleAnnotationVisibility != 'undefined')
             me.toggleAnnotationVisibility.setChecked(visible, true);
-        
+
         //TODO: Controller mit einbeziehen
-        if(visible && me.annotationsLoaded)
+        if (visible && me.annotationsLoaded)
             me.showAnnotations();
         else
             this.fireEvent('annotationsVisibilityChange', me, visible);
     },
 
-    toggleAnnotations: function(item, state) {
+    toggleAnnotations: function (item, state) {
         var me = this;
         me.annotationsVisible = state;
         me.annotationsVisibilitySetLocaly = true;
 
         //TODO: Controller mit einbeziehen
-        if(state && me.annotationsLoaded)
+        if (state && me.annotationsLoaded)
             me.showAnnotations();
         else
             this.fireEvent('annotationsVisibilityChange', me, state);
     },
 
-    toggleNotesVisibility: function(button) {
+    toggleNotesVisibility: function (button) {
         var notes = Ext.query('#' + this.id + '_textCont .note');
-        Ext.Array.each(notes, function(name, index, notes){
+        Ext.Array.each(notes, function (name, index, notes) {
             Ext.get(name).toggleCls('hidden')
         });
     },
 
-    togglePbVisibility: function(button) {
+    togglePbVisibility: function (button) {
         var notes = Ext.query('#' + this.id + '_textCont .pagebreak');
-        Ext.Array.each(notes, function(name, index, notes){
+        Ext.Array.each(notes, function (name, index, notes) {
             Ext.get(name).toggleCls('hidden')
         });
     },
 
-    showAnnotations: function(annotations) {
+    showAnnotations: function (annotations) {
         var me = this;
 
-        if(me.annotationsLoaded) {
+        if (me.annotationsLoaded) {
             var annos = Ext.query('#' + me.id + '_textCont span.annotation');
-            Ext.Array.each(annos, function(anno) {
+            Ext.Array.each(annos, function (anno) {
                 Ext.get(anno).show();
             });
 
@@ -131,10 +131,10 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
         me.annotationsLoaded = true;
 
         var tpl = Ext.DomHelper.createTemplate('<span id="{0}" class="annotation {1} {2} {3}" data-edirom-annot-id="{3}"></span>');
-        
+
         tpl.compile();
 
-        annotations.each(function(annotation) {
+        annotations.each(function (annotation) {
 
             var annoId = annotation.get('id');
             var name = annotation.get('title');
@@ -144,16 +144,16 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
             var fn = annotation.get('fn');
             var plist = Ext.Array.toArray(annotation.get('plist'));
 
-            Ext.Array.each(plist, function(p) {
+            Ext.Array.each(plist, function (p) {
                 var targetId = p.id.substring(annoId.length + 2);
                 var target = me.el.getById(me.id + '_' + targetId);
 
                 var shape = tpl.append(target, [me.id + '_' + p.id, categories, priority, annotation.get('id')], true);
-                
+
                 shape.on('mouseenter', me.highlightShape, me, shape, true);
                 shape.on('mouseleave', me.deHighlightShape, me, shape, true);
                 shape.on('mousedown', me.listenForShapeLink, me, {
-                    stopEvent : true,
+                    stopEvent: true,
                     elem: shape,
                     fn: fn
                 });
@@ -169,7 +169,7 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
                     html: getLangString('Annotation_plus_Title', name)
                 });
 
-                tip.on('afterrender', function() {
+                tip.on('afterrender', function () {
                     Ext.Ajax.request({
                         url: 'data/xql/getAnnotation.xql',
                         method: 'GET',
@@ -177,7 +177,7 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
                             uri: uri,
                             target: 'tip'
                         },
-                        success: function(response){
+                        success: function (response) {
                             this.update(response.responseText);
                         },
                         scope: this
@@ -188,52 +188,52 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
 
         }, me);
     },
-    
-    highlightShape: function(event, owner, shape) {
+
+    highlightShape: function (event, owner, shape) {
         shape.addCls('highlighted');
-        
+
         var annotId = shape.getAttribute('data-edirom-annot-id');
         Ext.select('div[data-edirom-annot-id=' + annotId + ']', this.el).addCls('combinedHighlight');
         Ext.select('span[data-edirom-annot-id=' + annotId + ']', this.el).addCls('combinedHighlight');
     },
 
-    deHighlightShape: function(event, owner, shape) {
+    deHighlightShape: function (event, owner, shape) {
         shape.removeCls('highlighted');
-        
+
         var annotId = shape.getAttribute('data-edirom-annot-id');
         Ext.select('div[data-edirom-annot-id=' + annotId + ']', this.el).removeCls('combinedHighlight');
         Ext.select('span[data-edirom-annot-id=' + annotId + ']', this.el).removeCls('combinedHighlight');
     },
 
-    listenForShapeLink: function(e, dom, args) {
+    listenForShapeLink: function (e, dom, args) {
         var me = this;
 
-        if(e.button != 0) return;
+        if (e.button != 0) return;
 
         args.elem.on('mouseup', me.openShapeLink, me, {
             single: true,
-            stopEvent : true,
+            stopEvent: true,
             fn: args.fn
         });
     },
 
-    openShapeLink: function(e, dom, args) {
+    openShapeLink: function (e, dom, args) {
         eval(args.fn);
     },
 
-    hideAnnotations: function() {
+    hideAnnotations: function () {
         var me = this;
         var annos = Ext.query('#' + me.id + '_textCont span.annotation');
-        Ext.Array.each(annos, function(anno) {
+        Ext.Array.each(annos, function (anno) {
             Ext.get(anno).hide();
         });
     },
 
-        //TODO: in mixin verpacken, wenn möglich
-    setAnnotationFilter: function(priorities, categories) {
+    //TODO: in mixin verpacken, wenn möglich
+    setAnnotationFilter: function (priorities, categories) {
         var me = this;
 
-        if(priorities.getTotalCount() == 0 && categories.getTotalCount() == 0) return;
+        if (priorities.getTotalCount() == 0 && categories.getTotalCount() == 0) return;
 
         me.toggleAnnotationVisibility = Ext.create('Ext.menu.CheckItem', {
             id: me.id + '_showAnnotations',
@@ -242,10 +242,10 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
             checkHandler: Ext.bind(me.toggleAnnotations, me, [], true)
         });
 
-        me.annotMenu =  Ext.create('Ext.button.Button', {
+        me.annotMenu = Ext.create('Ext.button.Button', {
             text: getLangString('view.window.text.TextView_annotMenu'),
             indent: false,
-            menu : {
+            menu: {
                 items: [
                     me.toggleAnnotationVisibility
                 ]
@@ -254,7 +254,7 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
         me.window.getTopbar().addViewSpecificItem(me.annotMenu, me.id);
 
         var prioritiesItems = [];
-        priorities.each(function(priority) {
+        priorities.each(function (priority) {
             prioritiesItems.push({
                 text: priority.get('name'),
                 priorityId: priority.get('id'),
@@ -264,7 +264,7 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
         });
 
         me.annotPrioritiesMenu = Ext.create('Ext.menu.Menu', {
-             items: prioritiesItems
+            items: prioritiesItems
         });
 
         me.annotMenu.menu.add({
@@ -274,7 +274,7 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
         });
 
         var categoriesItems = [];
-        categories.each(function(category) {
+        categories.each(function (category) {
             categoriesItems.push({
                 text: category.get('name'),
                 categoryId: category.get('id'),
@@ -284,7 +284,7 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
         });
 
         me.annotCategoriesMenu = Ext.create('Ext.menu.Menu', {
-             items: categoriesItems
+            items: categoriesItems
         });
 
         me.annotMenu.menu.add({
@@ -296,31 +296,31 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
         me.annotMenu.show();
     },
 
-    annotationFilterChanged: function(item, event) {
+    annotationFilterChanged: function (item, event) {
         var me = this;
 
-        if(!me.annotationsVisible) return;
+        if (!me.annotationsVisible) return;
 
         var visiblePriorities = [];
-        me.annotPrioritiesMenu.items.each(function(item) {
-            if(item.checked)
+        me.annotPrioritiesMenu.items.each(function (item) {
+            if (item.checked)
                 visiblePriorities.push(item.priorityId);
         });
         var visibleCategories = [];
-        me.annotCategoriesMenu.items.each(function(item) {
-            if(item.checked)
+        me.annotCategoriesMenu.items.each(function (item) {
+            if (item.checked)
                 visibleCategories.push(item.categoryId);
         });
 
         var annotations = Ext.query('#' + this.id + '_textCont span.annotation');
-        var fn = Ext.bind(function(annotation) {
+        var fn = Ext.bind(function (annotation) {
             var className = annotation.className.replace('annotation', '').trim();
             var classes = className.split(' ');
 
             var hasCategory = false;
             var hasPriority = false;
 
-            for(var i = 0; i < classes.length; i++) {
+            for (var i = 0; i < classes.length; i++) {
                 hasCategory |= Ext.Array.contains(visibleCategories, classes[i]);
                 hasPriority |= Ext.Array.contains(visiblePriorities, classes[i]);
             }
@@ -328,37 +328,37 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
             Ext.get(annotation).setVisible(hasCategory & hasPriority);
         }, me);
 
-        if(annotations.each)
+        if (annotations.each)
             annotations.each(fn);
         else
             Ext.Array.each(annotations, fn);
     },
 
-    setContent: function(text) {
+    setContent: function (text) {
         var me = this;
-		
-		Ext.fly(me.id + '_textCont').update(text);
-		this.fireEvent('documentLoaded', me);
-		
-		Tipped.create('#' + me.id + '_textCont .tipped', { position: 'top', maxWidth: 300 });
-		
-		Ext.Array.each(Ext.query('.scrollto'), function(dom, n, all) {
+
+        Ext.fly(me.id + '_textCont').update(text);
+        this.fireEvent('documentLoaded', me);
+
+        Tipped.create('#' + me.id + '_textCont .tipped', { position: 'top', maxWidth: 300 });
+
+        Ext.Array.each(Ext.query('.scrollto'), function (dom, n, all) {
             var elem = Ext.get(dom);
             var scrollTo = elem.getAttribute('data-footnote');
             elem.on('click', Ext.bind(me.scrollToId, me, [scrollTo]));
         }, me);
     },
 
-    setChapters: function(chapters) {
+    setChapters: function (chapters) {
         var me = this;
 
-        if(chapters.getTotalCount() == 0) return;
+        if (chapters.getTotalCount() == 0) return;
 
-        me.gotoMenu =  Ext.create('Ext.button.Button', {
+        me.gotoMenu = Ext.create('Ext.button.Button', {
             text: getLangString('view.window.text.TextView_gotoMenu'),
             indent: false,
             cls: 'menuButton',
-            menu : {
+            menu: {
                 items: [
                 ]
             }
@@ -368,7 +368,7 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
         me.chapters = chapters;
 
         var chapterItems = [];
-        chapters.each(function(chapter) {
+        chapters.each(function (chapter) {
             chapterItems.push({
                 text: chapter.get('name'),
                 handler: Ext.bind(me.gotoChapter, me, chapter.get('id'), true)
@@ -386,47 +386,59 @@ Ext.define('EdiromOnline.view.window.text.TextView', {
         me.gotoMenu.show();
     },
 
-    gotoChapter: function(menuItem, event, chapterId) {
+    gotoChapter: function (menuItem, event, chapterId) {
         this.fireEvent('gotoChapter', this, chapterId);
     },
 
     getWeightForInternalLink: function (uri, type, id) {
-		var me = this;
-		
-		if (me.uri != uri)
-		return 0;
-		
-		if (type == 'unknown' || type == 'graphic' || type == 'surface' || type == 'zone')
-		return 0;
-		
-		return 70;
-	},
-	
-	loadInternalId: function (internalId, internalIdType) {
-		var me = this;
+        var me = this;
+
+        if (me.uri != uri)
+            return 0;
+
+        if (type == 'unknown' || type == 'graphic' || type == 'surface' || type == 'zone')
+            return 0;
+
+        return 70;
+    },
+
+    loadInternalId: function (internalId, internalIdType) {
+        var me = this;
 
         var container = Ext.fly(me.id + '_textCont');
         var elem = container.getById(me.id + '_' + me.window.internalId);
-        if(elem) {
+        if (elem) {
             me.window.requestForActiveView(me);
             me.scrollToId(me.window.internalId);
         }
     },
 
-    scrollToId: function(id) {
-        
+    scrollToId: function (id) {
+
         var elem = Ext.get(this.id + '_' + id);
+
+        // Select all elements with the class "test"
+        let previous_elements = document.querySelectorAll('.redborder');
+
+        // Loop through the elements and remove the class "test"
+        previous_elements.forEach(element => {
+            element.classList.remove('redborder');
+        });
+
+
+        var elem2 = document.querySelector("#" + this.id + '_' + id);
+        elem2.classList.add("redborder");
 
         var showHide = !elem.isVisible();
 
-        if(showHide) elem.show();
-        
+        if (showHide) elem.show();
+
         Ext.getDom(elem).scrollIntoView(true);
-        
-        if(showHide) elem.hide();
-	},
-	
-	getContentConfig: function() {
+
+        if (showHide) elem.hide();
+    },
+
+    getContentConfig: function () {
         var me = this;
         return {
             id: this.id

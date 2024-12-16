@@ -145,7 +145,9 @@ declare function edition:getPreferencesURI($uri as xs:string?) as xs:string {
  : @return The URI of the secret file*
  :)
 declare function edition:getSecretsURI($uri as xs:string) as xs:string {
-    doc($uri)//secrets/@xlink:href => string()
+    if(doc-available($uri)) 
+    then(doc($uri)//secrets/@xlink:href => string())  
+    else util:log('warn', 'No secrets file found.')
 };
 
 (:~

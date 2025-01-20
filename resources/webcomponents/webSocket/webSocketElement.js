@@ -1,5 +1,16 @@
 console.log("WebSocket Webcomponent loaded");
 
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        let script = document.createElement("script");
+        script.src = src;
+        script.defer = true;
+        script.onload = () => resolve(script);
+        script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+        document.head.appendChild(script);
+    });
+}
+
 const template = document.createElement("template");
 template.innerHTML = `
     <div>
@@ -112,14 +123,6 @@ template.innerHTML = `
         </div>
     </div>
 `
-
-// Libraries
-let qrCodeJsElement = document.createElement("script");
-qrCodeJsElement.setAttribute("defer", "defer");
-qrCodeJsElement.setAttribute("src", "resources/webcomponents/webSocket/qrcode.js")
-document.querySelector("head").appendChild(qrCodeJsElement);
-
-
 
 class webSocketElement extends HTMLElement {
     constructor() {
@@ -300,5 +303,14 @@ class webSocketElement extends HTMLElement {
 
 }
 
-customElements.define("edirom-web-socket", webSocketElement);
+// Make sure that libraries are loaded before continuing
+Promise.all([
+    loadScript("resources/webcomponents/webSocket/qrcode.js"),
+    // loadScript("path/to/libraryB.js"),
+]).then(() => {
+    // All libraries are now loaded.
+    customElements.define("edirom-web-socket", webSocketElement);
+}).catch(err => console.error(err));
+
+
 

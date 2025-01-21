@@ -81,12 +81,25 @@ template.innerHTML = `
             }
 
             #info-popover {
+                position: relative;
                 width: 600px;
                 height: 600px;
                 padding: 10px;
                 background-color: rgb(221, 221, 221);
                 border: 1px solid black;
                 box-shadow: 5.0px 10px 10px hsl(0deg 0% 0% / 0.55);
+            }
+
+            .close-btn {
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                font-size: 30px;
+                font-weight: bold;
+                color: #333;
+                cursor: pointer;
+                user-select: none; 
+                line-height: 1;
             }
 
             #session-id-container {
@@ -107,8 +120,11 @@ template.innerHTML = `
                         <path d="M80-160v-120h80v-440q0-33 23.5-56.5T240-800h600v80H240v440h240v120H80Zm520 0q-17 0-28.5-11.5T560-200v-400q0-17 11.5-28.5T600-640h240q17 0 28.5 11.5T880-600v400q0 17-11.5 28.5T840-160H600Zm40-120h160v-280H640v280Zm0 0h160-160Z" />
                     </svg><span id="session-members-number">0</span></span>
             </div>
-            <div id="connection-news-popover" popover="manual"></div>
+            <div id="connection-news-popover" popover="manual">
+                <span class="close-btn">&times;</span>
+            </div>
             <div id="info-popover" popover="manual">
+                <span class="close-btn">&times;</span>
                 <h1>Sitzungsinformationen</h1>
                 <h2>Code</h2>
                 <div id="session-id-container">
@@ -149,6 +165,9 @@ class webSocketElement extends HTMLElement {
         this.smallInfoContainer.addEventListener("click", (event) => {
             console.log("SmallInfoContainer clicked!");
             this.infoPopover.togglePopover();
+        });
+        this.shadow.querySelector('#info-popover .close-btn').addEventListener("click", (event) => {
+            this.infoPopover.hidePopover();
         });
     }
 

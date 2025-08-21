@@ -23,5 +23,7 @@ services:
     container_name: edirom-online-backend
     volumes:
       - ${BACKEND_PATH}:/app
+    environment:
+      - EXIST_PWD=korngold
     ports:
       - 127.0.0.1:8080:8080

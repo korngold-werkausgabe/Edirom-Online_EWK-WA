@@ -16,11 +16,13 @@ services:
       - ${FRONTEND_PATH}:/app
     command: ["./build.sh testing && tail -f /dev/null"]
 
-  backend: 
-    # location and name of backend Dockerfile
+  backend:
+    build:
       context: ./backend   
       dockerfile: Dockerfile
       args:
         REPO: ${BE_REPO:-https://github.com/Edirom/Edirom-Online-Backend.git}
         BRANCH: ${BE_BRANCH:-develop}
         EDITION: ${EDITION_XAR}
+      ports:
+        - 8080:8080

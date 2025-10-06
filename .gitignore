@@ -13,4 +13,4 @@ local.properties
 .existdb.json
 .vscode/settings.json
 backend/autodeploy/*.xar
-.local-dev-config/.env
+.env

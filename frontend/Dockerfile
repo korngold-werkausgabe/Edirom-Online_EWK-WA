@@ -10,7 +10,7 @@
 # 1. Build Environment
 #########################
 
-FROM openjdk:8-jre-slim as builder
+FROM eclipse-temurin:8-jdk-focal as builder
 
 ARG ANT_VERSION=1.10.12
 ARG SOURCE=https://github.com/Edirom/Edirom-Online-Frontend.git
@@ -59,7 +59,7 @@ ENV PATH="/opt/ant/bin:/opt/Sencha/Cmd:${PATH}"
 WORKDIR /opt/eo-frontend
 
 RUN echo "Cloning from repo $SOURCE" && \
-    git clone "$SOURCE" --branch "$BRANCH" --single-branch . && \
+    git clone --recurse-submodules "$SOURCE" --branch "$BRANCH" --single-branch . && \
     if [ -n "$BE_PORT" ] && [ "$BE_PORT" != "8080" ]; then \
         echo "Writing backend.port=$BE_PORT to local.properties…"; \
         if [ -f "./local.properties" ]; then \

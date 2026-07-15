@@ -10,12 +10,13 @@
 # 1. Build Environment
 #########################
 
-FROM openjdk:8-jre-slim as builder
+FROM eclipse-temurin:21 as builder
 
 ARG ANT_VERSION=1.10.12
 ARG SOURCE=https://github.com/Edirom/Edirom-Online-Backend.git
-ARG BRANCH=v1.1.0
+ARG BRANCH=v1.3.0
 ARG EDITION
+ARG ROASTER_VERSION=1.11.0
 
 
 # Install wget and unzip and ruby and other dependencies
@@ -50,18 +51,24 @@ ENV PATH="/opt/ant/bin:${PATH}"
 WORKDIR /opt/eo-backend
 
 RUN echo "Cloning from repo $SOURCE" && \
-    git clone "$SOURCE" --branch "$BRANCH" --single-branch . && \
+    git clone --recurse-submodules "$SOURCE" --branch "$BRANCH" --single-branch . && \
     echo "Building Backend XAR..." && \
     ant
 
 RUN if [ -n "$EDITION" ]; then \
         echo "Downloading Edition XAR from $EDITION" && \
         mkdir -p /opt/eo-editions && \
-        curl -L "$EDITION" -O --output-dir "/opt/eo-editions/"; \
+        cd /opt/eo-editions && \
+        curl -L -O "$EDITION"; \
     else \
         mkdir -p /opt/eo-editions && \
         echo "Note: EDITION_XAR not provided. Please add manually to eXist-db."; \
     fi
+
+RUN echo "Downloading dependencies..." && \
+    mkdir -p /opt/roaster && \
+    cd /opt/roaster && \
+    curl -L -O "https://exist-db.org/exist/apps/public-repo/public/roaster-${ROASTER_VERSION}.xar";
 
 
 #########################
@@ -77,3 +84,4 @@ ADD ./autodeploy ${EXIST_HOME}/autodeploy/
 # copy built XARs to autodeploy directory of exist
 COPY --from=builder /opt/eo-backend/build-xar/*.xar ${EXIST_HOME}/autodeploy/
 COPY --from=builder /opt/eo-editions/*.xar ${EXIST_HOME}/autodeploy/
+COPY --from=builder /opt/roaster/*.xar ${EXIST_HOME}/autodeploy/

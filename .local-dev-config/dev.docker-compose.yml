@@ -1,28 +1,35 @@
 services:
     
   frontend-serve:
-    image: nginx:latest
+    build:
+      context: ${FRONTEND_PATH}
+      dockerfile: docker/Dockerfile
     container_name: edirom-online-frontend-serve
     volumes:
-      - ${FRONTEND_PATH}:/usr/share/nginx/html:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${FRONTEND_PATH}:/usr/share/nginx/html
+    environment:
+      - APP_PATH=/build
     ports:
       - 127.0.0.1:8089:80
 
   frontend-build:
-    image: ghcr.io/bwbohl/sencha-cmd:2.1.0
+    image: ghcr.io/bwbohl/sencha-cmd:latest
     container_name: edirom-online-frontend-build
+    stdin_open: true
+    tty: true
     volumes:
       - ${FRONTEND_PATH}:/app
-    command: ["./build.sh testing && tail -f /dev/null"]
+    working_dir: /app
 
-  backend:
+
+  backend: 
     build:
-      context: ../backend   
+      context: ${BACKEND_PATH}
       dockerfile: Dockerfile
-      args:
-        REPO: ${BE_REPO:-https://github.com/Edirom/Edirom-Online-Backend.git}
-        BRANCH: ${BE_BRANCH:-develop}
-        EDITION: ${EDITION_XAR}
+    container_name: edirom-online-backend
+    volumes:
+      - ${BACKEND_PATH}:/app
+    environment:
+      - EXIST_PASSWORD=korngold
     ports:
-      - 8080:8080
+      - 127.0.0.1:8080:8080

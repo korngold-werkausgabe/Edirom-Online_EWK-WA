@@ -8,6 +8,7 @@ services:
     volumes:
       - ${FRONTEND_PATH}:/usr/share/nginx/html
     environment:
+      - APP_LOCATION=/build
       - APP_PATH=/build
     ports:
       - 127.0.0.1:8089:80
